@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "frontend-dev": "webpack --watch --config=frontend/webpack.config.js",
-    "server-dev": "tsc -p server/tsconfig.json --watch & nodemon server/dist/index.js && fg",
+    "frontend-dev": "webpack --watch --config=src/frontend/webpack.config.js",
+    "server-dev": "tsc -p src/server/tsconfig.json --watch & nodemon src/server/dist/index.js && fg",
     "lint": "npx eslint . --ext .ts"
   },
   "keywords": [],

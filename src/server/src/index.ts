@@ -3,9 +3,9 @@ import express from 'express';
 const app = express();
 const port = 3000;
 
-app.set('views', './server/src/views');
+app.set('views', './src/server/src/views');
 app.set('view engine', 'ejs');
-app.use(express.static('./server/src/public'));
+app.use(express.static('./src/server/src/public'));
 
 app.get('/', (_, res) => {
   res.render('index', { csrfToken: 'fake_csrf_token' });

@@ -2,7 +2,7 @@ const path = require('path');
 require('dotenv').config();
 
 module.exports = {
-  entry: './frontend/src/index.tsx',
+  entry: './src/frontend/src/index.tsx',
   output: { path: path.join(__dirname, '../server/src/public'), filename: 'bundle.js' },
   mode: process.env.NODE_ENV || 'development',
   resolve: {
