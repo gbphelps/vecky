@@ -3,19 +3,22 @@ import bcrypt from 'bcrypt';
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/login', async (req, res) => {
   const { body: { username, password } } = req;
 
   const user = await req.db.collection('users').findOne({ username });
 
-  if (user) {
-    res.status(409).send('username already taken');
+  if (!user) {
+    res.status(403).send('invalid credentials');
     return;
   }
 
-  const passwordHash = await bcrypt.hash(password, 10);
+  const isValidPassword = await bcrypt.compare(password, user.password);
 
-  req.db.collection('users').insertOne({ username, password: passwordHash });
+  if (!isValidPassword) {
+    res.status(403).send('invalid credentials');
+    return;
+  }
 
   res.status(200).send();
 });
