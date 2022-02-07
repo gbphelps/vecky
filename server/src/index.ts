@@ -1,18 +1,15 @@
 import 'dotenv/config';
 import express from 'express';
-import path from 'path';
-
-console.log(process.env.TEST);
 
 const app = express();
 const port = 3000;
 
-app.set('views', './server/src/views');
+app.set('views', process.env.PATH_TO_VIEWS);
 app.set('view engine', 'ejs');
-app.use(express.static('./server/src/public'));
+app.use(express.static(process.env.PATH_TO_STATIC_FILES));
 
 app.get('/', (_, res) => {
-  res.render('index', { csrfToken: 'fake_csrf_token', bundle: path.join(process.cwd(), 'frontend', 'build', 'bundle.js') });
+  res.render('index', { csrfToken: 'fake_csrf_token' });
 });
 
 app.listen(port, () => console.log(`Express is listening at http://localhost:${port}`));

@@ -1,8 +1,9 @@
 const path = require('path');
+require('dotenv').config();
 
 module.exports = {
   entry: './frontend/src/index.tsx',
-  output: { path: path.join(__dirname, '../server/src/public'), filename: 'bundle.js' },
+  output: { path: path.join(__dirname, process.env.PATH_TO_WEBPACK_BUNDLE), filename: 'bundle.js' },
   mode: process.env.NODE_ENV || 'development',
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
