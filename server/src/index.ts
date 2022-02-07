@@ -1,12 +1,11 @@
-import 'dotenv/config';
 import express from 'express';
 
 const app = express();
 const port = 3000;
 
-app.set('views', process.env.PATH_TO_VIEWS);
+app.set('views', './server/src/views');
 app.set('view engine', 'ejs');
-app.use(express.static(process.env.PATH_TO_STATIC_FILES));
+app.use(express.static('./server/src/public'));
 
 app.get('/', (_, res) => {
   res.render('index', { csrfToken: 'fake_csrf_token' });
