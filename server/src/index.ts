@@ -1,5 +1,8 @@
+import 'dotenv/config';
 import express from 'express';
 import path from 'path';
+
+console.log(process.env.TEST);
 
 const app = express();
 const port = 3000;
