@@ -13,7 +13,7 @@ async function main() {
   await initMongoDb(app);
   initSessions(app);
 
-  app.use(csrf());
+  if (app.get('env') !== 'development') app.use(csrf());
 
   const port = 3000;
 
