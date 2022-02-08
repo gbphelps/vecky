@@ -20,7 +20,7 @@ function initSessions(app) {
   app.use(session({
     store: new RedisStore({ client: redisClient }),
     saveUninitialized: false,
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_COOKIE_SECRET,
     resave: false,
     cookie: {
       secure: app.get('env') === 'production',

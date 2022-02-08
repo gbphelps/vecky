@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import csrf from 'csurf';
 import apiRouter from './api';
 import initMongoDb from './mongodb';
 import initSessions from './sessions';
@@ -11,6 +12,8 @@ async function main() {
 
   await initMongoDb(app);
   initSessions(app);
+
+  app.use(csrf());
 
   const port = 3000;
 
@@ -26,9 +29,9 @@ async function main() {
 
   // routes
   app.use('/api', apiRouter);
-  app.get('*', (_, res) => {
-    // send app shell with csrf token
-    res.render('index', { csrfToken: 'fake_csrf_token' });
+
+  app.get('*', (req, res) => {
+    res.render('index', { csrfToken: req.csrfToken() });
   });
 
   app.listen(port, () => console.log(`Express is listening at http://localhost:${port}`));
