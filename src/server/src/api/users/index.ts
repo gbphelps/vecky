@@ -6,6 +6,11 @@ const router = express.Router();
 router.post('/', async (req, res) => {
   const { body: { username, password } } = req;
 
+  if (!password || !username) {
+    res.status(422).send('invalid parameters');
+    return;
+  }
+
   const user = await req.db.collection('users').findOne({ username });
 
   if (user) {
