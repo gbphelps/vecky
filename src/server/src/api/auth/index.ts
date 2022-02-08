@@ -20,7 +20,10 @@ router.post('/login', async (req, res) => {
     return;
   }
 
-  req.session.user = username;
+  req.session.user = {
+    username: user.username,
+    id: user._id,
+  };
 
   res.status(200).send();
 });

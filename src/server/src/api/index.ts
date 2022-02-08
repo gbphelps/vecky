@@ -7,4 +7,8 @@ const router = express.Router();
 router.use('/auth', authRouter);
 router.use('/users', usersRouter);
 
+// router.use('/', (req) => {
+//   console.log(req.session);
+// });
+
 export default router;

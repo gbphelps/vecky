@@ -11,8 +11,7 @@ declare module 'express-session' {
 function initSessions(app) {
   const RedisStore = connectRedis(session);
 
-  const redisClient = createClient({ legacyMode: true });
-  redisClient.connect();
+  const redisClient = createClient();
 
   redisClient.on('error', console.error);
 
