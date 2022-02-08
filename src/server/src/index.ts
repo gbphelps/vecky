@@ -1,12 +1,16 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import apiRouter from './api';
-import getDbConnection from './mongodb';
+import initMongoDb from './mongodb';
+import initSessions from './sessions';
+
+import 'dotenv/config';
 
 async function main() {
   const app = express();
 
-  const mongoConnection = await getDbConnection();
+  await initMongoDb(app);
+  initSessions(app);
 
   const port = 3000;
 
@@ -19,10 +23,6 @@ async function main() {
 
   // middleware
   app.use(bodyParser.json());
-  app.use((req, res, next) => {
-    req.db = mongoConnection;
-    next();
-  });
 
   // routes
   app.use('/api', apiRouter);

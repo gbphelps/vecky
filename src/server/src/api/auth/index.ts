@@ -20,6 +20,8 @@ router.post('/login', async (req, res) => {
     return;
   }
 
+  req.session.user = username;
+
   res.status(200).send();
 });
 

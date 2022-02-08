@@ -3,10 +3,15 @@ import { MongoClient } from 'mongodb';
 const CONNECTION_URL = 'mongodb://127.0.0.1:27017';
 const DATABASE_NAME = 'myProject';
 
-async function getDbConnection() {
+async function initMongoDb(app) {
   const client = new MongoClient(CONNECTION_URL);
   await client.connect();
-  return client.db(DATABASE_NAME);
+  const connection = client.db(DATABASE_NAME);
+
+  app.use((req, res, next) => {
+    req.db = connection;
+    next();
+  });
 }
 
-export default getDbConnection;
+export default initMongoDb;
