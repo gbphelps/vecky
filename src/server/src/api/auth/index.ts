@@ -6,7 +6,10 @@ const router = express.Router();
 router.post('/login', async (req, res) => {
   const { body: { username, password } } = req;
 
-  const user = await req.db.collection('users').findOne({ username });
+  const user = (await req.psql
+    .select('username', 'password')
+    .from('users')
+    .where('username', username))[0];
 
   if (!user) {
     res.status(403).send('invalid credentials');
@@ -22,7 +25,7 @@ router.post('/login', async (req, res) => {
 
   req.session.user = {
     username: user.username,
-    id: user._id,
+    id: user.id,
   };
 
   res.status(200).send();

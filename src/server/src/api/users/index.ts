@@ -11,7 +11,10 @@ router.post('/', async (req, res) => {
     return;
   }
 
-  const user = await req.db.collection('users').findOne({ username });
+  const user = (await req.psql
+    .select('username')
+    .from('users')
+    .where('username', username))[0];
 
   if (user) {
     res.status(409).send('username already taken');
@@ -20,7 +23,7 @@ router.post('/', async (req, res) => {
 
   const passwordHash = await bcrypt.hash(password, 10);
 
-  req.db.collection('users').insertOne({ username, password: passwordHash });
+  await req.psql('users').insert({ username, password: passwordHash });
 
   res.status(200).send();
 });

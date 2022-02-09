@@ -1,15 +1,17 @@
+import 'dotenv/config';
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import csrf from 'csurf';
 import apiRouter from './api';
 import initMongoDb from './mongodb';
 import initSessions from './sessions';
-
-import 'dotenv/config';
+import initPostgres from './psql';
 
 async function main() {
   const app = express();
 
+  initPostgres(app);
   await initMongoDb(app);
   initSessions(app);
 

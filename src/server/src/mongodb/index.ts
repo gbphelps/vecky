@@ -1,14 +1,12 @@
 import { MongoClient } from 'mongodb';
+import type { Express } from 'express';
 
-const CONNECTION_URL = 'mongodb://127.0.0.1:27017';
-const DATABASE_NAME = 'myProject';
-
-async function initMongoDb(app) {
-  const client = new MongoClient(CONNECTION_URL);
+async function initMongoDb(app: Express) {
+  const client = new MongoClient(process.env.MONGO_URL);
   await client.connect();
-  const connection = client.db(DATABASE_NAME);
+  const connection = client.db(process.env.MONGO_DATABASE);
 
-  app.use((req, res, next) => {
+  app.use((req, _, next) => {
     req.db = connection;
     next();
   });
