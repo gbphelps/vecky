@@ -7,15 +7,24 @@ const addUpdateTrigger = (table: string) => `
     EXECUTE PROCEDURE on_update_timestamp();
   `;
 
-function createTable(
+async function createTable(
   knex: Knex,
   tableName:string,
   callback: (table: Knex.CreateTableBuilder) => void,
 ) {
   return knex.schema.createTable(tableName, (table) => {
+    // set up uuids
     table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'));
+
+    // set up timestamps
+    table.timestamps(true, true);
+
+    // do whatever else user wants to do
     callback(table);
-  });
+  }).then(
+    // add updater
+    () => knex.raw(addUpdateTrigger(tableName)),
+  );
 }
 
-export { addUpdateTrigger, createTable };
+export { createTable };
