@@ -8,7 +8,8 @@
     "frontend-dev": "webpack --watch --config=src/frontend/webpack.config.js",
     "server-dev": "tsc -p src/server/tsconfig.json --watch & nodemon src/server/dist/index.js && fg",
     "lint": "eslint . --ext .ts",
-    "knex": "dotenv -- knex --knexfile src/server/src/psql/knexfile.js"
+    "knex": "dotenv -- knex --knexfile src/server/src/psql/knexfile.ts",
+    "knex:migrate:make": "knex --knexfile src/server/src/psql/knexfile.ts migrate:make -x ts"
   },
   "keywords": [],
   "author": "",
@@ -55,6 +56,7 @@
     "html-webpack-plugin": "^5.5.0",
     "nodemon": "^2.0.15",
     "ts-loader": "^9.2.6",
+    "ts-node": "^10.5.0",
     "typescript": "^4.5.5",
     "webpack": "^5.68.0",
     "webpack-cli": "^4.9.2",

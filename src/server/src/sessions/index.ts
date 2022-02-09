@@ -2,12 +2,6 @@ import session from 'express-session';
 import connectRedis from 'connect-redis';
 import { createClient } from 'redis';
 
-declare module 'express-session' {
-    export interface SessionData {
-      user: { [key: string]: any };
-    }
-  }
-
 function initSessions(app) {
   const RedisStore = connectRedis(session);
 
