@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "frontend-dev": "webpack --watch --config=src/frontend/webpack.config.js",
-    "server-dev": "tsc -p src/server/tsconfig.json --watch & nodemon src/server/dist/index.js && fg",
+    "server-dev": "tsc -p src/server/tsconfig.json --watch & nodemon src/server/dist/src/index.js && fg",
     "lint": "eslint . --ext .ts",
     "knex": "dotenv -- knex --knexfile src/server/src/psql/knexfile.ts",
     "knex:migrate:make": "knex --knexfile src/server/src/psql/knexfile.ts migrate:make -x ts"

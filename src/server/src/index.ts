@@ -15,6 +15,9 @@ async function main() {
   await initMongoDb(app);
   initSessions(app);
 
+  // TODO: consider enabling in all envs; main drawback is
+  // that you can't use postman
+  // Add CSRF protection in every environment but development
   if (app.get('env') !== 'development') app.use(csrf());
 
   const port = 3000;
@@ -33,7 +36,11 @@ async function main() {
   app.use('/api', apiRouter);
 
   app.get('*', (req, res) => {
-    res.render('index', { csrfToken: req.csrfToken() });
+    res.set({
+      'X-Frame-Options': 'DENY',
+    });
+
+    res.render('index', { csrfToken: req.csrfToken?.() ?? 'no_csrf_in_dev' });
   });
 
   app.listen(port, () => console.log(`Express is listening at http://localhost:${port}`));
