@@ -4,6 +4,11 @@ import bcrypt from 'bcrypt';
 const router = express.Router();
 
 router.post('/login', async (req, res) => {
+  if (req.session.user) {
+    res.status(403).send('already logged in');
+    return;
+  }
+
   const { body: { username, password } } = req;
 
   const user = (await req.psql
@@ -29,6 +34,23 @@ router.post('/login', async (req, res) => {
   };
 
   res.status(200).send();
+});
+
+router.post('/logout', (req, res) => {
+  if (!req.session.user) {
+    res.send();
+    return;
+  }
+
+  const onDestroy = (err?: Error) => {
+    if (err) {
+      res.status(422).send('Could not process logout request');
+      return;
+    }
+    res.status(200).send();
+  };
+
+  req.session.destroy(onDestroy);
 });
 
 export default router;

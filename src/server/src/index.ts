@@ -16,7 +16,7 @@ async function main() {
   initSessions(app);
 
   // TODO: consider enabling in all envs; main drawback is
-  // that you can't use postman
+  // that you can't use postman if you do
   // Add CSRF protection in every environment but development
   if (app.get('env') !== 'development') app.use(csrf());
 

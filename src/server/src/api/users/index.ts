@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
     .where('username', username))[0];
 
   if (user) {
-    res.status(409).send('username already taken');
+    res.status(403).send('username already taken');
     return;
   }
 
