@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import request from '../../apiClient';
+import styles from './login.module.scss';
 
 function Login() {
   const [form, setForm] = useState({
@@ -19,7 +20,7 @@ function Login() {
   }, [form]);
 
   return (
-    <div>
+    <div className={styles.container}>
       <input
         type="text"
         value={form.username}

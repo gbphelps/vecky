@@ -1,4 +1,5 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 require('dotenv').config();
 
 module.exports = {
@@ -8,16 +9,6 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
-  // devServer: {
-  //   proxy: {
-  //     '/api': {
-  //       target: 'http://localhost:3000',
-  //       pathRewrite: {
-  //         "^/api": ""
-  //       },
-  //     }
-  //   },
-  // },
   module: {
     rules: [
       {
@@ -27,14 +18,13 @@ module.exports = {
       },
       {
         test: /\.(css|scss)$/,
-        use: ['style-loader', 'css-loader'],
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader',
+        ],
       },
     ],
   },
-  // plugins: [
-  //   new HtmlWebpackPlugin({
-  //     template: path.join(__dirname, 'src', 'index.ejs'),
-  //     title: 'Chat App',
-  //   }),
-  // ],
+  plugins: [new MiniCssExtractPlugin()],
 };
