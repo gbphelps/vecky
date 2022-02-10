@@ -11,9 +11,11 @@
 //     }),
 //   });
 
-function request(method: string, endpoint: string, body: object) {
+function request(method: string, endpoint: string, body?: {}) {
   const csrfMeta = document.querySelector('meta[name="csrf-token"]');
   const csrfToken = csrfMeta?.getAttribute('content') ?? '';
+
+  if (endpoint.startsWith('/')) throw new Error(`Endpoint should not use initial forward slash. Did you mean ${endpoint.slice(1)}?`);
 
   return fetch(`/api/${endpoint}`, {
     credentials: 'same-origin',
@@ -22,8 +24,11 @@ function request(method: string, endpoint: string, body: object) {
       'Content-Type': 'application/json',
     },
     method,
-    body: JSON.stringify(body),
-  });
+    ...(body ? { body: JSON.stringify(body) } : null),
+  }).then(async (res) => ({
+    code: res.status,
+    data: await res.json(),
+  }));
 }
 
 export default request;

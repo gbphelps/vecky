@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import request from '../../apiClient';
-import styles from './login.module.scss';
+import styles from './index.module.scss';
 
 function Login() {
   const [form, setForm] = useState({

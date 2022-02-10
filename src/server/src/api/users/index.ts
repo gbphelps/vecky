@@ -7,7 +7,7 @@ router.post('/', async (req, res) => {
   const { body: { username, password } } = req;
 
   if (!password || !username) {
-    res.status(422).send('invalid parameters');
+    res.status(422).json({ error: 'invalid parameters' });
     return;
   }
 
@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
     .where('username', username))[0];
 
   if (user) {
-    res.status(403).send('username already taken');
+    res.status(403).json({ error: 'username already taken' });
     return;
   }
 
@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
 
   await req.psql('users').insert({ username, password: passwordHash });
 
-  res.status(200).send();
+  res.status(200).json({});
 });
 
 export default router;

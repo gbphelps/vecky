@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post('/login', async (req, res) => {
   if (req.session.user) {
-    res.status(403).send('already logged in');
+    res.status(403).json({ error: 'already logged in' });
     return;
   }
 
@@ -17,14 +17,14 @@ router.post('/login', async (req, res) => {
     .where('username', username))[0];
 
   if (!user) {
-    res.status(403).send('invalid credentials');
+    res.status(403).json({ error: 'invalid credentials' });
     return;
   }
 
   const isValidPassword = await bcrypt.compare(password, user.password);
 
   if (!isValidPassword) {
-    res.status(403).send('invalid credentials');
+    res.status(403).json({ error: 'invalid credentials' });
     return;
   }
 
@@ -33,21 +33,30 @@ router.post('/login', async (req, res) => {
     id: user.id,
   };
 
-  res.status(200).send();
+  res.status(200).json({});
+});
+
+router.get('/user', async (req, res) => {
+  if (!req.session.user) {
+    res.status(404).json({ error: 'No session found.' });
+    return;
+  }
+
+  res.status(200).json(req.session.user);
 });
 
 router.post('/logout', (req, res) => {
   if (!req.session.user) {
-    res.send();
+    res.status(404).json({ error: 'No session found.' });
     return;
   }
 
   const onDestroy = (err?: Error) => {
     if (err) {
-      res.status(422).send('Could not process logout request');
+      res.status(422).json({ error: 'Could not process logout request' });
       return;
     }
-    res.status(200).send();
+    res.status(200).json({});
   };
 
   req.session.destroy(onDestroy);
