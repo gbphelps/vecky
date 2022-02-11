@@ -1,15 +1,18 @@
 import { useState, useCallback } from 'react';
 import styles from './index.module.scss';
-import { useSessionContext } from '../../common/contexts/sessionContext';
+import { TUserForm } from '../../common/contexts/sessionContext';
 // import StyleGuide from '../_styleGuide';
 
-function Login() {
+interface Props {
+  title: string,
+  onSubmit: (form: TUserForm) => Promise<void>
+}
+
+function AuthComponent({ title, onSubmit }: Props) {
   const [form, setForm] = useState({
     username: '',
     password: '',
   });
-
-  const { login } = useSessionContext();
 
   const onChange = useCallback(({ target: { value, name } }) => {
     setForm((oldForm) => ({
@@ -18,14 +21,10 @@ function Login() {
     }));
   }, []);
 
-  const submitForm = useCallback(async () => {
-    login(form);
-  }, [form, login]);
-
   return (
     <div className={styles['page-container']}>
       <div className={styles.container}>
-        <h4>Sign in</h4>
+        <h4>{title}</h4>
         <label htmlFor="username">
           <div>Username</div>
           <input
@@ -47,7 +46,7 @@ function Login() {
         </label>
 
         <div className={styles['button-panel']}>
-          <button type="button" onClick={submitForm}>
+          <button type="button" onClick={() => onSubmit(form)}>
             Submit
           </button>
         </div>
@@ -56,4 +55,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default AuthComponent;

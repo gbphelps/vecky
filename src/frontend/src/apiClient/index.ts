@@ -1,26 +1,13 @@
-//   fetch('/api/users', {
-//     credentials: 'same-origin', // <-- includes cookies in the request
-//     headers: {
-//       'CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-//       'Content-Type': 'application/json',
-//     },
-//     method: 'POST',
-//     body: JSON.stringify({
-//       username: 'apple',
-//       password: 'apple',
-//     }),
-//   });
-
 type PrimitiveType = string | number | undefined | null;
 
-type JsonObject = {
+interface IJsonObject {
   [key: string]: PrimitiveType
-    | JsonObject
+    | IJsonObject
     | (PrimitiveType
-    | JsonObject)[]
+    | IJsonObject)[]
 }
 
-type IArgs = [method: string, endpoint: string, body?: JsonObject];
+type IArgs = [method: string, endpoint: string, body?: IJsonObject];
 
 async function request(...[method, endpoint, body]: IArgs) {
   const csrfMeta = document.querySelector('meta[name="csrf-token"]');
@@ -51,5 +38,5 @@ async function request(...[method, endpoint, body]: IArgs) {
   });
 }
 
-export type { IArgs };
+export type { IArgs, IJsonObject };
 export default request;

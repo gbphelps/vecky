@@ -1,10 +1,10 @@
-/*!*****************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/pages/login/index.module.scss ***!
-  \*****************************************************************************************************************************************/
+/*!****************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/pages/auth/index.module.scss ***!
+  \****************************************************************************************************************************************/
 @import url(https://fonts.googleapis.com/css2?family=Open+Sans:wght@700;800&display=swap);
-/*!*********************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/pages/login/index.module.scss (1) ***!
-  \*********************************************************************************************************************************************/
+/*!********************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/pages/auth/index.module.scss (1) ***!
+  \********************************************************************************************************************************************/
 @import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap);
 /*!******************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/styles/global.scss ***!
@@ -14,30 +14,31 @@
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/styles/global.scss (1) ***!
   \**********************************************************************************************************************************/
 @import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap);
-/*!*********************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/pages/login/index.module.scss (2) ***!
-  \*********************************************************************************************************************************************/
-.kEbond7VCkbeCl09Mpib {
+/*!********************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/pages/auth/index.module.scss (2) ***!
+  \********************************************************************************************************************************************/
+.zuCVcC1JTdhBMfwDtxys {
   height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.kEbond7VCkbeCl09Mpib h4 {
+.zuCVcC1JTdhBMfwDtxys h4 {
   margin-bottom: 24px;
 }
 
-.jKi6CCQqpounGEmzX3z7 {
+.SZ37X796AzaYZYuGeicj {
   padding-top: 10px;
 }
 
-.rz8qcVWtsezHwFY5bpvu {
+.zpUWad7FkV8Ams4pfIpw {
   padding: 40px;
   max-height: 100%;
   max-width: 100%;
   border: 1px solid #171c1c;
   border-radius: 10px;
+  width: 400px;
 }
 /*!**********************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/styles/global.scss (2) ***!
@@ -78,6 +79,7 @@ input[type=password] {
   margin-bottom: 1em;
   padding: 0.4em;
   border-radius: 3px;
+  width: 100%;
 }
 
 label div {

@@ -13,14 +13,14 @@ interface User {
   id: string,
 }
 
-interface UserForm {
+type TUserForm = {
   username: string,
   password: string,
 }
 
 interface ISessionContext {
   user: User | null,
-  login: (userForm: UserForm) => Promise<void>,
+  login: (userForm: TUserForm) => Promise<void>,
   logout: () => Promise<void>,
 }
 
@@ -66,3 +66,4 @@ const SessionProvider: React.FunctionComponent = ({ children }) => {
 const useSessionContext = () => useContext(SessionContext);
 
 export { useSessionContext, SessionProvider };
+export type { TUserForm };

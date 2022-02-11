@@ -17,9 +17,10 @@
 }
 
 .container {
-    padding: 40px;
+    padding: v.px(40);
     max-height: 100%;
     max-width: 100%;
     border: 1px solid v.$black;
     border-radius: 10px;  
+    width: 400px;
 }
