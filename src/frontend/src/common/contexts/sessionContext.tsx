@@ -35,7 +35,8 @@ const SessionContext = createContext<ISessionContext>({
 });
 
 const SessionProvider: React.FunctionComponent = ({ children }) => {
-  const [user, setUser] = useState(null);
+  console.log(__user__);
+  const [user, setUser] = useState<User | null>(__user__);
 
   const login = useCallback(async (userForm) => {
     try {
@@ -51,12 +52,6 @@ const SessionProvider: React.FunctionComponent = ({ children }) => {
       setUser(null);
     });
   }, []);
-
-  useEffect(() => {
-    request('GET', 'auth/user').then((res) => {
-      setUser(res.data);
-    }).catch(logout);
-  }, [logout]);
 
   const value = useMemo(() => ({ user, login, logout }), [user, login, logout]);
 

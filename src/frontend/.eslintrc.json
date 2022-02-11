@@ -55,5 +55,8 @@
               "tsx": "never"
             }
          ]
+      },
+      "globals": {
+          "__user__": "readonly"
       }
 }

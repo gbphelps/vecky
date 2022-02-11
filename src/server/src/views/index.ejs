@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8"/>
     <meta name="csrf-token" content="<%= csrfToken %>"/>
-    <script type="text/javascript">
-      var isLoggedIn = <%= isLoggedIn %>;
+    <script type="text/javascript" charset="utf-8">
+      var __user__ = <%- JSON.stringify(user) ?? 'null' %>
     </script>
     <script defer src="bundle.js"></script>
     <link rel="stylesheet" href="main.css">

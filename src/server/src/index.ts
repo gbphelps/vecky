@@ -40,7 +40,7 @@ async function main() {
       'X-Frame-Options': 'DENY',
     });
 
-    res.render('index', { isLoggedIn: Boolean(req.session.user), csrfToken: req.csrfToken?.() ?? 'no_csrf_in_dev' });
+    res.render('index', { user: req.session.user, csrfToken: req.csrfToken?.() ?? 'no_csrf_in_dev' });
   });
 
   app.listen(port, () => console.log(`Express is listening at http://localhost:${port}`));
