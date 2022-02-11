@@ -12,7 +12,7 @@ router.post('/login', async (req, res) => {
   const { body: { username, password } } = req;
 
   const user = (await req.psql
-    .select('username', 'password')
+    .select('username', 'id', 'password')
     .from('users')
     .where('username', username))[0];
 
@@ -40,7 +40,7 @@ router.post('/login', async (req, res) => {
 
 router.get('/user', async (req, res) => {
   if (!req.session.user) {
-    res.status(404).json({ error: 'No session found.' });
+    res.status(403).json({ error: 'No session found.' });
     return;
   }
 

@@ -25,10 +25,19 @@ function request(method: string, endpoint: string, body?: {}) {
     },
     method,
     ...(body ? { body: JSON.stringify(body) } : null),
-  }).then(async (res) => ({
-    code: res.status,
-    data: await res.json(),
-  }));
+  }).then(async (res) => {
+    if (res.status < 300) {
+      return {
+        code: res.status,
+        data: await res.json(),
+      };
+    }
+
+    throw new Error(JSON.stringify({
+      code: res.status,
+      error: await res.json(),
+    }));
+  });
 }
 
 export default request;
