@@ -12,6 +12,10 @@ function Pages() {
     return <Navigate to="/login" replace />;
   }
 
+  if (user && pathname === '/login') {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <Routes>
       <Route path="/login" element={<Login />} />

@@ -1,12 +1,15 @@
 import { useState, useCallback } from 'react';
 import request from '../../apiClient';
 import styles from './index.module.scss';
+import { useSessionContext } from '../../common/contexts/sessionContext';
 
 function Login() {
   const [form, setForm] = useState({
     username: '',
     password: '',
   });
+
+  const { login } = useSessionContext();
 
   const onChange = useCallback(({ target: { value, name } }) => {
     setForm((oldForm) => ({
@@ -15,9 +18,9 @@ function Login() {
     }));
   }, []);
 
-  const submitForm = useCallback(() => {
-    request('POST', 'auth/login', form);
-  }, [form]);
+  const submitForm = useCallback(async () => {
+    login(form);
+  }, [form, login]);
 
   return (
     <div className={styles.container}>

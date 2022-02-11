@@ -28,12 +28,14 @@ router.post('/login', async (req, res) => {
     return;
   }
 
-  req.session.user = {
+  const loggedInUser = {
     username: user.username,
     id: user.id,
   };
 
-  res.status(200).json({});
+  req.session.user = loggedInUser;
+
+  res.status(200).json(loggedInUser);
 });
 
 router.get('/user', async (req, res) => {
