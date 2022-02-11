@@ -1,10 +1,13 @@
 @use "sass:map";
 
 
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
 
-$background-primary: #171c1c;
+
+$black: #171c1c;
+
+$content-primary: $black;
 
 $px: (
     2: 2px,

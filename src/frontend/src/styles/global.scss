@@ -5,10 +5,6 @@ h1,h2,h3,h4,h5,h6 {
     margin-bottom: 0;
 }
 
-// body {
-//     background: v.$background-primary;
-// }
-
 html, body, #root {
     margin: 0;
     padding: 0;
@@ -17,11 +13,13 @@ html, body, #root {
 }
 
 button {
+    @include v.display-xsmall;
     font-size: 20px;
+    font-weight: 700;
     padding: .2em .6em;
     border-radius: 3px;
     border: 1px solid rgba(0,0,0,.1);
-    background: blue;
+    background: v.$content-primary;
     color: white;
 }
 
@@ -51,4 +49,5 @@ h4 { @include v.display-xsmall; }
 
 * {
     box-sizing: border-box;
+    color: v.$black;
 }

@@ -1,7 +1,7 @@
 /*!*****************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/pages/login/index.module.scss ***!
   \*****************************************************************************************************************************************/
-@import url(https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Open+Sans:wght@700;800&display=swap);
 /*!*********************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/pages/login/index.module.scss (1) ***!
   \*********************************************************************************************************************************************/
@@ -9,7 +9,7 @@
 /*!******************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/styles/global.scss ***!
   \******************************************************************************************************************************/
-@import url(https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Open+Sans:wght@700;800&display=swap);
 /*!**********************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/styles/global.scss (1) ***!
   \**********************************************************************************************************************************/
@@ -32,7 +32,7 @@
   padding: 40px;
   max-height: 100%;
   max-width: 100%;
-  border: 1px solid black;
+  border: 1px solid #171c1c;
   border-radius: 10px;
 }
 /*!**********************************************************************************************************************************!*\
@@ -51,11 +51,15 @@ html, body, #root {
 }
 
 button {
+  font-family: "Open Sans";
+  font-weight: 800;
+  font-size: 40px;
   font-size: 20px;
+  font-weight: 700;
   padding: 0.2em 0.6em;
   border-radius: 3px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  background: blue;
+  background: #171c1c;
   color: white;
 }
 
@@ -103,4 +107,5 @@ h4 {
 
 * {
   box-sizing: border-box;
+  color: #171c1c;
 }
