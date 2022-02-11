@@ -5,7 +5,7 @@
 /*!*********************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/pages/login/index.module.scss (1) ***!
   \*********************************************************************************************************************************************/
-@import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap);
 /*!******************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/styles/global.scss ***!
   \******************************************************************************************************************************/
@@ -13,7 +13,7 @@
 /*!**********************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/styles/global.scss (1) ***!
   \**********************************************************************************************************************************/
-@import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap);
 /*!*********************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/pages/login/index.module.scss (2) ***!
   \*********************************************************************************************************************************************/
@@ -62,37 +62,43 @@ button {
 input[type=text],
 input[type=password] {
   font-family: "Roboto";
-  font-size: 16px;
+  font-size: 18px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   outline: none;
   display: block;
   margin-bottom: 1em;
-  padding: 0.5em;
+  padding: 0.4em;
   border-radius: 3px;
 }
 
+label div {
+  font-family: "Roboto";
+  font-weight: 300;
+  font-size: 14px;
+}
+
 h1 {
-  font-size: 96px;
   font-family: "Open Sans";
   font-weight: 800;
+  font-size: 96px;
 }
 
 h2 {
-  font-size: 72px;
   font-family: "Open Sans";
   font-weight: 800;
+  font-size: 72px;
 }
 
 h3 {
-  font-size: 56px;
   font-family: "Open Sans";
   font-weight: 800;
+  font-size: 56px;
 }
 
 h4 {
-  font-size: 40px;
   font-family: "Open Sans";
   font-weight: 800;
+  font-size: 40px;
 }
 
 * {
