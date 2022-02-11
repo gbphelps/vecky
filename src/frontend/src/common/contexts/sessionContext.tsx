@@ -15,7 +15,7 @@ interface User {
 
 interface UserForm {
   username: string,
-  passowrd: string,
+  password: string,
 }
 
 interface ISessionContext {

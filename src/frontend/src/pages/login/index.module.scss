@@ -1,9 +1,21 @@
+@use '../../styles/variables.scss' as v;
+
+.page-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    h4 {
+        margin-bottom: v.px(24)
+    }
+}
 
 .container {
-    input {
-        border: 1px solid rgba(0,0,0,.1);
-        outline: none;
-        font-size: 14px;
-        height: 20px;
-    }   
+    padding: 40px;
+    max-height: 100%;
+    max-width: 100%;
+    border: 1px solid black;
+    border-radius: 10px;  
 }

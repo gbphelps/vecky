@@ -11,7 +11,18 @@
 //     }),
 //   });
 
-function request(method: string, endpoint: string, body?: {}) {
+type PrimitiveType = string | number | undefined | null;
+
+type JsonObject = {
+  [key: string]: PrimitiveType
+    | JsonObject
+    | (PrimitiveType
+    | JsonObject)[]
+}
+
+type IArgs = [method: string, endpoint: string, body?: JsonObject];
+
+async function request(...[method, endpoint, body]: IArgs) {
   const csrfMeta = document.querySelector('meta[name="csrf-token"]');
   const csrfToken = csrfMeta?.getAttribute('content') ?? '';
 
@@ -40,4 +51,5 @@ function request(method: string, endpoint: string, body?: {}) {
   });
 }
 
+export type { IArgs };
 export default request;

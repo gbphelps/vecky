@@ -1,0 +1,63 @@
+@use "sass:map";
+
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+$background-primary: #171c1c;
+
+$px: (
+    2: 2px,
+    4: 4px,
+    6: 6px,
+    8: 8px,
+    10: 10px,
+    12: 10px,
+    14: 14px,
+    16: 16px,
+    18: 18px,
+    20: 20px,
+
+    24: 24px,
+    32: 32px,
+    40: 40px,
+    48: 48px,
+    56: 56px,
+    64: 64px,
+    72: 72px,
+
+    96: 96px,
+    128: 128px,
+    192: 192px
+);
+
+@function px($num) {
+    $size: map.get($px, $num);
+    @if $size == null { @error "Bad px value"; }
+    @return $size;
+}
+
+@mixin display-font {
+    font-family: 'Open Sans';
+    font-weight: 800;
+}
+
+@mixin display-large {
+    font-size: px(96);
+    @include display-font;
+}
+
+@mixin display-medium {
+    font-size: px(72);
+    @include display-font;
+}
+
+@mixin display-small {
+    font-size: px(56);
+    @include display-font;
+}
+
+@mixin display-xsmall {
+    font-size: px(40);
+    @include display-font;
+}

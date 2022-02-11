@@ -1,9 +1,100 @@
 /*!*****************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/pages/login/index.module.scss ***!
   \*****************************************************************************************************************************************/
-.rz8qcVWtsezHwFY5bpvu input {
+@import url(https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap);
+/*!*********************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/pages/login/index.module.scss (1) ***!
+  \*********************************************************************************************************************************************/
+@import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap);
+/*!******************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/styles/global.scss ***!
+  \******************************************************************************************************************************/
+@import url(https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap);
+/*!**********************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/styles/global.scss (1) ***!
+  \**********************************************************************************************************************************/
+@import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap);
+/*!*********************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/pages/login/index.module.scss (2) ***!
+  \*********************************************************************************************************************************************/
+.kEbond7VCkbeCl09Mpib {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.kEbond7VCkbeCl09Mpib h4 {
+  margin-bottom: 24px;
+}
+
+.rz8qcVWtsezHwFY5bpvu {
+  padding: 40px;
+  max-height: 100%;
+  max-width: 100%;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+/*!**********************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/styles/global.scss (2) ***!
+  \**********************************************************************************************************************************/
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+button {
+  font-size: 20px;
+  padding: 0.2em 0.6em;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: blue;
+  color: white;
+}
+
+input[type=text],
+input[type=password] {
+  font-family: "Roboto";
+  font-size: 16px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   outline: none;
-  font-size: 14px;
-  height: 20px;
+  display: block;
+  margin-bottom: 1em;
+  padding: 0.5em;
+  border-radius: 3px;
+}
+
+h1 {
+  font-size: 96px;
+  font-family: "Open Sans";
+  font-weight: 800;
+}
+
+h2 {
+  font-size: 72px;
+  font-family: "Open Sans";
+  font-weight: 800;
+}
+
+h3 {
+  font-size: 56px;
+  font-family: "Open Sans";
+  font-weight: 800;
+}
+
+h4 {
+  font-size: 40px;
+  font-family: "Open Sans";
+  font-weight: 800;
+}
+
+* {
+  box-sizing: border-box;
 }

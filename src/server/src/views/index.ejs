@@ -3,6 +3,9 @@
   <head>
     <meta charset="utf-8"/>
     <meta name="csrf-token" content="<%= csrfToken %>"/>
+    <script type="text/javascript">
+      var isLoggedIn = <%= isLoggedIn %>;
+    </script>
     <script defer src="bundle.js"></script>
     <link rel="stylesheet" href="main.css">
     <title></title>

@@ -1,0 +1,44 @@
+@use './variables.scss' as v;
+
+h1,h2,h3,h4,h5,h6 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+html, body, #root {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+button {
+    font-size: 20px;
+    padding: .2em .6em;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,.1);
+    background: blue;
+    color: white;
+}
+
+input[type="text"], 
+input[type="password"] {
+    font-family: 'Roboto';
+    font-size: 16px;
+    border: 1px solid rgba(0,0,0,.1);
+    outline: none;
+    display: block;
+    margin-bottom: 1em;
+    padding: .5em;
+    border-radius: 3px;
+}
+
+
+h1 { @include v.display-large; }
+h2 { @include v.display-medium; }
+h3 { @include v.display-small; }
+h4 { @include v.display-xsmall; }
+
+* {
+    box-sizing: border-box;
+}

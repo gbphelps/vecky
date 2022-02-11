@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
-import request from './index';
+import request, { IArgs } from './index';
 import { useSessionContext } from '../common/contexts/sessionContext';
 
 function useApiClient() {
   const { logout } = useSessionContext();
 
-  const wrappedRequest = useCallback((...args) => request(...args)
+  const wrappedRequest = useCallback((...args: IArgs) => request(...args)
     .catch(async (err) => {
       if (err.code === 403) logout();
       throw (err);
