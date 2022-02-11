@@ -28,6 +28,10 @@
   margin-bottom: 24px;
 }
 
+.jKi6CCQqpounGEmzX3z7 {
+  padding-top: 10px;
+}
+
 .rz8qcVWtsezHwFY5bpvu {
   padding: 40px;
   max-height: 100%;
@@ -56,11 +60,12 @@ button {
   font-size: 40px;
   font-size: 20px;
   font-weight: 700;
-  padding: 0.2em 0.6em;
+  padding: 0.2em 0.8em;
   border-radius: 3px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: #171c1c;
   color: white;
+  cursor: pointer;
 }
 
 input[type=text],

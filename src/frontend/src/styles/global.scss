@@ -16,11 +16,12 @@ button {
     @include v.display-xsmall;
     font-size: 20px;
     font-weight: 700;
-    padding: .2em .6em;
+    padding: .2em .8em;
     border-radius: 3px;
     border: 1px solid rgba(0,0,0,.1);
     background: v.$content-primary;
     color: white;
+    cursor: pointer;
 }
 
 input[type="text"], 

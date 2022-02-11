@@ -45,9 +45,12 @@ function Login() {
             name="password"
           />
         </label>
-        <button type="button" onClick={submitForm}>
-          Submit
-        </button>
+
+        <div className={styles['button-panel']}>
+          <button type="button" onClick={submitForm}>
+            Submit
+          </button>
+        </div>
       </div>
     </div>
   );
