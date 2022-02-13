@@ -1,29 +1,30 @@
-import Tool from './tool';
+import { CustomWheelEvent } from './constructedEvents/EventsInterface';
 import ScreenManager from './screenManager';
 import MousePosition from './mousePosition';
+import Tool from './tool';
 
 const ZOOM_INC = 1.001;
 
-class ZoomTool extends Tool {
-  constructor(args: {
-      root: SVGElement,
-      screenManager: ScreenManager,
-      mousePosition: MousePosition
-    }) {
-    super();
-    const { root, screenManager, mousePosition } = args;
+interface Args {
+  screenManager: ScreenManager,
+  mousePosition: MousePosition,
+  root: SVGElement,
+}
 
-    this.addListener({
-      element: root,
-      type: 'wheel',
-      callback: (e) => {
-        e.preventDefault();
-        const zoomAmount = ZOOM_INC ** e.deltaY;
-        const anchor = { x: mousePosition.x, y: mousePosition.y };
-        console.log(anchor);
-        screenManager.zoom(anchor, zoomAmount);
-      },
-    });
+class ZoomTool extends Tool {
+  screenManager: ScreenManager;
+
+  constructor(args: Args) {
+    super(args);
+
+    this.screenManager = args.screenManager;
+  }
+
+  onWheelCallback(e: CustomWheelEvent) {
+    const zoom = ZOOM_INC ** e.wheelVec.y;
+    const anchor = e.pos;
+
+    this.screenManager.zoom(anchor, zoom);
   }
 }
 

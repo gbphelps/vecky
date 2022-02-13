@@ -1,33 +1,46 @@
-interface AddListenerProps<
-Element extends SVGElement,
-Event extends keyof SVGElementEventMap
->{
-    element: Element,
-    type: Event,
-    callback: (event: SVGElementEventMap[Event]) => void
+import EventsInterface, {
+  CustomDragEndEvent,
+  CustomDragStartEvent,
+  CustomDragEvent,
+  CustomWheelEvent,
+  CustomMouseMoveEvent,
+} from './constructedEvents/EventsInterface';
+import ScreenManager from './screenManager';
+import MousePosition from './mousePosition';
+
+interface Args {
+  screenManager: ScreenManager;
+  mousePosition: MousePosition;
+  root: SVGElement;
 }
 
-class Tool {
-  teardownFns: (() => void)[];
+interface Tool {
+  onMouseMove(e: CustomMouseMoveEvent): void
+  onDragStartCallback(e: CustomDragStartEvent): void
+  onDragCallback(e: CustomDragEvent): void
+  onDragEndCallback(e: CustomDragEndEvent): void
+  onWheelCallback(e: CustomWheelEvent): void
+}
 
-  constructor() {
-    this.teardownFns = [];
-  }
+// eslint-disable-next-line no-redeclare
+abstract class Tool {
+  eventsInterface: EventsInterface;
 
-  addListener<
-    Element extends SVGElement,
-    Event extends keyof SVGElementEventMap
-    >(args: AddListenerProps<Element, Event>) {
-    const { element, type, callback } = args;
-
-    this.teardownFns.push(() => {
-      element.removeEventListener(type, callback);
+  constructor({ screenManager, mousePosition, root }: Args) {
+    this.eventsInterface = new EventsInterface({
+      root,
+      screenManager,
+      mousePosition,
+      onDragStartCallback: this.onDragStartCallback,
+      onDragEndCallback: this.onDragEndCallback,
+      onDragCallback: this.onDragCallback,
+      onMouseMoveCallback: this.onMouseMove,
+      onWheelCallback: this.onWheelCallback,
     });
-    element.addEventListener(type, callback);
   }
 
-  destroy() {
-    this.teardownFns.forEach((fn) => fn());
+  onDestroy() {
+    this.eventsInterface.destroy();
   }
 }
 

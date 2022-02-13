@@ -1,20 +1,14 @@
 import { setProps } from './utils';
+import Vec2 from './vec2';
 
 class ScreenManager {
   scale: number;
-
   left: number;
-
   top: number;
-
   height: number;
-
   width: number;
-
   viewportHeight: number;
-
   viewportWidth: number;
-
   svg: SVGElement;
 
   constructor(svg: SVGElement) {
@@ -40,8 +34,6 @@ class ScreenManager {
       this.height = this.scale * this.viewportHeight;
       this.width = this.scale * this.viewportWidth;
 
-      console.log(this.viewportWidth, this.viewportHeight);
-
       setProps(svg, { viewBox: `${this.left} ${this.top} ${this.width} ${this.height}` });
     });
 
@@ -49,7 +41,7 @@ class ScreenManager {
     ro.observe(svg.parentElement);
   }
 
-  zoom(anchor: {x: number, y: number}, amount: number) {
+  zoom(anchor: Vec2, amount: number) {
     this.left = anchor.x + (this.left - anchor.x) * amount;
     this.top = anchor.y + (this.top - anchor.y) * amount;
     this.scale *= amount;

@@ -1,56 +1,44 @@
 import ScreenManager from './screenManager';
-import Tool from './tool';
+import Vec2 from './vec2';
 
-class MousePosition extends Tool {
+class MousePosition {
   screenManager: ScreenManager;
 
-  x: number;
+  root: SVGElement;
 
-  y: number;
-
-  delX: number;
-
-  delY: number;
-
-  prevX: number;
-
-  prevY: number;
+  pos: Vec2;
+  delta: Vec2;
+  prev: Vec2;
 
   constructor(args: { root: SVGElement, screenManager: ScreenManager }) {
-    super();
-
     const { root, screenManager } = args;
 
     this.screenManager = screenManager;
 
-    this.delX = 0;
-    this.delY = 0;
+    this.root = root;
 
-    this.prevX = 0;
-    this.prevY = 0;
+    this.pos = new Vec2();
+    this.delta = new Vec2();
+    this.prev = new Vec2();
 
-    this.x = 0;
-    this.y = 0;
-
-    this.addListener({
-      element: root,
-      type: 'mousemove',
-      callback: this.onMouseMove.bind(this),
-    });
+    root.addEventListener('mousemove', this.onMouseMove);
   }
 
-  onMouseMove(e: MouseEvent) {
+  onMouseMove = (e: MouseEvent) => {
     const { x, y } = e;
+    const newPos = new Vec2(
+      this.screenManager.left + x * this.screenManager.scale,
+      this.screenManager.top + y * this.screenManager.scale,
+    );
 
-    this.prevX = this.x;
-    this.prevY = this.y;
+    this.delta = newPos.minus(this.pos);
+    this.prev = this.pos;
+    this.pos = newPos;
+  };
 
-    this.x = this.screenManager.left + x * this.screenManager.scale;
-    this.y = this.screenManager.top + y * this.screenManager.scale;
-
-    this.delX = this.x - this.prevX;
-    this.delY = this.x - this.prevY;
-  }
+  destroy = () => {
+    this.root.removeEventListener('mousemove', this.onMouseMove);
+  };
 }
 
 export default MousePosition;
