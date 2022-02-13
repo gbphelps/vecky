@@ -49,6 +49,42 @@ type Args = {
     mousePosition: MousePosition;
 }
 
+class DomEventManager {
+  element: Document | SVGElement;
+  teardownFns: (() => void)[];
+
+  constructor(element: Document | SVGElement) {
+    this.element = element;
+    this.teardownFns = [];
+  }
+
+  add<Type extends keyof GlobalEventHandlersEventMap>(
+    type: Type,
+    fn: (a: GlobalEventHandlersEventMap[Type]) => void,
+    options?: AddEventListenerOptions,
+  ) {
+    this.element.addEventListener(
+      type,
+      // @ts-ignore
+      fn,
+      options,
+    );
+    this.teardownFns.push(
+      () => this.element.removeEventListener(
+        type,
+        // @ts-ignore
+        fn,
+        options,
+      ),
+    );
+  }
+
+  destroy() {
+    this.teardownFns.forEach((fn) => fn());
+    this.teardownFns = [];
+  }
+}
+
 class DragEventsInterface implements IListener {
   rootElement: SVGElement;
   selectedElement: SVGElement | null;
@@ -65,6 +101,8 @@ class DragEventsInterface implements IListener {
   dragStartVector: Vec2 | null;
   dragVector: Vec2 | null;
   wasDragged: boolean;
+  rootEvents: DomEventManager;
+  docEvents: DomEventManager;
 
   constructor(args: Args) {
     const {
@@ -95,25 +133,22 @@ class DragEventsInterface implements IListener {
 
     this.wasDragged = false;
 
-    if (onWheelCallback) this.rootElement.addEventListener('wheel', this.onWheel);
-    this.rootElement.addEventListener('mousedown', this.mouseDown);
+    this.rootEvents = new DomEventManager(root);
+    this.docEvents = new DomEventManager(document);
+
+    if (onWheelCallback) this.rootEvents.add('wheel', this.onWheel);
+    this.rootEvents.add('mousedown', this.mouseDown);
 
     // note: this MUST come after the mousedown event.
-    if (onMouseMoveCallback) this.rootElement.addEventListener('mousemove', this.onMouseMove);
+    if (onMouseMoveCallback) this.rootEvents.add('mousemove', this.onMouseMove);
   }
 
   mouseDown = (e: MouseEvent) => {
     this.selectedElement = e.target as SVGElement;
 
-    document.addEventListener('mousemove', this.onDragStart, { once: true });
-    document.addEventListener('mousemove', this.onDrag);
-    document.addEventListener('mouseup', this.onMouseUp, { once: true });
-  };
-
-  destroyDocumentListeners = () => {
-    document.removeEventListener('mousemove', this.onDragStart);
-    document.removeEventListener('mousemove', this.onDrag);
-    document.removeEventListener('mouseup', this.onMouseUp);
+    this.docEvents.add('mousemove', this.onDragStart, { once: true });
+    this.docEvents.add('mousemove', this.onDrag);
+    this.docEvents.add('mouseup', this.onMouseUp, { once: true });
   };
 
   onWheel = (e: WheelEvent) => {
@@ -158,7 +193,7 @@ class DragEventsInterface implements IListener {
     this.wasDragged = false;
     this.dragStartVector = null;
     this.dragVector = null;
-    this.destroyDocumentListeners();
+    this.docEvents.destroy();
   };
 
   onMouseMove = () => {
@@ -189,10 +224,8 @@ class DragEventsInterface implements IListener {
   };
 
   destroy = () => {
-    this.rootElement.removeEventListener('mousemove', this.onMouseMove);
-    this.rootElement.removeEventListener('wheel', this.onWheel);
-    this.rootElement.removeEventListener('mousedown', this.mouseDown);
-    this.destroyDocumentListeners();
+    this.rootEvents.destroy();
+    this.docEvents.destroy();
   };
 }
 

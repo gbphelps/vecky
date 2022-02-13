@@ -30,6 +30,7 @@
         }
       },
     "rules":  {
+        "@typescript-eslint/ban-ts-comment": "off",
         "class-methods-use-this": "off",
         "lines-between-class-members": "off",
         "@typescript-eslint/ban-types": "off",
@@ -62,7 +63,8 @@
       },
       "globals": {
           "__user__": "readonly",
-          "SVGElementEventMap": "readonly",
-          "Constructor": "readonly"
+          "GlobalEventHandlersEventMap": "readonly",
+          "Constructor": "readonly",
+          "AddEventListenerOptions": "readonly"
       }
 }
