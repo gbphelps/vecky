@@ -1,7 +1,16 @@
 import { setProps } from './utils';
 import Vec2 from './vec2';
+import PubSub from './pubSub';
 
-class ScreenManager {
+interface SubArgs {
+    scale: number,
+    left: number,
+    top: number,
+    height: number,
+    width: number,
+}
+
+class ScreenManager extends PubSub<SubArgs> {
   scale: number;
   left: number;
   top: number;
@@ -12,6 +21,8 @@ class ScreenManager {
   svg: SVGElement;
 
   constructor(svg: SVGElement) {
+    super();
+
     this.scale = 1;
 
     this.left = 0;
@@ -34,7 +45,7 @@ class ScreenManager {
       this.height = this.scale * this.viewportHeight;
       this.width = this.scale * this.viewportWidth;
 
-      setProps(svg, { viewBox: `${this.left} ${this.top} ${this.width} ${this.height}` });
+      this.update();
     });
 
     if (!svg.parentElement) throw new Error('No parent');
@@ -47,8 +58,28 @@ class ScreenManager {
     this.scale *= amount;
     this.height *= amount;
     this.width *= amount;
+    this.update();
+  }
 
+  move(delta: Vec2) {
+    this.left += delta.x;
+    this.top += delta.y;
+    this.update();
+  }
+
+  update = () => {
+    this.publish();
     setProps(this.svg, { viewBox: `${this.left} ${this.top} ${this.width} ${this.height}` });
+  };
+
+  publish() {
+    return {
+      scale: this.scale,
+      left: this.left,
+      top: this.top,
+      height: this.height,
+      width: this.width,
+    };
   }
 }
 

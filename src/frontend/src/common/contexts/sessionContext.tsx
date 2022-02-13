@@ -35,7 +35,6 @@ const SessionContext = createContext<ISessionContext>({
 });
 
 const SessionProvider: React.FunctionComponent = ({ children }) => {
-  console.log(__user__);
   const [user, setUser] = useState<User | null>(__user__);
 
   const login = useCallback(async (userForm) => {

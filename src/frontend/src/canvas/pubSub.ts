@@ -1,4 +1,6 @@
-class PubSub<T> {
+abstract class PubSub<T> {
+  abstract publish(): T
+
   value: T | null;
 
   subscriptions: Set<(arg: T) => void>;
@@ -6,6 +8,14 @@ class PubSub<T> {
   constructor() {
     this.subscriptions = new Set();
     this.value = null;
+
+    const publish = this.publish.bind(this);
+
+    this.publish = () => {
+      const value = publish();
+      this.set(value);
+      return value;
+    };
   }
 
   set(value: T) {

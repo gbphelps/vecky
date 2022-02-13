@@ -1,26 +1,18 @@
 import { CustomWheelEvent } from './constructedEvents/EventsInterface';
 import ScreenManager from './screenManager';
-import MousePosition from './mousePosition';
-import Tool from './tool';
+import Tool, { IToolArgs } from './tool';
 
 const ZOOM_INC = 1.001;
-
-interface Args {
-  screenManager: ScreenManager,
-  mousePosition: MousePosition,
-  root: SVGElement,
-}
 
 class ZoomTool extends Tool {
   screenManager: ScreenManager;
 
-  constructor(args: Args) {
+  constructor(args: IToolArgs) {
     super(args);
-
     this.screenManager = args.screenManager;
   }
 
-  onWheelCallback(e: CustomWheelEvent) {
+  onWheel(e: CustomWheelEvent) {
     const zoom = ZOOM_INC ** e.wheelVec.y;
     const anchor = e.pos;
 

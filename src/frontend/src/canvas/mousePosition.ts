@@ -9,6 +9,7 @@ class MousePosition {
   pos: Vec2;
   delta: Vec2;
   prev: Vec2;
+  rawPos: Vec2;
 
   constructor(args: { root: SVGElement, screenManager: ScreenManager }) {
     const { root, screenManager } = args;
@@ -20,15 +21,23 @@ class MousePosition {
     this.pos = new Vec2();
     this.delta = new Vec2();
     this.prev = new Vec2();
+    this.rawPos = new Vec2();
+
+    this.screenManager.subscribe(this.update);
 
     root.addEventListener('mousemove', this.onMouseMove);
   }
 
   onMouseMove = (e: MouseEvent) => {
     const { x, y } = e;
+    this.rawPos = new Vec2(x, y);
+    this.update();
+  };
+
+  update = () => {
     const newPos = new Vec2(
-      this.screenManager.left + x * this.screenManager.scale,
-      this.screenManager.top + y * this.screenManager.scale,
+      this.screenManager.left + this.rawPos.x * this.screenManager.scale,
+      this.screenManager.top + this.rawPos.y * this.screenManager.scale,
     );
 
     this.delta = newPos.minus(this.pos);
