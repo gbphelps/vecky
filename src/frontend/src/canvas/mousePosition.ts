@@ -1,9 +1,10 @@
 import ScreenManager from './screenManager';
 import Vec2 from './vec2';
+import EventManager from './constructedEvents/EventManager';
 
 class MousePosition {
   screenManager: ScreenManager;
-
+  events: EventManager;
   root: SVGElement;
 
   pos: Vec2;
@@ -24,13 +25,12 @@ class MousePosition {
     this.rawPos = new Vec2();
 
     this.screenManager.subscribe(this.update);
-
-    root.addEventListener('mousemove', this.onMouseMove);
+    this.events = new EventManager(root);
+    this.events.add('mousemove', this.onMouseMove);
   }
 
   onMouseMove = (e: MouseEvent) => {
-    const { x, y } = e;
-    this.rawPos = new Vec2(x, y);
+    this.rawPos = new Vec2(e.offsetX, e.offsetY);
     this.update();
   };
 
@@ -46,7 +46,8 @@ class MousePosition {
   };
 
   destroy = () => {
-    this.root.removeEventListener('mousemove', this.onMouseMove);
+    this.events.destroy();
+    this.screenManager.unsubscribe(this.update);
   };
 }
 

@@ -4,9 +4,9 @@ import EventsInterface, {
   CustomDragEvent,
   CustomWheelEvent,
   CustomMouseMoveEvent,
-} from './constructedEvents/EventsInterface';
-import ScreenManager from './screenManager';
-import MousePosition from './mousePosition';
+} from '../constructedEvents/EventsInterface';
+import ScreenManager from '../screenManager';
+import MousePosition from '../mousePosition';
 
 interface IToolArgs {
   screenManager: ScreenManager;

@@ -19,9 +19,12 @@ class ScreenManager extends PubSub<SubArgs> {
   viewportHeight: number;
   viewportWidth: number;
   svg: SVGElement;
+  ro: ResizeObserver;
 
   constructor(svg: SVGElement) {
     super();
+
+    if (!svg.parentElement) throw new Error('No parent');
 
     this.scale = 1;
 
@@ -36,7 +39,7 @@ class ScreenManager extends PubSub<SubArgs> {
 
     this.svg = svg;
 
-    const ro = new ResizeObserver(([entry]) => {
+    this.ro = new ResizeObserver(([entry]) => {
       const { height, width } = entry.contentRect;
 
       this.viewportHeight = height;
@@ -48,8 +51,7 @@ class ScreenManager extends PubSub<SubArgs> {
       this.update();
     });
 
-    if (!svg.parentElement) throw new Error('No parent');
-    ro.observe(svg.parentElement);
+    this.ro.observe(svg.parentElement);
   }
 
   zoom(anchor: Vec2, amount: number) {
@@ -80,6 +82,10 @@ class ScreenManager extends PubSub<SubArgs> {
       height: this.height,
       width: this.width,
     };
+  }
+
+  destroy() {
+    this.ro.disconnect();
   }
 }
 

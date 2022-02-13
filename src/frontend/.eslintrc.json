@@ -30,6 +30,9 @@
         }
       },
     "rules":  {
+        "no-underscore-dangle": "off",
+        "no-plusplus": "off",
+        "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/ban-ts-comment": "off",
         "class-methods-use-this": "off",
         "lines-between-class-members": "off",
@@ -39,6 +42,7 @@
         "react/function-component-definition": "off",
         "react/jsx-uses-react": "off",
         "react/react-in-jsx-scope": "off",
+        "consistent-return": "off",
         "react/jsx-filename-extension": [
             2, 
             { 

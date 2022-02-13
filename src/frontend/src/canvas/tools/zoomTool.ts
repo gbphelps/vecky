@@ -1,5 +1,5 @@
-import { CustomWheelEvent } from './constructedEvents/EventsInterface';
-import ScreenManager from './screenManager';
+import { CustomWheelEvent } from '../constructedEvents/EventsInterface';
+import ScreenManager from '../screenManager';
 import Tool, { IToolArgs } from './tool';
 
 const ZOOM_INC = 1.001;

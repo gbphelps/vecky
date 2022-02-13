@@ -1,8 +1,8 @@
 import { create } from './utils';
-import ZoomTool from './zoomTool';
+import ZoomTool from './tools/zoomTool';
 import ScreenManager from './screenManager';
 import MousePosition from './mousePosition';
-import DragScreenTool from './dragScreenTool';
+import DragScreenTool from './tools/dragScreenTool';
 
 function initCanvas(root: HTMLDivElement) {
   const svg = create('svg', {
@@ -26,6 +26,15 @@ function initCanvas(root: HTMLDivElement) {
 
   const zoomTool = new ZoomTool({ root: svg, screenManager, mousePosition });
   const dragScreenTool = new DragScreenTool({ root: svg, screenManager, mousePosition });
+
+  return {
+    destroy: () => {
+      screenManager.destroy();
+      mousePosition.destroy();
+      zoomTool.destroy();
+      dragScreenTool.destroy();
+    },
+  };
 }
 
 export default initCanvas;

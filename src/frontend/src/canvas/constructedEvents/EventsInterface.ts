@@ -2,6 +2,7 @@ import { IListener } from './types';
 import ScreenManager from '../screenManager';
 import MousePosition from '../mousePosition';
 import Vec2 from '../vec2';
+import EventManager from './EventManager';
 
 interface CustomDragStartEvent {
   dragStart: Vec2,
@@ -49,42 +50,6 @@ type Args = {
     mousePosition: MousePosition;
 }
 
-class DomEventManager {
-  element: Document | SVGElement;
-  teardownFns: (() => void)[];
-
-  constructor(element: Document | SVGElement) {
-    this.element = element;
-    this.teardownFns = [];
-  }
-
-  add<Type extends keyof GlobalEventHandlersEventMap>(
-    type: Type,
-    fn: (a: GlobalEventHandlersEventMap[Type]) => void,
-    options?: AddEventListenerOptions,
-  ) {
-    this.element.addEventListener(
-      type,
-      // @ts-ignore
-      fn,
-      options,
-    );
-    this.teardownFns.push(
-      () => this.element.removeEventListener(
-        type,
-        // @ts-ignore
-        fn,
-        options,
-      ),
-    );
-  }
-
-  destroy() {
-    this.teardownFns.forEach((fn) => fn());
-    this.teardownFns = [];
-  }
-}
-
 class DragEventsInterface implements IListener {
   rootElement: SVGElement;
   selectedElement: SVGElement | null;
@@ -101,8 +66,8 @@ class DragEventsInterface implements IListener {
   dragStartVector: Vec2 | null;
   dragVector: Vec2 | null;
   wasDragged: boolean;
-  rootEvents: DomEventManager;
-  docEvents: DomEventManager;
+  rootEvents: EventManager;
+  docEvents: EventManager;
 
   constructor(args: Args) {
     const {
@@ -133,8 +98,8 @@ class DragEventsInterface implements IListener {
 
     this.wasDragged = false;
 
-    this.rootEvents = new DomEventManager(root);
-    this.docEvents = new DomEventManager(document);
+    this.rootEvents = new EventManager(root);
+    this.docEvents = new EventManager(document);
 
     if (onWheelCallback) this.rootEvents.add('wheel', this.onWheel);
     this.rootEvents.add('mousedown', this.mouseDown);
