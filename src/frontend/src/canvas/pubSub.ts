@@ -13,14 +13,10 @@ abstract class PubSub<T> {
 
     this.publish = () => {
       const value = publish();
-      this.set(value);
+      this.value = value;
+      this.subscriptions.forEach((fn) => fn(value));
       return value;
     };
-  }
-
-  set(value: T) {
-    this.value = value;
-    this.subscriptions.forEach((fn) => fn(value));
   }
 
   subscribe(fn: (arg: T) => void) {

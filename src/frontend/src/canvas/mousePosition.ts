@@ -1,6 +1,6 @@
 import ScreenManager from './screenManager';
 import Vec2 from './vec2';
-import EventManager from './constructedEvents/EventManager';
+import EventManager from './events/EventManager';
 
 class MousePosition {
   screenManager: ScreenManager;

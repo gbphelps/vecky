@@ -24,6 +24,7 @@ interface CustomDragEvent {
   dragStart: Vec2,
   dragVector: Vec2,
   dragDeltaVector: Vec2,
+  pos: Vec2,
   element: SVGElement,
 }
 
@@ -33,11 +34,22 @@ interface CustomMouseMoveEvent {
     prev: Vec2
 }
 
+interface CustomMouseDownEvent {
+  element: SVGElement | null,
+  pos: Vec2
+}
+
+interface CustomMouseUpEvent {
+  pos: Vec2
+}
+
 type OnDragEndCallback = (args: CustomDragEndEvent) => void;
 type OnDragCallback = (args: CustomDragEvent) => void;
 type OnMouseMoveCallback = (args: CustomMouseMoveEvent) => void;
 type OnWheelCallback = (ev: CustomWheelEvent) => void;
 type OnDragStartCallback = (args: CustomDragStartEvent) => void;
+type OnMouseDownCallback = (args: CustomMouseDownEvent) => void;
+type OnMouseUpCallback = (args: CustomMouseUpEvent) => void;
 
 type Args = {
     root: SVGElement;
@@ -46,6 +58,8 @@ type Args = {
     onDragCallback?: OnDragCallback;
     onMouseMoveCallback?: OnMouseMoveCallback;
     onWheelCallback?: OnWheelCallback;
+    onMouseDownCallback?: OnMouseDownCallback;
+    onMouseUpCallback?: OnMouseUpCallback;
     screenManager: ScreenManager;
     mousePosition: MousePosition;
 }
@@ -59,6 +73,8 @@ class DragEventsInterface implements IListener {
   onDragCallback?: OnDragCallback;
   onMouseMoveCallback?: OnMouseMoveCallback;
   onWheelCallback?: OnWheelCallback;
+  onMouseDownCallback?: OnMouseDownCallback;
+  onMouseUpCallback?: OnMouseUpCallback;
 
   screenManager: ScreenManager;
   mousePosition: MousePosition;
@@ -76,6 +92,8 @@ class DragEventsInterface implements IListener {
       onDragEndCallback,
       onDragCallback,
       onWheelCallback,
+      onMouseDownCallback,
+      onMouseUpCallback,
       screenManager,
       mousePosition,
       root,
@@ -93,6 +111,8 @@ class DragEventsInterface implements IListener {
     this.onDragCallback = onDragCallback;
     this.onMouseMoveCallback = onMouseMoveCallback;
     this.onWheelCallback = onWheelCallback;
+    this.onMouseDownCallback = onMouseDownCallback;
+    this.onMouseUpCallback = onMouseUpCallback;
 
     this.selectedElement = null;
 
@@ -109,6 +129,14 @@ class DragEventsInterface implements IListener {
   }
 
   mouseDown = (e: MouseEvent) => {
+    if (this.onMouseDownCallback) {
+      this.onMouseDownCallback({
+        pos: this.mousePosition.pos,
+        // TODO implement me!!!
+        element: null,
+      });
+    }
+
     this.selectedElement = e.target as SVGElement;
 
     this.docEvents.add('mousemove', this.onDragStart, { once: true });
@@ -141,16 +169,24 @@ class DragEventsInterface implements IListener {
   };
 
   onMouseUp = () => {
-    if (!this.dragStartVector) throw new Error();
-    if (!this.dragVector) throw new Error();
-    if (!this.selectedElement) throw new Error();
-
-    if (this.wasDragged && this.onDragEndCallback) {
+    if (
+      this.dragStartVector
+      && this.dragVector
+      && this.selectedElement
+      && this.wasDragged
+      && this.onDragEndCallback
+    ) {
       this.onDragEndCallback({
         dragStart: this.dragStartVector,
         dragVector: this.dragVector,
         dragEnd: this.mousePosition.pos,
         element: this.selectedElement,
+      });
+    }
+
+    if (this.onMouseUpCallback) {
+      this.onMouseUpCallback({
+        pos: this.mousePosition.pos,
       });
     }
 
@@ -185,6 +221,7 @@ class DragEventsInterface implements IListener {
       dragVector: this.dragVector,
       dragDeltaVector: this.mousePosition.delta,
       element: this.selectedElement,
+      pos: this.mousePosition.pos,
     });
   };
 
@@ -208,4 +245,6 @@ export type {
   CustomDragEvent,
   CustomDragStartEvent,
   CustomMouseMoveEvent,
+  CustomMouseDownEvent,
+  CustomMouseUpEvent,
 };

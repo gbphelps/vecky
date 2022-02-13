@@ -1,4 +1,4 @@
-import { CustomWheelEvent } from '../constructedEvents/EventsInterface';
+import { CustomWheelEvent } from '../events/EventsInterface';
 import ScreenManager from '../screenManager';
 import Tool, { IToolArgs } from './tool';
 
@@ -18,6 +18,8 @@ class ZoomTool extends Tool {
 
     this.screenManager.zoom(anchor, zoom);
   }
+
+  destroy() {}
 }
 
 export default ZoomTool;

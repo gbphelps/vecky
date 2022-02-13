@@ -2,7 +2,7 @@ import { setProps } from './utils';
 import Vec2 from './vec2';
 import PubSub from './pubSub';
 
-interface SubArgs {
+interface ScreenManagerEvent {
     scale: number,
     left: number,
     top: number,
@@ -10,7 +10,7 @@ interface SubArgs {
     width: number,
 }
 
-class ScreenManager extends PubSub<SubArgs> {
+class ScreenManager extends PubSub<ScreenManagerEvent> {
   scale: number;
   left: number;
   top: number;
@@ -18,7 +18,6 @@ class ScreenManager extends PubSub<SubArgs> {
   width: number;
   viewportHeight: number;
   viewportWidth: number;
-  svg: SVGElement;
   ro: ResizeObserver;
 
   constructor(svg: SVGElement) {
@@ -37,7 +36,14 @@ class ScreenManager extends PubSub<SubArgs> {
     this.viewportHeight = 0;
     this.viewportWidth = 0;
 
-    this.svg = svg;
+    this.subscribe(({
+      left,
+      top,
+      height,
+      width,
+    }) => {
+      setProps(svg, { viewBox: `${left} ${top} ${width} ${height}` });
+    });
 
     this.ro = new ResizeObserver(([entry]) => {
       const { height, width } = entry.contentRect;
@@ -48,7 +54,7 @@ class ScreenManager extends PubSub<SubArgs> {
       this.height = this.scale * this.viewportHeight;
       this.width = this.scale * this.viewportWidth;
 
-      this.update();
+      this.publish();
     });
 
     this.ro.observe(svg.parentElement);
@@ -60,19 +66,14 @@ class ScreenManager extends PubSub<SubArgs> {
     this.scale *= amount;
     this.height *= amount;
     this.width *= amount;
-    this.update();
+    this.publish();
   }
 
   move(delta: Vec2) {
     this.left += delta.x;
     this.top += delta.y;
-    this.update();
-  }
-
-  update = () => {
     this.publish();
-    setProps(this.svg, { viewBox: `${this.left} ${this.top} ${this.width} ${this.height}` });
-  };
+  }
 
   publish() {
     return {

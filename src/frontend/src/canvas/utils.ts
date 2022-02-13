@@ -13,7 +13,7 @@ function setProps<T extends SVGElement>(el: SVGElement, props: SVGAttributes<T>)
 function create<T extends SVGElement>(type: string, props?: SVGAttributes<T>) {
   const el = document.createElementNS('http://www.w3.org/2000/svg', type);
   setProps(el, props ?? {});
-  return el;
+  return (el as T);
 }
 
 export { setProps, create };

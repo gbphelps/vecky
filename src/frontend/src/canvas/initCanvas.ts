@@ -3,6 +3,7 @@ import ZoomTool from './tools/zoomTool';
 import ScreenManager from './screenManager';
 import MousePosition from './mousePosition';
 import DragScreenTool from './tools/dragScreenTool';
+import PenTool from './tools/pen';
 
 function initCanvas(root: HTMLDivElement) {
   const svg = create('svg', {
@@ -25,14 +26,16 @@ function initCanvas(root: HTMLDivElement) {
   const mousePosition = new MousePosition({ screenManager, root: svg });
 
   const zoomTool = new ZoomTool({ root: svg, screenManager, mousePosition });
-  const dragScreenTool = new DragScreenTool({ root: svg, screenManager, mousePosition });
+  // const dragScreenTool = new DragScreenTool({ root: svg, screenManager, mousePosition });
+
+  const penTool = new PenTool({ root: svg, screenManager, mousePosition });
 
   return {
     destroy: () => {
       screenManager.destroy();
       mousePosition.destroy();
       zoomTool.destroy();
-      dragScreenTool.destroy();
+      // dragScreenTool.destroy();
     },
   };
 }

@@ -4,7 +4,9 @@ import EventsInterface, {
   CustomDragEvent,
   CustomWheelEvent,
   CustomMouseMoveEvent,
-} from '../constructedEvents/EventsInterface';
+  CustomMouseDownEvent,
+  CustomMouseUpEvent,
+} from '../events/EventsInterface';
 import ScreenManager from '../screenManager';
 import MousePosition from '../mousePosition';
 
@@ -20,10 +22,14 @@ interface Tool {
   onDrag(e: CustomDragEvent): void
   onDragEnd(e: CustomDragEndEvent): void
   onWheel(e: CustomWheelEvent): void
+  onMouseDown(e: CustomMouseDownEvent): void
+  onMouseUp(e: CustomMouseUpEvent): void
 }
 
 // eslint-disable-next-line no-redeclare
 abstract class Tool {
+  abstract destroy(): void;
+
   eventsInterface: EventsInterface;
 
   constructor({ screenManager, mousePosition, root }: IToolArgs) {
@@ -31,11 +37,13 @@ abstract class Tool {
       root,
       screenManager,
       mousePosition,
-      onDragStartCallback: this.onDragStart,
-      onDragEndCallback: this.onDragEnd,
-      onDragCallback: this.onDrag,
-      onMouseMoveCallback: this.onMouseMove,
-      onWheelCallback: this.onWheel,
+      onDragStartCallback: this.onDragStart?.bind(this),
+      onDragEndCallback: this.onDragEnd?.bind(this),
+      onDragCallback: this.onDrag?.bind(this),
+      onMouseMoveCallback: this.onMouseMove?.bind(this),
+      onWheelCallback: this.onWheel?.bind(this),
+      onMouseDownCallback: this.onMouseDown?.bind(this),
+      onMouseUpCallback: this.onMouseUp?.bind(this),
     });
   }
 

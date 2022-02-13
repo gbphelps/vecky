@@ -1,5 +1,5 @@
 import Tool, { IToolArgs } from './tool';
-import { CustomDragEvent } from '../constructedEvents/EventsInterface';
+import { CustomDragEvent } from '../events/EventsInterface';
 import ScreenManager from '../screenManager';
 import MousePosition from '../mousePosition';
 
