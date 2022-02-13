@@ -30,6 +30,8 @@
         }
       },
     "rules":  {
+        "@typescript-eslint/ban-types": "off",
+        "max-classes-per-file": "off",
         "no-unused-vars": "off",
         "react/function-component-definition": "off",
         "react/jsx-uses-react": "off",
@@ -57,6 +59,8 @@
          ]
       },
       "globals": {
-          "__user__": "readonly"
+          "__user__": "readonly",
+          "SVGElementEventMap": "readonly",
+          "Constructor": "readonly"
       }
 }

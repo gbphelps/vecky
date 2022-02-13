@@ -3,7 +3,9 @@ import { useSessionContext } from '../../common/contexts/sessionContext';
 
 function Login() {
   const { login } = useSessionContext();
-  return <AuthComponent title="Sign in" onSubmit={login} />;
+  return (
+    <AuthComponent title="Sign in" onSubmit={login} />
+  );
 }
 
 export default Login;

@@ -8,3 +8,5 @@ declare let __user__: {
     username: string,
     id: string
 };
+
+declare type Constructor = new (...args: any[]) => {};
