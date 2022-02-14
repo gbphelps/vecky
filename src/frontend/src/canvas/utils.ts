@@ -16,4 +16,32 @@ function create<T extends SVGElement>(type: string, props?: SVGAttributes<T>) {
   return (el as T);
 }
 
-export { setProps, create };
+interface DoubleLinkedList<T> {
+  next: DoubleLinkedList<T> | null,
+  prev: DoubleLinkedList<T> | null,
+  value: T
+}
+
+function reverseDoubleLinkedList<T>(ll: DoubleLinkedList<T>, transform?: (a: T) => T) {
+  let node: DoubleLinkedList<T> | null = ll;
+  while (node.next) node = node.next;
+
+  while (node) {
+    const nxt: DoubleLinkedList<T> | null = node.next;
+    const prv: DoubleLinkedList<T> | null = node.prev;
+
+    if (transform) node.value = transform(node.value);
+
+    if (nxt) nxt.next = node;
+    node.prev = nxt;
+
+    node = prv;
+  }
+
+  // eslint-disable-next-line no-param-reassign
+  ll.next = null;
+  return ll;
+}
+
+export { setProps, create, reverseDoubleLinkedList };
+export type { DoubleLinkedList };

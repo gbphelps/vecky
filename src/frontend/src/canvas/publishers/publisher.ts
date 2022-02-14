@@ -1,9 +1,9 @@
-abstract class PubSub<T> {
+abstract class Publisher<T> {
   abstract publish(): T
 
   value: T | null;
 
-  subscriptions: Set<(arg: T) => void>;
+  private subscriptions: Set<(arg: T) => void>;
 
   constructor() {
     this.subscriptions = new Set();
@@ -28,4 +28,4 @@ abstract class PubSub<T> {
   }
 }
 
-export default PubSub;
+export default Publisher;

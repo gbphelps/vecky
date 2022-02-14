@@ -1,6 +1,6 @@
 import { setProps } from './utils';
 import Vec2 from './vec2';
-import PubSub from './pubSub';
+import Publisher from './publishers/publisher';
 
 interface ScreenManagerEvent {
     scale: number,
@@ -10,7 +10,7 @@ interface ScreenManagerEvent {
     width: number,
 }
 
-class ScreenManager extends PubSub<ScreenManagerEvent> {
+class ScreenManager extends Publisher<ScreenManagerEvent> {
   scale: number;
   left: number;
   top: number;
