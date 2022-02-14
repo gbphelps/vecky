@@ -2,10 +2,10 @@ import Tool, { IToolArgs } from '../tool';
 import {
   CustomMouseDownEvent, CustomMouseMoveEvent, CustomMouseUpEvent,
 } from '../../events/EventsInterface';
-import Point from './point';
+import { PointListItem } from './point';
 
 class PenTool extends Tool {
-  activeNode: Point | null;
+  activeNode: PointListItem | null;
   root: SVGElement;
 
   constructor(args: IToolArgs) {
@@ -21,13 +21,13 @@ class PenTool extends Tool {
 
   onMouseDown(e: CustomMouseDownEvent) {
     if (!this.activeNode && !e.element) {
-      this.activeNode = new Point({ root: this.root });
+      this.activeNode = new PointListItem({ root: this.root });
       this.activeNode.pos.set(e.pos);
     }
   }
 
   onMouseUp(e: CustomMouseUpEvent) {
-    this.activeNode = new Point({ root: this.root });
+    this.activeNode = new PointListItem({ root: this.root });
     this.activeNode.pos.set(e.pos);
   }
 

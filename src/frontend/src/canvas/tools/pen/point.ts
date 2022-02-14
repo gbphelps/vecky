@@ -1,21 +1,36 @@
 import Position from '../../publishers/position';
-import { setProps, create } from '../../utils';
+import { setProps, create, DoubleLinkedList } from '../../utils';
+import Vec2 from '../../vec2';
+
+interface PointArgs {
+    root: SVGElement;
+}
 
 class Point {
   pos: Position;
   element: SVGElement;
   isActive: boolean;
 
-  constructor(args: {root: SVGElement}) {
+  constructor(args: PointArgs) {
     const { root } = args;
 
     this.pos = new Position();
+
     this.element = this.createElement();
+    this.pos.subscribe(this.update);
     root.appendChild(this.element);
 
     this.isActive = true;
     this.setIsActive(true);
   }
+
+  setPosition(pos: Vec2) {
+    this.pos.set(pos);
+  }
+
+  update = (pos: Vec2) => {
+    setProps(this.element, { transform: `translate(${pos.x} ${pos.y})` });
+  };
 
   setIsActive(value: boolean) {
     this.isActive = value;
@@ -35,13 +50,23 @@ class Point {
     });
 
     g.appendChild(circle);
-
-    this.pos.subscribe((pos) => {
-      setProps(g, { transform: `translate(${pos.x} ${pos.y})` });
-    });
-
     return g;
+  }
+
+  destroy() {
+    this.pos.unsubscribe(this.update);
   }
 }
 
-export default Point;
+class PointListItem extends Point implements DoubleLinkedList<Point> {
+  next: DoubleLinkedList<Point> | null;
+  prev: DoubleLinkedList<Point> | null;
+
+  constructor(args: PointArgs) {
+    super(args);
+    this.next = null;
+    this.prev = null;
+  }
+}
+
+export { Point, PointListItem };

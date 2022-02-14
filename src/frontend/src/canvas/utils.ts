@@ -19,10 +19,12 @@ function create<T extends SVGElement>(type: string, props?: SVGAttributes<T>) {
 interface DoubleLinkedList<T> {
   next: DoubleLinkedList<T> | null,
   prev: DoubleLinkedList<T> | null,
-  value: T
 }
 
-function reverseDoubleLinkedList<T>(ll: DoubleLinkedList<T>, transform?: (a: T) => T) {
+function reverseDoubleLinkedList<T>(
+  ll: DoubleLinkedList<T>,
+  transform?: (a: DoubleLinkedList<T>) => void,
+) {
   let node: DoubleLinkedList<T> | null = ll;
   while (node.next) node = node.next;
 
@@ -30,7 +32,7 @@ function reverseDoubleLinkedList<T>(ll: DoubleLinkedList<T>, transform?: (a: T) 
     const nxt: DoubleLinkedList<T> | null = node.next;
     const prv: DoubleLinkedList<T> | null = node.prev;
 
-    if (transform) node.value = transform(node.value);
+    if (transform) transform(node);
 
     if (nxt) nxt.next = node;
     node.prev = nxt;
