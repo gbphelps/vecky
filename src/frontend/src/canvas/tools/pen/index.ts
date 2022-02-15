@@ -5,7 +5,7 @@ import {
   CustomMouseUpEvent,
   CustomDragEvent,
 } from '../../events/EventsInterface';
-import { PointListItem } from './point';
+import { PointListItem } from '../../entities/pointListItem';
 
 class PenTool extends Tool {
   activeNode: PointListItem | null;

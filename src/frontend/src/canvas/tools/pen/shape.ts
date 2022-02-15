@@ -1,5 +1,5 @@
 import { create, setProps } from '../../utils';
-import { PointListItem } from './point';
+import { PointListItem } from '../../entities/pointListItem';
 import Vec2 from '../../vec2';
 
 const COMMAND_LOOKUP: Record<number, string> = {
