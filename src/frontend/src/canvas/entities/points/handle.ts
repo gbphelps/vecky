@@ -21,11 +21,6 @@ class Handle extends Point implements IHandle {
     return create('line');
   }
 
-  setPosition(pos: Vec2) {
-    super.setPosition(pos);
-    this.update();
-  }
-
   protected update() {
     super.update();
     setProps(this.connector, {
@@ -36,6 +31,11 @@ class Handle extends Point implements IHandle {
       stroke: 'black',
       strokeWidth: 5,
     });
+  }
+
+  setPosition(pos: Vec2) {
+    super.setPosition(pos);
+    this.update();
   }
 }
 

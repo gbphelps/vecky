@@ -20,6 +20,22 @@ class Point {
     this.setIsActive(true);
   }
 
+  private createElement() {
+    const g = create('g');
+    const circle = create('circle', {
+      cx: 0,
+      cy: 0,
+      r: '.5%',
+    });
+
+    g.appendChild(circle);
+    return g;
+  }
+
+  protected update() {
+    setProps(this.element, { transform: `translate(${this._pos.x} ${this._pos.y})` });
+  }
+
   get pos() {
     return this._pos.clone();
   }
@@ -37,10 +53,6 @@ class Point {
     this.update();
   }
 
-  protected update() {
-    setProps(this.element, { transform: `translate(${this._pos.x} ${this._pos.y})` });
-  }
-
   setIsActive(value: boolean) {
     this.isActive = value;
     setProps(this.element, {
@@ -48,18 +60,6 @@ class Point {
         pointerEvents: value ? 'none' : 'auto',
       },
     });
-  }
-
-  createElement() {
-    const g = create('g');
-    const circle = create('circle', {
-      cx: 0,
-      cy: 0,
-      r: '.5%',
-    });
-
-    g.appendChild(circle);
-    return g;
   }
 }
 
