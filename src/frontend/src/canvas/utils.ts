@@ -10,10 +10,18 @@ function setProps<T extends SVGElement>(el: SVGElement, props: SVGAttributes<T>)
   });
 }
 
-function create<T extends SVGElement>(type: string, props?: SVGAttributes<T>) {
+interface TypeMap {
+  path: SVGPathElement,
+  svg: SVGSVGElement,
+  circle: SVGCircleElement,
+  line: SVGLineElement,
+  g: SVGGElement
+}
+
+function create<T extends keyof TypeMap>(type: T, props?: SVGAttributes<TypeMap[T]>) {
   const el = document.createElementNS('http://www.w3.org/2000/svg', type);
   setProps(el, props ?? {});
-  return (el as T);
+  return el;
 }
 
 interface DoubleLinkedList<T> {

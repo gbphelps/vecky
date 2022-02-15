@@ -14,7 +14,7 @@ function initCanvas(root: HTMLDivElement) {
   });
   root.appendChild(svg);
 
-  const circle = create<SVGCircleElement>('circle', {
+  const circle = create('circle', {
     cx: '200',
     cy: '200',
     r: '20',

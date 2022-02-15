@@ -6,6 +6,9 @@ class Vec2 {
     this.x = x ?? 0;
     this.y = y ?? 0;
   }
+  clone(): Vec2 {
+    return new Vec2(this.x, this.y);
+  }
 
   minus(other: Vec2) {
     return new Vec2(this.x - other.x, this.y - other.y);
