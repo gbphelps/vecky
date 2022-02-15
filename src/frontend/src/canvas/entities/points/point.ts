@@ -37,7 +37,7 @@ class Point {
     this.update();
   }
 
-  update() {
+  protected update() {
     setProps(this.element, { transform: `translate(${this._pos.x} ${this._pos.y})` });
   }
 
@@ -63,4 +63,4 @@ class Point {
   }
 }
 
-export { Point };
+export default Point;

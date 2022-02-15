@@ -1,4 +1,4 @@
-import { Anchor } from './points/handle';
+import Anchor from './points/anchor';
 import { DoubleLinkedList } from '../utils';
 import Shape from '../tools/pen/shape';
 import { PointArgs } from './points/types';
