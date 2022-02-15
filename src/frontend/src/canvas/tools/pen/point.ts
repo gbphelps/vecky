@@ -6,6 +6,11 @@ interface PointArgs {
     root: SVGElement;
 }
 
+const HANDLE_KEY: Record<'next' | 'prev', '_next' | '_prev'> = {
+  next: '_next',
+  prev: '_prev',
+};
+
 class Point {
   private _pos: Vec2;
   private element: SVGElement;
@@ -68,36 +73,47 @@ class Point {
 }
 
 class Handles {
-  prev: Handle | null;
-  next: Handle | null;
-  root: SVGElement;
-  anchor: Anchor;
-  isMirrored: boolean;
+  private _prev: Handle | null;
+  private _next: Handle | null;
+
+  private root: SVGElement;
+  private anchor: Anchor;
+  private isMirrored: boolean;
 
   constructor(args: {anchor: Anchor, root: SVGElement}) {
     const { anchor, root } = args;
 
     this.anchor = anchor;
     this.root = root;
-    this.prev = null;
-    this.next = null;
+    this._prev = null;
+    this._next = null;
     this.isMirrored = true;
   }
 
+  get prevHandlePos() {
+    return this._prev?.pos;
+  }
+
+  get nextHandlePos() {
+    return this._next?.pos;
+  }
+
   setHandlePos(handle: 'prev' | 'next', pos: Vec2) {
-    const h = this[handle] || new Handle({
+    const handleKey = HANDLE_KEY[handle];
+
+    const h = this[handleKey] || new Handle({
       anchor: this.anchor,
       root: this.root,
     });
 
     h.setPosition(pos);
-    this[handle] = h;
+    this[handleKey] = h;
 
     if (!this.isMirrored) return;
 
-    const otherHandle = handle === 'prev' ? 'next' : 'prev';
+    const otherKey = handle === 'prev' ? '_next' : '_prev';
 
-    const h2 = this[otherHandle] || new Handle({
+    const h2 = this[otherKey] || new Handle({
       anchor: this.anchor,
       root: this.root,
     });
@@ -108,7 +124,7 @@ class Handles {
       .plus(this.anchor.pos);
 
     h2.setPosition(pos2);
-    this[otherHandle] = h2;
+    this[otherKey] = h2;
   }
 }
 
@@ -123,10 +139,10 @@ class Anchor extends Point {
     });
   }
 
-  get handles() {
+  get handlePositions() {
     return {
-      prev: this._handles.prev,
-      next: this._handles.next,
+      prev: this._handles.prevHandlePos,
+      next: this._handles.nextHandlePos,
     };
   }
 }

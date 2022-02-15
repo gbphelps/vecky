@@ -1,5 +1,6 @@
 import { create, setProps } from '../../utils';
-import { PointListItem, Point } from './point';
+import { PointListItem } from './point';
+import Vec2 from '../../vec2';
 
 const COMMAND_LOOKUP: Record<number, string> = {
   1: 'L',
@@ -26,20 +27,20 @@ class Shape {
 
     let node: PointListItem | null = this.head;
     while (node) {
-      const controlPoints: Point[] = [];
+      const controlPoints: Vec2[] = [];
 
-      const handle1 = node.handles.next;
-      const handle2 = node.next?.handles.prev;
-      const nxt: PointListItem | null = node.next;
+      const handle1 = node.handlePositions.next;
+      const handle2 = node.next?.handlePositions.prev;
+      const endpoint: Vec2 | undefined = node.next?.pos;
 
-      [handle1, handle2, nxt].forEach((p) => {
+      [handle1, handle2, endpoint].forEach((p) => {
         if (p) controlPoints.push(p);
       });
 
       const command = COMMAND_LOOKUP[controlPoints.length];
 
       d.push(`${command} ${controlPoints.map((p) => `${p.x} ${p.y}`).join(' ')}`);
-      node = nxt;
+      node = node.next;
     }
 
     setProps(this.element, { d: d.join(' ') });
