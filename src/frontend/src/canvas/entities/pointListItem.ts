@@ -8,7 +8,7 @@ class PointListItem extends Anchor implements DoubleLinkedList<Anchor> {
   next: this | null;
   prev: this | null;
   private _shape: Shape;
-  root: SVGElement;
+  root: SVGSVGElement;
 
   constructor(args: PointArgs) {
     super(args);

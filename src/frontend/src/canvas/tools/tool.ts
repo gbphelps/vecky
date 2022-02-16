@@ -13,7 +13,7 @@ import MousePosition from '../mousePosition';
 interface IToolArgs {
   screenManager: ScreenManager;
   mousePosition: MousePosition;
-  root: SVGElement;
+  root: SVGSVGElement;
 }
 
 interface Tool {

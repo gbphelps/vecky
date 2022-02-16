@@ -4,7 +4,7 @@ class Layer {
   drawLayer: SVGGElement;
   uxLayer: SVGGElement;
 
-  constructor({ root }: {root: SVGElement}) {
+  constructor({ root }: {root: SVGSVGElement}) {
     this.drawLayer = create('g');
     this.uxLayer = create('g');
   }

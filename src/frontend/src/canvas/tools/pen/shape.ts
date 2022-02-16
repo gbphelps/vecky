@@ -9,11 +9,11 @@ const COMMAND_LOOKUP: Record<number, string> = {
 };
 
 class Shape {
-  root: SVGElement;
+  root: SVGSVGElement;
   readonly element: SVGPathElement;
   head: PointListItem;
 
-  constructor(args: { head: PointListItem, root: SVGElement }) {
+  constructor(args: { head: PointListItem, root: SVGSVGElement }) {
     const { head, root } = args;
     this.element = create('path');
     root.appendChild(this.element);

@@ -5,14 +5,14 @@ import EventManager from './events/EventManager';
 class MousePosition {
   screenManager: ScreenManager;
   events: EventManager;
-  root: SVGElement;
+  root: SVGSVGElement;
 
   pos: Vec2;
   delta: Vec2;
   prev: Vec2;
   rawPos: Vec2;
 
-  constructor(args: { root: SVGElement, screenManager: ScreenManager }) {
+  constructor(args: { root: SVGSVGElement, screenManager: ScreenManager }) {
     const { root, screenManager } = args;
 
     this.screenManager = screenManager;

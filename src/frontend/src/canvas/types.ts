@@ -1,7 +1,7 @@
 import ScreenManager from './screenManager';
 
 interface Context {
-    root: SVGElement;
+    root: SVGSVGElement;
     screenManager: ScreenManager;
 }
 

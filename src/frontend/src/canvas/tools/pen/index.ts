@@ -10,7 +10,7 @@ import { reverseDoubleLinkedList } from '../../utils';
 
 class PenTool extends Tool {
   activeNode: PointListItem | null;
-  root: SVGElement;
+  root: SVGSVGElement;
 
   constructor(args: IToolArgs) {
     super(args);

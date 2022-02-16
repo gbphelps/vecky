@@ -53,7 +53,7 @@ type OnMouseDownCallback = (args: CustomMouseDownEvent) => void;
 type OnMouseUpCallback = (args: CustomMouseUpEvent) => void;
 
 type Args = {
-    root: SVGElement;
+    root: SVGSVGElement;
     onDragStartCallback?: OnDragStartCallback;
     onDragEndCallback?: OnDragEndCallback;
     onDragCallback?: OnDragCallback;
@@ -66,7 +66,7 @@ type Args = {
 }
 
 class DragEventsInterface implements IListener {
-  rootElement: SVGElement;
+  rootElement: SVGSVGElement;
   selectedElement: SVGElement | null;
 
   onDragStartCallback?: OnDragStartCallback;

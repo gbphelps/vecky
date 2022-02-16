@@ -1,18 +1,18 @@
 class DomEntry {
   static manifest: Map<
-    SVGElement,
+    SVGSVGElement,
     Record<string, DomEntry>
   > = new Map();
 
   private static idCounter = 0;
 
-  static lookup(root: SVGElement, id: string): DomEntry | null {
+  static lookup(root: SVGSVGElement, id: string): DomEntry | null {
     return DomEntry.manifest.get(root)?.[id] ?? null;
   }
 
   id: string;
 
-  constructor({ root }: {root: SVGElement}) {
+  constructor({ root }: {root: SVGSVGElement}) {
     this.id = String(DomEntry.idCounter++);
     const rootEntry = DomEntry.manifest.get(root) || {};
     rootEntry[this.id] = this;

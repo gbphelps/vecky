@@ -11,11 +11,11 @@ class Handles {
   private _prev: IHandle | null;
   private _next: IHandle | null;
 
-  private root: SVGElement;
+  private root: SVGSVGElement;
   private anchor: IAnchor;
   private isMirrored: boolean;
 
-  constructor(args: {anchor: IAnchor, root: SVGElement}) {
+  constructor(args: {anchor: IAnchor, root: SVGSVGElement}) {
     const { anchor, root } = args;
 
     this.anchor = anchor;

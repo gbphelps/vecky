@@ -16,7 +16,7 @@ function assignAll(element: SVGElement, props: Record<string, string | string>) 
 class DomPoint {
   private hitbox: SVGCircleElement;
   element: SVGGElement;
-  root: SVGElement;
+  root: SVGSVGElement;
 
   constructor({ root, id }: PointArgs & {id: string}) {
     this.root = root;

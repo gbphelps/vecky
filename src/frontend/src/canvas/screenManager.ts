@@ -20,7 +20,7 @@ class ScreenManager extends Publisher<ScreenManagerEvent> {
   viewportWidth: number;
   ro: ResizeObserver;
 
-  constructor(svg: SVGElement) {
+  constructor(svg: SVGSVGElement) {
     super();
 
     if (!svg.parentElement) throw new Error('No parent');
