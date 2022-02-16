@@ -14,14 +14,6 @@ function initCanvas(root: HTMLDivElement) {
   });
   root.appendChild(svg);
 
-  const circle = create('circle', {
-    cx: '200',
-    cy: '200',
-    r: '20',
-  });
-
-  svg.appendChild(circle);
-
   const screenManager = new ScreenManager(svg);
   const mousePosition = new MousePosition({ screenManager, root: svg });
 

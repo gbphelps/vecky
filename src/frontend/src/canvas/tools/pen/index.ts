@@ -67,6 +67,12 @@ class PenTool extends Tool {
   onMouseUp(e: CustomMouseUpEvent) {
     const prev = this.activeNode;
 
+    if (this.activeNode?.next && this.activeNode?.prev) {
+      // shape is closed. clear the pen tool.
+      this.activeNode = null;
+      return;
+    }
+
     if (prev) prev.commit();
     this.activeNode = new PointListItem({ root: this.root });
     this.activeNode.setPosition(e.pos);
