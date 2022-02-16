@@ -4,23 +4,25 @@ import ScreenManager from './screenManager';
 import MousePosition from './mousePosition';
 import DragScreenTool from './tools/dragScreenTool';
 import PenTool from './tools/pen';
+import LayerManager from './entities/layers/layerManager';
 
-function initCanvas(root: HTMLDivElement) {
-  const svg = create('svg', {
+function initCanvas(rootDiv: HTMLDivElement) {
+  const root = create('svg', {
     style: {
       height: '100%',
       width: '100%',
     },
   });
-  root.appendChild(svg);
+  rootDiv.appendChild(root);
 
-  const screenManager = new ScreenManager(svg);
-  const mousePosition = new MousePosition({ screenManager, root: svg });
+  const screenManager = new ScreenManager(root);
+  const mousePosition = new MousePosition({ screenManager, root });
+  const layerManager = new LayerManager({ root });
 
-  const zoomTool = new ZoomTool({ root: svg, screenManager, mousePosition });
+  const zoomTool = new ZoomTool({ root, screenManager, mousePosition });
   // const dragScreenTool = new DragScreenTool({ root: svg, screenManager, mousePosition });
 
-  const penTool = new PenTool({ root: svg, screenManager, mousePosition });
+  const penTool = new PenTool({ root, screenManager, mousePosition });
 
   return {
     destroy: () => {

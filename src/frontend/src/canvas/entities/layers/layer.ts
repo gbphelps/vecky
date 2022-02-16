@@ -7,7 +7,10 @@ class Layer {
   constructor({ root }: {root: SVGSVGElement}) {
     this.drawLayer = create('g');
     this.uxLayer = create('g');
+
+    root.appendChild(this.drawLayer);
+    root.appendChild(this.uxLayer);
   }
 }
 
-export { Layer };
+export default Layer;
