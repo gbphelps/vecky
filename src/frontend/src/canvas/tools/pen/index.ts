@@ -26,7 +26,10 @@ class PenTool extends Tool {
     if (!this.activeNode && !e.element) {
       this.activeNode = new PointListItem({ root: this.root });
       this.activeNode.setPosition(e.pos);
+      return;
     }
+
+    console.log(e.element);
   }
 
   onDrag(e: CustomDragEvent) {
@@ -37,6 +40,7 @@ class PenTool extends Tool {
   onMouseUp(e: CustomMouseUpEvent) {
     const prev = this.activeNode;
 
+    if (prev) prev.commit();
     this.activeNode = new PointListItem({ root: this.root });
     this.activeNode.setPosition(e.pos);
     this.activeNode.setPrev(prev);

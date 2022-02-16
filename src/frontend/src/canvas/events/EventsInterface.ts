@@ -3,6 +3,7 @@ import ScreenManager from '../screenManager';
 import MousePosition from '../mousePosition';
 import Vec2 from '../vec2';
 import EventManager from './EventManager';
+import DomEntry from '../entities/domEntry';
 
 interface CustomDragStartEvent {
   dragStart: Vec2,
@@ -35,7 +36,7 @@ interface CustomMouseMoveEvent {
 }
 
 interface CustomMouseDownEvent {
-  element: SVGElement | null,
+  element: DomEntry | null,
   pos: Vec2
 }
 
@@ -129,11 +130,11 @@ class DragEventsInterface implements IListener {
   }
 
   mouseDown = (e: MouseEvent) => {
+    const elementId = (e.target as SVGElement | null)?.dataset?.id ?? '';
     if (this.onMouseDownCallback) {
       this.onMouseDownCallback({
         pos: this.mousePosition.pos,
-        // TODO implement me!!!
-        element: null,
+        element: DomEntry.lookup(this.rootElement, elementId),
       });
     }
 

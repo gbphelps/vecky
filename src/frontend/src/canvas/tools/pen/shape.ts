@@ -37,9 +37,11 @@ class Shape {
         if (p) controlPoints.push(p);
       });
 
-      const command = COMMAND_LOOKUP[controlPoints.length];
+      if (controlPoints.length) {
+        const command = COMMAND_LOOKUP[controlPoints.length];
+        d.push(`${command} ${controlPoints.map((p) => `${p.x} ${p.y}`).join(' ')}`);
+      }
 
-      d.push(`${command} ${controlPoints.map((p) => `${p.x} ${p.y}`).join(' ')}`);
       node = node.next;
     }
 
