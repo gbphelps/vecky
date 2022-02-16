@@ -19,6 +19,10 @@ class PointListItem extends Anchor implements DoubleLinkedList<Anchor> {
     this._shape = new Shape({ head: this, root: args.root });
   }
 
+  reverseNode() {
+    this._handles.reverse();
+  }
+
   setHandle(handle: 'prev' | 'next', pos: Vec2) {
     this._handles.setHandlePos(handle, pos);
     this.updateShape();
@@ -38,7 +42,7 @@ class PointListItem extends Anchor implements DoubleLinkedList<Anchor> {
   }
 
   set shape(shape: Shape) {
-    this._shape.destroy();
+    if (!this.prev) this._shape.destroy();
     this._shape = shape;
   }
 
@@ -53,13 +57,16 @@ class PointListItem extends Anchor implements DoubleLinkedList<Anchor> {
       nextShape = prev.shape;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let node: PointListItem | null = this;
-
-    while (node) {
-      node.shape = nextShape;
-      node = node.next;
+    if (this._shape !== nextShape) {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      let node: PointListItem | null = this;
+      while (node) {
+        node.shape = nextShape;
+        node = node.next;
+      }
     }
+
+    this.updateShape();
   }
 
   setNext(nxt: this | null) {
@@ -69,12 +76,21 @@ class PointListItem extends Anchor implements DoubleLinkedList<Anchor> {
     // eslint-disable-next-line no-param-reassign
     nxt.prev = this;
 
-    let node: PointListItem | null = nxt;
-
-    while (node) {
-      node.shape = this.shape;
-      node = node.next;
+    if (this._shape !== nxt.shape) {
+      let node: PointListItem | null = nxt;
+      while (node) {
+        node.shape = this.shape;
+        node = node.next;
+      }
     }
+
+    this.updateShape();
+  }
+
+  destroy() {
+    this.prev?.setNext(null);
+    this.next?.setPrev(null);
+    super.destroy();
   }
 }
 

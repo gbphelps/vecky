@@ -16,8 +16,11 @@ function assignAll(element: SVGElement, props: Record<string, string | string>) 
 class DomPoint {
   private hitbox: SVGCircleElement;
   element: SVGGElement;
+  root: SVGElement;
 
   constructor({ root, id }: PointArgs & {id: string}) {
+    this.root = root;
+
     const g = create('g');
 
     const circle = create('circle', {
@@ -62,6 +65,10 @@ class DomPoint {
   setPosition(pos: Vec2) {
     setProps(this.element, { transform: `translate(${pos.x} ${pos.y})` });
   }
+
+  destroy() {
+    this.root.removeChild(this.element);
+  }
 }
 
 class Point extends DomEntry {
@@ -103,6 +110,10 @@ class Point extends DomEntry {
 
   uncommit() {
     this.domPoint.setIsCommitted(false);
+  }
+
+  destroy() {
+    this.domPoint.destroy();
   }
 }
 

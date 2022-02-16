@@ -33,6 +33,12 @@ class Handles {
     return this._next?.pos;
   }
 
+  reverse() {
+    const store = this._prev;
+    this._prev = this._next;
+    this._next = store;
+  }
+
   setHandlePos(handle: 'prev' | 'next', pos: Vec2) {
     const handleKey = HANDLE_KEY[handle];
 

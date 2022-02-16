@@ -6,6 +6,7 @@ import {
   CustomDragEvent,
 } from '../../events/EventsInterface';
 import { PointListItem } from '../../entities/pointListItem';
+import { reverseDoubleLinkedList } from '../../utils';
 
 class PenTool extends Tool {
   activeNode: PointListItem | null;
@@ -23,13 +24,39 @@ class PenTool extends Tool {
   }
 
   onMouseDown(e: CustomMouseDownEvent) {
-    if (!this.activeNode && !e.element) {
-      this.activeNode = new PointListItem({ root: this.root });
-      this.activeNode.setPosition(e.pos);
+    const clickedPoint = e.element instanceof PointListItem ? e.element : null;
+
+    if (!this.activeNode) {
+      if (!e.element) {
+        this.activeNode = new PointListItem({ root: this.root });
+        this.activeNode.setPosition(e.pos);
+        return;
+      }
+      this.activeNode = clickedPoint;
       return;
     }
 
-    console.log(e.element);
+    if (!clickedPoint) {
+      // may need to handle this later, but not now.
+      return;
+    }
+
+    if (clickedPoint.next && clickedPoint.prev) {
+      // this point has a full valence and is nonreactive.
+      return;
+    }
+
+    // else we figure out how to join the paths.
+
+    // first, destroy the active node.
+    this.activeNode.destroy();
+    this.activeNode = this.activeNode.prev;
+
+    // reverse node if necessary
+    if (clickedPoint.prev) reverseDoubleLinkedList(clickedPoint);
+
+    this.activeNode?.setNext(clickedPoint);
+    this.activeNode = clickedPoint;
   }
 
   onDrag(e: CustomDragEvent) {

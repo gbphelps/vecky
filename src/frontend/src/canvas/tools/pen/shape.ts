@@ -22,11 +22,27 @@ class Shape {
     this.root = root;
   }
 
+  get nodeList() {
+    const nodes = [];
+    const seen = new Set();
+
+    let node: PointListItem | null = this.head;
+
+    while (node) {
+      if (seen.has(node)) break;
+      nodes.push(node);
+      seen.add(node);
+
+      node = node.next;
+    }
+
+    return nodes;
+  }
+
   update() {
     const d = [`M ${this.head.x} ${this.head.y}`];
 
-    let node: PointListItem | null = this.head;
-    while (node) {
+    this.nodeList.forEach((node) => {
       const controlPoints: Vec2[] = [];
 
       const handle1 = node.handlePositions.next;
@@ -41,9 +57,7 @@ class Shape {
         const command = COMMAND_LOOKUP[controlPoints.length];
         d.push(`${command} ${controlPoints.map((p) => `${p.x} ${p.y}`).join(' ')}`);
       }
-
-      node = node.next;
-    }
+    });
 
     setProps(this.element, { d: d.join(' ') });
   }

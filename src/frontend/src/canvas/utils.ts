@@ -27,11 +27,11 @@ function create<T extends keyof TypeMap>(type: T, props?: SVGAttributes<TypeMap[
 interface DoubleLinkedList<T> {
   next: DoubleLinkedList<T> | null,
   prev: DoubleLinkedList<T> | null,
+  reverseNode: () => void,
 }
 
 function reverseDoubleLinkedList<T>(
   ll: DoubleLinkedList<T>,
-  transform?: (a: DoubleLinkedList<T>) => void,
 ) {
   let node: DoubleLinkedList<T> | null = ll;
   while (node.next) node = node.next;
@@ -40,7 +40,7 @@ function reverseDoubleLinkedList<T>(
     const nxt: DoubleLinkedList<T> | null = node.next;
     const prv: DoubleLinkedList<T> | null = node.prev;
 
-    if (transform) transform(node);
+    node.reverseNode();
 
     if (nxt) nxt.next = node;
     node.prev = nxt;
