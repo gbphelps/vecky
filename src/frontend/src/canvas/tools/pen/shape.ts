@@ -19,7 +19,14 @@ class Shape extends DomEntry {
     super({ root: args.root });
 
     const { head, layer } = args;
-    this.element = create('path');
+    this.element = create('path', {
+      style: {
+        fill: 'none',
+        stroke: 'black',
+        strokeWidth: 1,
+        vectorEffect: 'non-scaling-stroke',
+      },
+    });
 
     layer.drawLayer.appendChild(this.element);
 

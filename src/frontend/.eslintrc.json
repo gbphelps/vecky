@@ -30,6 +30,7 @@
         }
       },
     "rules":  {
+        "no-empty-interface": "off",
         "no-continue": "off",
         "no-use-before-define": "off",
         "import/prefer-default-export": "off",

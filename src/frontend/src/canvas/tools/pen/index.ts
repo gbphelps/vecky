@@ -4,6 +4,7 @@ import {
   CustomMouseMoveEvent,
   CustomMouseUpEvent,
   CustomDragEvent,
+  CustomEscapeEvent,
 } from '../../events/EventsInterface';
 import { PointListItem } from '../../entities/pointListItem';
 import { reverseDoubleLinkedList } from '../../utils';
@@ -19,6 +20,11 @@ class PenTool extends Tool {
 
     this.layerManager = args.layerManager;
     this.root = args.root;
+    this.activeNode = null;
+  }
+
+  onEscape() {
+    this.activeNode?.destroy();
     this.activeNode = null;
   }
 

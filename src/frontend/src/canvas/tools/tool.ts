@@ -6,6 +6,7 @@ import EventsInterface, {
   CustomMouseMoveEvent,
   CustomMouseDownEvent,
   CustomMouseUpEvent,
+  CustomEscapeEvent,
 } from '../events/EventsInterface';
 import ScreenManager from '../screenManager';
 import MousePosition from '../mousePosition';
@@ -24,6 +25,7 @@ interface Tool {
   onWheel(e: CustomWheelEvent): void
   onMouseDown(e: CustomMouseDownEvent): void
   onMouseUp(e: CustomMouseUpEvent): void
+  onEscape(e: CustomEscapeEvent): void
 }
 
 // eslint-disable-next-line no-redeclare
@@ -44,6 +46,7 @@ abstract class Tool {
       onWheelCallback: this.onWheel?.bind(this),
       onMouseDownCallback: this.onMouseDown?.bind(this),
       onMouseUpCallback: this.onMouseUp?.bind(this),
+      onEscapeCallback: this.onEscape?.bind(this),
     });
   }
 

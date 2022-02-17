@@ -5,6 +5,8 @@ import Vec2 from '../vec2';
 import EventManager from './EventManager';
 import DomEntry from '../entities/domEntry';
 
+interface CustomEscapeEvent {}
+
 interface CustomDragStartEvent {
   dragStart: Vec2,
   element: SVGElement
@@ -51,6 +53,7 @@ type OnWheelCallback = (ev: CustomWheelEvent) => void;
 type OnDragStartCallback = (args: CustomDragStartEvent) => void;
 type OnMouseDownCallback = (args: CustomMouseDownEvent) => void;
 type OnMouseUpCallback = (args: CustomMouseUpEvent) => void;
+type OnEscapeCallback = (args: CustomEscapeEvent) => void;
 
 type Args = {
     root: SVGSVGElement;
@@ -61,11 +64,12 @@ type Args = {
     onWheelCallback?: OnWheelCallback;
     onMouseDownCallback?: OnMouseDownCallback;
     onMouseUpCallback?: OnMouseUpCallback;
+    onEscapeCallback?: OnEscapeCallback;
     screenManager: ScreenManager;
     mousePosition: MousePosition;
 }
 
-class DragEventsInterface implements IListener {
+class EventsInterface implements IListener {
   rootElement: SVGSVGElement;
   selectedElement: SVGElement | null;
 
@@ -76,6 +80,7 @@ class DragEventsInterface implements IListener {
   onWheelCallback?: OnWheelCallback;
   onMouseDownCallback?: OnMouseDownCallback;
   onMouseUpCallback?: OnMouseUpCallback;
+  onEscapeCallback?: OnEscapeCallback;
 
   screenManager: ScreenManager;
   mousePosition: MousePosition;
@@ -83,8 +88,10 @@ class DragEventsInterface implements IListener {
   dragStartVector: Vec2 | null;
   dragVector: Vec2 | null;
   wasDragged: boolean;
+
   rootEvents: EventManager;
   docEvents: EventManager;
+  keyEvents: EventManager;
 
   constructor(args: Args) {
     const {
@@ -95,6 +102,7 @@ class DragEventsInterface implements IListener {
       onWheelCallback,
       onMouseDownCallback,
       onMouseUpCallback,
+      onEscapeCallback,
       screenManager,
       mousePosition,
       root,
@@ -114,6 +122,7 @@ class DragEventsInterface implements IListener {
     this.onWheelCallback = onWheelCallback;
     this.onMouseDownCallback = onMouseDownCallback;
     this.onMouseUpCallback = onMouseUpCallback;
+    this.onEscapeCallback = onEscapeCallback;
 
     this.selectedElement = null;
 
@@ -121,12 +130,24 @@ class DragEventsInterface implements IListener {
 
     this.rootEvents = new EventManager(root);
     this.docEvents = new EventManager(document);
+    this.keyEvents = new EventManager(document);
 
     if (onWheelCallback) this.rootEvents.add('wheel', this.onWheel);
     this.rootEvents.add('mousedown', this.mouseDown);
 
+    if (this.onEscapeCallback) {
+      this.keyEvents.add('keyup', (e) => {
+        if (e.key === 'Escape') this.onEscape();
+      });
+    }
+
     // note: this MUST come after the mousedown event.
     if (onMouseMoveCallback) this.rootEvents.add('mousemove', this.onMouseMove);
+  }
+
+  onEscape() {
+    if (!this.onEscapeCallback) return;
+    this.onEscapeCallback({});
   }
 
   mouseDown = (e: MouseEvent) => {
@@ -229,18 +250,13 @@ class DragEventsInterface implements IListener {
   destroy = () => {
     this.rootEvents.destroy();
     this.docEvents.destroy();
+    this.keyEvents.destroy();
   };
 }
 
-export default DragEventsInterface;
+export default EventsInterface;
 
 export type {
-  OnDragStartCallback,
-  OnDragEndCallback,
-  OnDragCallback,
-  OnMouseMoveCallback,
-  OnWheelCallback,
-
   CustomWheelEvent,
   CustomDragEndEvent,
   CustomDragEvent,
@@ -248,4 +264,5 @@ export type {
   CustomMouseMoveEvent,
   CustomMouseDownEvent,
   CustomMouseUpEvent,
+  CustomEscapeEvent,
 };
