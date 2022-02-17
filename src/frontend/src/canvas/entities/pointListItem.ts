@@ -118,11 +118,17 @@ class ShapeWithUI {
     this.update();
   }
 
+  reverse() {
+    this.points.reverse();
+    this.points.forEach((p) => p.reverseHandles());
+  }
   // insert(idx: number, pos: Vec2) {}
 
-  merge(other: ShapeWithUI, side: 'back' | 'front') {
+  merge(other: ShapeWithUI, side: 'back' | 'front', reverseThis: boolean) {
+    if (reverseThis) this.reverse();
+
     if (other.size > this.size) {
-      other.merge(this, side === 'back' ? 'front' : 'back');
+      other.merge(this, side === 'back' ? 'front' : 'back', false);
       return;
     }
 
@@ -130,7 +136,7 @@ class ShapeWithUI {
 
     other.points.forEach((p) => p.setShape(this));
 
-    this.points = side === 'back'
+    this.points = side === 'front'
       ? other.points.concat(this.points)
       : this.points.concat(other.points);
     this.update();

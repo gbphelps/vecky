@@ -25,6 +25,10 @@ class Anchor extends Point implements IAnchor {
     this.update();
   }
 
+  reverseHandles() {
+    this._handles.reverse();
+  }
+
   get handlePositions() {
     return {
       prev: this._handles.prevHandlePos,

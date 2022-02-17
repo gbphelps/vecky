@@ -11,6 +11,7 @@ import Anchor from '../../entities/points/anchor';
 
 class PenTool extends Tool {
   activeNode: Anchor | null;
+  dir: 'next' | 'prev';
 
   private root: SVGSVGElement;
   private layerManager: LayerManager;
@@ -21,6 +22,7 @@ class PenTool extends Tool {
     this.layerManager = args.layerManager;
     this.root = args.root;
     this.activeNode = null;
+    this.dir = 'next';
   }
 
   onEscape() {
@@ -47,6 +49,7 @@ class PenTool extends Tool {
         return;
       }
 
+      if (clickedPoint.isFirstPoint()) this.dir = 'prev';
       this.activeNode = clickedPoint;
       return;
     }
@@ -65,51 +68,65 @@ class PenTool extends Tool {
       return;
     }
 
-    // else we figure out how to join the paths.
-
+    // else join paths.
     // first, destroy the active node.
+    const activeIsLast = this.activeNode.isLastPoint();
     this.activeNode.destroy();
 
     if (this.activeNode.getShape() === clickedPoint.getShape()) {
+      // close shape
       this.activeNode.getShape().close();
-      this.activeNode = this.activeNode.getShape().firstPoint();
+      this.activeNode = activeIsLast
+        ? this.activeNode.getShape().firstPoint()
+        : this.activeNode.getShape().lastPoint();
       return;
     }
 
+    this.activeNode = this.activeNode.getShape().lastPoint();
+
+    const shouldReverse = (this.dir === 'next' && clickedPoint.isLastPoint())
+      || (this.dir === 'prev' && clickedPoint.isFirstPoint());
+
+    const isFrontMerge = clickedPoint.isLastPoint();
+
     this.activeNode.getShape().merge(
       clickedPoint.getShape(),
-      this.activeNode.isLastPoint() ? 'front' : 'back',
+      isFrontMerge ? 'front' : 'back',
+      shouldReverse,
     );
+
+    if (isFrontMerge) this.dir = 'prev';
 
     this.activeNode = clickedPoint;
   }
 
   onDrag(e: CustomDragEvent) {
     if (!this.activeNode) throw new Error('No active node!');
-    this.activeNode.setHandle('next', e.pos);
+    this.activeNode.setHandle(this.dir, e.pos);
   }
 
   onMouseUp(e: CustomMouseUpEvent) {
-    const prev = this.activeNode;
+    if (!this.activeNode) return;
 
-    if (this.activeNode?.getShape().isClosed) {
+    if (this.activeNode.getShape().isClosed || !this.activeNode.isEdge()) {
       // shape is closed. clear the pen tool.
       this.activeNode = null;
+      this.dir = 'next';
       return;
     }
 
-    if (prev) prev.commit();
+    this.dir = this.activeNode?.isLastPoint() ? 'next' : 'prev';
 
-    if (this.activeNode) {
-      const shape = this.activeNode.getShape();
+    this.activeNode.commit();
 
-      if (!this.activeNode.isLastPoint()) {
-        shape.unshift(e.pos);
-        this.activeNode = shape.firstPoint();
-      } else {
-        shape.push(e.pos);
-        this.activeNode = shape.lastPoint();
-      }
+    const shape = this.activeNode.getShape();
+
+    if (!this.activeNode.isLastPoint()) {
+      shape.unshift(e.pos);
+      this.activeNode = shape.firstPoint();
+    } else {
+      shape.push(e.pos);
+      this.activeNode = shape.lastPoint();
     }
   }
 

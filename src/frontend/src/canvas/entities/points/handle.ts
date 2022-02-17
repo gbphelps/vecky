@@ -22,7 +22,7 @@ class Handle extends Point implements IHandle {
   }
 
   private createConnector() {
-    return create('line');
+    return create('line', { style: { pointerEvents: 'none' } });
   }
 
   protected update() {
