@@ -26,6 +26,7 @@ class PenTool extends Tool {
   }
 
   onEscape() {
+    this.dir = 'next';
     this.activeNode?.destroy();
     this.activeNode = null;
   }

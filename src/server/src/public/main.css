@@ -55,7 +55,8 @@ html, body, #root {
   width: 100%;
 }
 
-button {
+button,
+input[type=submit] {
   font-family: "Open Sans";
   font-weight: 800;
   font-size: 40px;

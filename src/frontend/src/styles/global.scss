@@ -12,7 +12,8 @@ html, body, #root {
     width: 100%;
 }
 
-button {
+button,
+input[type="submit"] {
     @include v.display-xsmall;
     font-size: 20px;
     font-weight: 700;
