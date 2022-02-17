@@ -4,14 +4,14 @@ import {
   CustomMouseMoveEvent,
   CustomMouseUpEvent,
   CustomDragEvent,
-  CustomEscapeEvent,
 } from '../../events/EventsInterface';
-import { PointListItem } from '../../entities/pointListItem';
-import { reverseDoubleLinkedList } from '../../utils';
+import { ShapeWithUI } from '../../entities/pointListItem';
 import LayerManager from '../../entities/layers/layerManager';
+import Anchor from '../../entities/points/anchor';
 
 class PenTool extends Tool {
-  activeNode: PointListItem | null;
+  activeNode: Anchor | null;
+
   private root: SVGSVGElement;
   private layerManager: LayerManager;
 
@@ -33,22 +33,18 @@ class PenTool extends Tool {
   }
 
   onMouseDown(e: CustomMouseDownEvent) {
-    const clickedPoint = e.element instanceof PointListItem ? e.element : null;
+    const clickedPoint = e.element instanceof Anchor ? e.element : null;
 
     if (!this.activeNode) {
       if (!clickedPoint) {
-        this.activeNode = new PointListItem({
+        const newShape = new ShapeWithUI({
           root: this.root,
           layer: this.layerManager.activeLayer,
         });
-        this.activeNode.setPosition(e.pos);
-        return;
-      }
 
-      if (clickedPoint.next) {
-        // have to reset the shape's head after reversing!
-        const head = reverseDoubleLinkedList(clickedPoint);
-        clickedPoint.shape.head = head;
+        newShape.push(e.pos);
+        this.activeNode = newShape.lastPoint();
+        return;
       }
 
       this.activeNode = clickedPoint;
@@ -56,11 +52,15 @@ class PenTool extends Tool {
     }
 
     if (!clickedPoint) {
-      // may need to handle this later, but not now.
+      // if (this.activeNode.isFirstPoint()) {
+      //   this.activeNode.getShape().unshift(e.pos);
+      // } else {
+      //   this.activeNode.getShape().push(e.pos);
+      // }
       return;
     }
 
-    if (clickedPoint.next && clickedPoint.prev) {
+    if (!clickedPoint.isEdge()) {
       // this point has a full valence and is nonreactive.
       return;
     }
@@ -69,14 +69,18 @@ class PenTool extends Tool {
 
     // first, destroy the active node.
     this.activeNode.destroy();
-    this.activeNode = this.activeNode.prev;
 
-    // reverse node if necessary
-    if (clickedPoint.prev) {
-      reverseDoubleLinkedList(clickedPoint);
+    if (this.activeNode.getShape() === clickedPoint.getShape()) {
+      this.activeNode.getShape().close();
+      this.activeNode = this.activeNode.getShape().firstPoint();
+      return;
     }
 
-    this.activeNode?.setNext(clickedPoint);
+    this.activeNode.getShape().merge(
+      clickedPoint.getShape(),
+      this.activeNode.isLastPoint() ? 'front' : 'back',
+    );
+
     this.activeNode = clickedPoint;
   }
 
@@ -88,16 +92,25 @@ class PenTool extends Tool {
   onMouseUp(e: CustomMouseUpEvent) {
     const prev = this.activeNode;
 
-    if (this.activeNode?.next && this.activeNode?.prev) {
+    if (this.activeNode?.getShape().isClosed) {
       // shape is closed. clear the pen tool.
       this.activeNode = null;
       return;
     }
 
     if (prev) prev.commit();
-    this.activeNode = new PointListItem({ root: this.root, layer: this.layerManager.activeLayer });
-    this.activeNode.setPosition(e.pos);
-    this.activeNode.setPrev(prev);
+
+    if (this.activeNode) {
+      const shape = this.activeNode.getShape();
+
+      if (!this.activeNode.isLastPoint()) {
+        shape.unshift(e.pos);
+        this.activeNode = shape.firstPoint();
+      } else {
+        shape.push(e.pos);
+        this.activeNode = shape.lastPoint();
+      }
+    }
   }
 
   destroy() {}

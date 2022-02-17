@@ -1,103 +1,144 @@
 import Anchor from './points/anchor';
-import { DoubleLinkedList } from '../utils';
-import Shape from '../tools/pen/shape';
+import { create, setProps } from '../utils';
 import { PointArgs } from './points/types';
 import Vec2 from '../vec2';
 import Layer from './layers/layer';
 
-class PointListItem extends Anchor implements DoubleLinkedList<Anchor> {
-  next: this | null;
-  prev: this | null;
-  private _shape: Shape;
+const COMMAND_LOOKUP: Record<number, string> = {
+  1: 'L',
+  2: 'Q',
+  3: 'C',
+};
+
+class ShapeWithUI {
+  element: SVGPathElement;
+  private points: Anchor[];
   root: SVGSVGElement;
   layer: Layer;
+  isClosed: boolean;
 
   constructor(args: PointArgs) {
-    super(args);
-    const { root } = args;
-    this.root = root;
-    this.next = null;
-    this.prev = null;
+    this.root = args.root;
     this.layer = args.layer;
-    this._shape = new Shape({ head: this, root: args.root, layer: args.layer });
+
+    this.element = create('path', {
+      style: {
+        fill: 'none',
+        stroke: 'black',
+        strokeWidth: '1',
+        vectorEffect: 'non-scaling-stroke',
+      },
+    });
+    this.layer.drawLayer.appendChild(this.element);
+
+    this.points = [];
+    this.isClosed = false;
   }
 
-  reverseNode() {
-    this._handles.reverse();
+  get size() {
+    return this.points.length;
   }
 
-  setHandle(handle: 'prev' | 'next', pos: Vec2) {
-    this._handles.setHandlePos(handle, pos);
-    this.updateShape();
+  getIndex(point: Anchor) {
+    const idx = this.points.findIndex((p) => p === point);
+    if (idx === -1) throw new Error('Point not found!');
+    return idx;
   }
 
-  setPosition(pos: Vec2) {
-    super.setPosition(pos);
-    this.updateShape();
+  lastPoint() {
+    return this.points[this.points.length - 1];
   }
 
-  updateShape = () => {
-    this._shape.update();
-  };
-
-  get shape() {
-    return this._shape;
+  firstPoint() {
+    return this.points[0];
   }
 
-  set shape(shape: Shape) {
-    if (!this.prev) this._shape.destroy();
-    this._shape = shape;
+  makePoint(pos: Vec2) {
+    const point = new Anchor({
+      shape: this,
+      root: this.root,
+      layer: this.layer,
+    });
+    point.setPosition(pos);
+    return point;
   }
 
-  setPrev(prev: this | null) {
-    this.prev = prev;
+  push(pos: Vec2) {
+    const point = this.makePoint(pos);
+    this.points.push(point);
+  }
 
-    let nextShape = new Shape({ head: this, root: this.root, layer: this.layer });
+  unshift(pos: Vec2) {
+    const point = this.makePoint(pos);
+    this.points.unshift(point);
+  }
 
-    if (prev) {
-      // eslint-disable-next-line no-param-reassign
-      prev.next = this;
-      nextShape = prev.shape;
+  update() {
+    if (!this.points.length) {
+      setProps(this.element, { d: '' });
+      return;
     }
 
-    if (this._shape !== nextShape) {
-      this._shape.destroy();
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      let node: PointListItem | null = this;
-      while (node) {
-        node.shape = nextShape;
-        node = node.next;
+    const d = [`M ${this.points[0].x} ${this.points[0].y}`];
+
+    for (
+      let i = 1;
+      i < this.points.length + (this.isClosed ? 1 : 0);
+      i++
+    ) {
+      const controlPoints: Vec2[] = [];
+
+      const handle1 = this.points[i - 1].handlePositions.next;
+
+      const handle2 = this.points[i % this.points.length].handlePositions.prev;
+
+      const endpoint: Vec2 | undefined = this.points[i % this.points.length].pos;
+
+      [handle1, handle2, endpoint].forEach((p) => {
+        if (p) controlPoints.push(p);
+      });
+
+      if (controlPoints.length) {
+        const command = COMMAND_LOOKUP[controlPoints.length];
+        d.push(`${command} ${controlPoints.map((p) => `${p.x} ${p.y}`).join(' ')}`);
       }
     }
 
-    this.updateShape();
+    setProps(this.element, { d: d.join(' ') });
   }
 
-  setNext(nxt: this | null) {
-    this.next = nxt;
-    if (!nxt) return;
+  close() {
+    this.isClosed = true;
+    this.update();
+  }
 
-    // eslint-disable-next-line no-param-reassign
-    nxt.prev = this;
+  deletePoint(point: Anchor) {
+    const index = this.getIndex(point);
+    this.points.splice(index, 1);
+    this.update();
+  }
 
-    if (this._shape !== nxt.shape) {
-      nxt._shape.destroy();
-      let node: PointListItem | null = nxt;
-      while (node) {
-        node.shape = this.shape;
-        node = node.next;
-      }
+  // insert(idx: number, pos: Vec2) {}
+
+  merge(other: ShapeWithUI, side: 'back' | 'front') {
+    if (other.size > this.size) {
+      other.merge(this, side === 'back' ? 'front' : 'back');
+      return;
     }
 
-    this.updateShape();
+    other.destroy();
+
+    other.points.forEach((p) => p.setShape(this));
+
+    this.points = side === 'back'
+      ? other.points.concat(this.points)
+      : this.points.concat(other.points);
+    this.update();
   }
 
   destroy() {
-    this.prev?.setNext(null);
-    this.next?.setPrev(null);
-    this.updateShape();
-    super.destroy();
+    this.layer.drawLayer.removeChild(this.element);
   }
 }
 
-export { PointListItem };
+export { ShapeWithUI };
