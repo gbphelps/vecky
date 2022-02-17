@@ -22,6 +22,16 @@ class PointListItem extends Anchor implements DoubleLinkedList<Anchor> {
     this._shape = new Shape({ head: this, root: args.root, layer: args.layer });
   }
 
+  print() {
+    const list = [];
+    let node: any = this;
+    while (node) {
+      list.push(node);
+      node = node.next;
+    }
+    return list;
+  }
+
   reverseNode() {
     this._handles.reverse();
   }

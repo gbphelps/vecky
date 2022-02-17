@@ -28,29 +28,30 @@ interface DoubleLinkedList<T> {
   next: DoubleLinkedList<T> | null,
   prev: DoubleLinkedList<T> | null,
   reverseNode: () => void,
+  print: () => any[]
 }
 
-function reverseDoubleLinkedList<T>(
-  ll: DoubleLinkedList<T>,
-) {
-  let node: DoubleLinkedList<T> | null = ll;
-  while (node.next) node = node.next;
+function reverseDoubleLinkedList<T>(ll: DoubleLinkedList<T>) {
+  let head = ll;
+  while (head.next) head = head.next;
 
-  while (node) {
-    const nxt: DoubleLinkedList<T> | null = node.next;
-    const prv: DoubleLinkedList<T> | null = node.prev;
+  function _s(node: DoubleLinkedList<T> | null) {
+    if (!node) return node;
 
     node.reverseNode();
 
-    if (nxt) nxt.next = node;
-    node.prev = nxt;
+    const next = _s(node.prev);
 
-    node = prv;
+    // eslint-disable-next-line no-param-reassign
+    node.next = next;
+    if (next) next.prev = node;
+    return node;
   }
 
-  // eslint-disable-next-line no-param-reassign
-  ll.next = null;
-  return ll;
+  _s(head);
+  head.prev = null;
+
+  return head;
 }
 
 export { setProps, create, reverseDoubleLinkedList };

@@ -65,7 +65,11 @@ class PenTool extends Tool {
     this.activeNode = this.activeNode.prev;
 
     // reverse node if necessary
-    if (clickedPoint.prev) reverseDoubleLinkedList(clickedPoint);
+    if (clickedPoint.prev) {
+      console.log('reverse!!');
+      reverseDoubleLinkedList(clickedPoint);
+      console.log(clickedPoint.print());
+    }
 
     this.activeNode?.setNext(clickedPoint);
     this.activeNode = clickedPoint;
