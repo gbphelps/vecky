@@ -22,7 +22,15 @@ class Handle extends Point implements IHandle {
   }
 
   private createConnector() {
-    return create('line', { style: { pointerEvents: 'none' } });
+    return create('line', {
+      style: {
+        pointerEvents: 'none',
+        stroke: 'black',
+        strokeWidth: 1,
+        vectorEffect: 'non-scaling-stroke',
+        strokeOpacity: 0.2,
+      },
+    });
   }
 
   protected update() {
@@ -32,8 +40,6 @@ class Handle extends Point implements IHandle {
       y1: this.anchor.y,
       x2: this.x,
       y2: this.y,
-      stroke: 'black',
-      strokeWidth: 5,
     });
   }
 

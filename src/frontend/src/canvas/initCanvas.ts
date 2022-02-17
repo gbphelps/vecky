@@ -5,6 +5,7 @@ import MousePosition from './mousePosition';
 import DragScreenTool from './tools/dragScreenTool';
 import PenTool from './tools/pen';
 import LayerManager from './entities/layers/layerManager';
+import Grid from './entities/grids/grid';
 
 function initCanvas(rootDiv: HTMLDivElement) {
   const root = create('svg', {
@@ -24,6 +25,14 @@ function initCanvas(rootDiv: HTMLDivElement) {
 
   const penTool = new PenTool({
     root, screenManager, layerManager, mousePosition,
+  });
+
+  const grid = new Grid({
+    unit: 10,
+    offset: 0,
+    axis: 'y',
+    root,
+    screenManager,
   });
 
   return {
