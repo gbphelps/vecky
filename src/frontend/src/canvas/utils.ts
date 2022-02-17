@@ -28,7 +28,6 @@ interface DoubleLinkedList<T> {
   next: DoubleLinkedList<T> | null,
   prev: DoubleLinkedList<T> | null,
   reverseNode: () => void,
-  print: () => any[]
 }
 
 function reverseDoubleLinkedList<T>(ll: DoubleLinkedList<T>) {

@@ -36,7 +36,7 @@ class PenTool extends Tool {
     const clickedPoint = e.element instanceof PointListItem ? e.element : null;
 
     if (!this.activeNode) {
-      if (!e.element) {
+      if (!clickedPoint) {
         this.activeNode = new PointListItem({
           root: this.root,
           layer: this.layerManager.activeLayer,
@@ -44,6 +44,13 @@ class PenTool extends Tool {
         this.activeNode.setPosition(e.pos);
         return;
       }
+
+      if (clickedPoint.next) {
+        // have to reset the shape's head after reversing!
+        const head = reverseDoubleLinkedList(clickedPoint);
+        clickedPoint.shape.head = head;
+      }
+
       this.activeNode = clickedPoint;
       return;
     }
@@ -66,9 +73,7 @@ class PenTool extends Tool {
 
     // reverse node if necessary
     if (clickedPoint.prev) {
-      console.log('reverse!!');
       reverseDoubleLinkedList(clickedPoint);
-      console.log(clickedPoint.print());
     }
 
     this.activeNode?.setNext(clickedPoint);
