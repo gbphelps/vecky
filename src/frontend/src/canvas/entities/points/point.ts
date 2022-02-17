@@ -2,6 +2,7 @@ import { setProps, create } from '../../utils';
 import Vec2 from '../../vec2';
 import { PointArgs } from './types';
 import DomEntry from '../domEntry';
+import Layer from '../layers/layer';
 
 function assignAll(element: SVGElement, props: Record<string, string | string>) {
   Object.assign(element.dataset, props);
@@ -15,11 +16,13 @@ function assignAll(element: SVGElement, props: Record<string, string | string>) 
 
 class DomPoint {
   private hitbox: SVGCircleElement;
-  element: SVGGElement;
-  root: SVGSVGElement;
+  private element: SVGGElement;
+  private root: SVGSVGElement;
+  private layer: Layer;
 
-  constructor({ root, id }: PointArgs & {id: string}) {
+  constructor({ root, id, layer }: PointArgs & {id: string}) {
     this.root = root;
+    this.layer = layer;
 
     const g = create('g');
 
@@ -41,7 +44,7 @@ class DomPoint {
 
     g.append(this.hitbox);
     g.appendChild(circle);
-    root.appendChild(g);
+    layer.uxLayer.appendChild(g);
     this.element = g;
 
     assignAll(g, { id, type: 'point' });
@@ -67,7 +70,7 @@ class DomPoint {
   }
 
   destroy() {
-    this.root.removeChild(this.element);
+    this.layer.uxLayer.removeChild(this.element);
   }
 }
 
@@ -80,7 +83,7 @@ class Point extends DomEntry {
 
     const { root } = args;
     this._pos = new Vec2();
-    this.domPoint = new DomPoint({ root, id: this.id });
+    this.domPoint = new DomPoint({ root, id: this.id, layer: args.layer });
   }
 
   protected update() {

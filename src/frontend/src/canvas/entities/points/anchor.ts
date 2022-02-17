@@ -10,6 +10,7 @@ class Anchor extends Point implements IAnchor {
     this._handles = new Handles({
       anchor: this,
       root: args.root,
+      layer: args.layer,
     });
   }
 

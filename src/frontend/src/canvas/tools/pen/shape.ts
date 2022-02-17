@@ -1,6 +1,8 @@
 import { create, setProps } from '../../utils';
 import { PointListItem } from '../../entities/pointListItem';
 import Vec2 from '../../vec2';
+import Layer from '../../entities/layers/layer';
+import DomEntry from '../../entities/domEntry';
 
 const COMMAND_LOOKUP: Record<number, string> = {
   1: 'L',
@@ -8,18 +10,21 @@ const COMMAND_LOOKUP: Record<number, string> = {
   3: 'C',
 };
 
-class Shape {
-  root: SVGSVGElement;
+class Shape extends DomEntry {
   readonly element: SVGPathElement;
   head: PointListItem;
+  private layer: Layer;
 
-  constructor(args: { head: PointListItem, root: SVGSVGElement }) {
-    const { head, root } = args;
+  constructor(args: { head: PointListItem, root: SVGSVGElement, layer: Layer }) {
+    super({ root: args.root });
+
+    const { head, layer } = args;
     this.element = create('path');
-    root.appendChild(this.element);
+
+    layer.drawLayer.appendChild(this.element);
 
     this.head = head;
-    this.root = root;
+    this.layer = layer;
   }
 
   get nodeList() {
@@ -63,7 +68,7 @@ class Shape {
   }
 
   destroy() {
-    this.root.removeChild(this.element);
+    this.layer.drawLayer.removeChild(this.element);
   }
 }
 

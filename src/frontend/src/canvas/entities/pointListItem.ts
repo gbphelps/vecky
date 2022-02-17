@@ -3,12 +3,14 @@ import { DoubleLinkedList } from '../utils';
 import Shape from '../tools/pen/shape';
 import { PointArgs } from './points/types';
 import Vec2 from '../vec2';
+import Layer from './layers/layer';
 
 class PointListItem extends Anchor implements DoubleLinkedList<Anchor> {
   next: this | null;
   prev: this | null;
   private _shape: Shape;
   root: SVGSVGElement;
+  layer: Layer;
 
   constructor(args: PointArgs) {
     super(args);
@@ -16,7 +18,8 @@ class PointListItem extends Anchor implements DoubleLinkedList<Anchor> {
     this.root = root;
     this.next = null;
     this.prev = null;
-    this._shape = new Shape({ head: this, root: args.root });
+    this.layer = args.layer;
+    this._shape = new Shape({ head: this, root: args.root, layer: args.layer });
   }
 
   reverseNode() {
@@ -49,7 +52,7 @@ class PointListItem extends Anchor implements DoubleLinkedList<Anchor> {
   setPrev(prev: this | null) {
     this.prev = prev;
 
-    let nextShape = new Shape({ head: this, root: this.root });
+    let nextShape = new Shape({ head: this, root: this.root, layer: this.layer });
 
     if (prev) {
       // eslint-disable-next-line no-param-reassign

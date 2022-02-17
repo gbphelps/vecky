@@ -7,14 +7,17 @@ import {
 } from '../../events/EventsInterface';
 import { PointListItem } from '../../entities/pointListItem';
 import { reverseDoubleLinkedList } from '../../utils';
+import LayerManager from '../../entities/layers/layerManager';
 
 class PenTool extends Tool {
   activeNode: PointListItem | null;
-  root: SVGSVGElement;
+  private root: SVGSVGElement;
+  private layerManager: LayerManager;
 
-  constructor(args: IToolArgs) {
+  constructor(args: IToolArgs & {layerManager: LayerManager}) {
     super(args);
 
+    this.layerManager = args.layerManager;
     this.root = args.root;
     this.activeNode = null;
   }
@@ -28,7 +31,10 @@ class PenTool extends Tool {
 
     if (!this.activeNode) {
       if (!e.element) {
-        this.activeNode = new PointListItem({ root: this.root });
+        this.activeNode = new PointListItem({
+          root: this.root,
+          layer: this.layerManager.activeLayer,
+        });
         this.activeNode.setPosition(e.pos);
         return;
       }
@@ -74,7 +80,7 @@ class PenTool extends Tool {
     }
 
     if (prev) prev.commit();
-    this.activeNode = new PointListItem({ root: this.root });
+    this.activeNode = new PointListItem({ root: this.root, layer: this.layerManager.activeLayer });
     this.activeNode.setPosition(e.pos);
     this.activeNode.setPrev(prev);
   }

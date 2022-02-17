@@ -1,8 +1,10 @@
 import Vec2 from '../../vec2';
 import Point from './point';
+import Layer from '../layers/layer';
 
 interface PointArgs {
     root: SVGSVGElement;
+    layer: Layer;
 }
 
 interface IHandle extends Point {

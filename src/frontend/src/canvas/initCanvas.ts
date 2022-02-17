@@ -22,7 +22,9 @@ function initCanvas(rootDiv: HTMLDivElement) {
   const zoomTool = new ZoomTool({ root, screenManager, mousePosition });
   // const dragScreenTool = new DragScreenTool({ root: svg, screenManager, mousePosition });
 
-  const penTool = new PenTool({ root, screenManager, mousePosition });
+  const penTool = new PenTool({
+    root, screenManager, layerManager, mousePosition,
+  });
 
   return {
     destroy: () => {

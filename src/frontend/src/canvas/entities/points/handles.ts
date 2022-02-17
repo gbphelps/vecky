@@ -1,6 +1,7 @@
 import { IHandle, IAnchor } from './types';
 import Handle from './handle';
 import Vec2 from '../../vec2';
+import Layer from '../layers/layer';
 
 const HANDLE_KEY: Record<'next' | 'prev', '_next' | '_prev'> = {
   next: '_next',
@@ -11,13 +12,15 @@ class Handles {
   private _prev: IHandle | null;
   private _next: IHandle | null;
 
+  private layer: Layer;
   private root: SVGSVGElement;
   private anchor: IAnchor;
   private isMirrored: boolean;
 
-  constructor(args: {anchor: IAnchor, root: SVGSVGElement}) {
+  constructor(args: {anchor: IAnchor, root: SVGSVGElement, layer: Layer}) {
     const { anchor, root } = args;
 
+    this.layer = args.layer;
     this.anchor = anchor;
     this.root = root;
     this._prev = null;
@@ -45,6 +48,7 @@ class Handles {
     const h = this[handleKey] || new Handle({
       anchor: this.anchor,
       root: this.root,
+      layer: this.layer,
     });
 
     h.setPosition(pos);
@@ -57,6 +61,7 @@ class Handles {
     const h2 = this[otherKey] || new Handle({
       anchor: this.anchor,
       root: this.root,
+      layer: this.layer,
     });
 
     const pos2 = pos
