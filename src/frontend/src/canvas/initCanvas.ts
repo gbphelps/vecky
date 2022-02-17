@@ -27,10 +27,19 @@ function initCanvas(rootDiv: HTMLDivElement) {
     root, screenManager, layerManager, mousePosition,
   });
 
+  // todo: outputs at wrong layer
   const grid = new Grid({
     unit: 10,
     offset: 0,
     axis: 'y',
+    root,
+    screenManager,
+  });
+
+  const grid = new Grid({
+    unit: 10,
+    offset: 0,
+    axis: 'x',
     root,
     screenManager,
   });

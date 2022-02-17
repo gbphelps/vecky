@@ -25,8 +25,8 @@ class GridLine {
       y1: this.axis === 'y' ? i : Number.MIN_SAFE_INTEGER,
       y2: this.axis === 'y' ? i : Number.MAX_SAFE_INTEGER,
       style: {
-        stroke: 'blue',
-        strokeOpacity: 0.5,
+        pointerEvents: 'none',
+        stroke: '#aaaaff',
         strokeWidth: 1,
         vectorEffect: 'non-scaling-stroke',
       },
