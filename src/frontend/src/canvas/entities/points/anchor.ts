@@ -1,20 +1,26 @@
-import { IAnchor, PointArgs } from './types';
+import { IAnchor } from './types';
 import Handles from './handles';
 import Point from './point';
-import { ShapeWithUI } from '../pointListItem';
+import Shape from '../shape';
 import Vec2 from '../../vec2';
+import Layer from '../layers/layer';
+import Registry from '../registry';
 
 class Anchor extends Point implements IAnchor {
   protected _handles: Handles;
-  private _shape: ShapeWithUI;
+  private _shape: Shape;
 
-  constructor(args: PointArgs & {shape: ShapeWithUI}) {
+  constructor(args: {
+    shape: Shape,
+    layer: Layer,
+    pointRegistry: Registry<Point>
+  }) {
     super(args);
 
     this._handles = new Handles({
       anchor: this,
-      root: args.root,
       layer: args.layer,
+      pointRegistry: args.pointRegistry,
     });
 
     this._shape = args.shape;
@@ -40,7 +46,7 @@ class Anchor extends Point implements IAnchor {
     return this._shape;
   }
 
-  setShape(shape: ShapeWithUI) {
+  setShape(shape: Shape) {
     this._shape = shape;
   }
 

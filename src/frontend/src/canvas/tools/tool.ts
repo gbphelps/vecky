@@ -10,11 +10,14 @@ import EventsInterface, {
 } from '../events/EventsInterface';
 import ScreenManager from '../screenManager';
 import MousePosition from '../mousePosition';
+import Point from '../entities/points/point';
+import Registry from '../entities/registry';
 
 interface IToolArgs {
   screenManager: ScreenManager;
   mousePosition: MousePosition;
   root: SVGSVGElement;
+  pointRegistry: Registry<Point>
 }
 
 interface Tool {
@@ -34,8 +37,14 @@ abstract class Tool {
 
   eventsInterface: EventsInterface;
 
-  constructor({ screenManager, mousePosition, root }: IToolArgs) {
+  constructor({
+    screenManager,
+    mousePosition,
+    root,
+    pointRegistry,
+  }: IToolArgs) {
     this.eventsInterface = new EventsInterface({
+      pointRegistry,
       root,
       screenManager,
       mousePosition,

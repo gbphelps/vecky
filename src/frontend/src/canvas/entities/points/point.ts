@@ -1,7 +1,7 @@
 import { setProps, create } from '../../utils';
 import Vec2 from '../../vec2';
-import { PointArgs } from './types';
-import DomEntry from '../domEntry';
+import RegistryObject from '../registryObject';
+import Registry from '../registry';
 import Layer from '../layers/layer';
 
 function assignAll(element: SVGElement, props: Record<string, string | string>) {
@@ -17,11 +17,9 @@ function assignAll(element: SVGElement, props: Record<string, string | string>) 
 class DomPoint {
   private hitbox: SVGCircleElement;
   private element: SVGGElement;
-  private root: SVGSVGElement;
   private layer: Layer;
 
-  constructor({ root, id, layer }: PointArgs & {id: string}) {
-    this.root = root;
+  constructor({ id, layer }: {id: string, layer: Layer}) {
     this.layer = layer;
 
     const g = create('g');
@@ -74,16 +72,15 @@ class DomPoint {
   }
 }
 
-class Point extends DomEntry {
+class Point extends RegistryObject<Point> {
   private _pos: Vec2;
   private domPoint: DomPoint;
 
-  constructor(args: PointArgs) {
-    super(args);
+  constructor(args: {pointRegistry: Registry<Point>, layer: Layer}) {
+    super({ registry: args.pointRegistry });
 
-    const { root } = args;
     this._pos = new Vec2();
-    this.domPoint = new DomPoint({ root, id: this.id, layer: args.layer });
+    this.domPoint = new DomPoint({ id: this.id, layer: args.layer });
   }
 
   protected update() {

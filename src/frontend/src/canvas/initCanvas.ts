@@ -6,8 +6,14 @@ import DragScreenTool from './tools/dragScreenTool';
 import PenTool from './tools/pen';
 import LayerManager from './entities/layers/layerManager';
 import Grid from './entities/grids/grid';
+import Registry from './entities/registry';
+import Point from './entities/points/point';
+import Shape from './entities/shape';
 
 function initCanvas(rootDiv: HTMLDivElement) {
+  const pointRegistry = new Registry<Point>();
+  const shapeRegistry = new Registry<Shape>();
+
   const root = create('svg', {
     style: {
       height: '100%',
@@ -20,11 +26,22 @@ function initCanvas(rootDiv: HTMLDivElement) {
   const mousePosition = new MousePosition({ screenManager, root });
   const layerManager = new LayerManager({ root });
 
-  const zoomTool = new ZoomTool({ root, screenManager, mousePosition });
+  const zoomTool = new ZoomTool({
+    root,
+    screenManager,
+    mousePosition,
+    pointRegistry,
+  });
   // const dragScreenTool = new DragScreenTool({ root: svg, screenManager, mousePosition });
 
   const penTool = new PenTool({
-    root, screenManager, layerManager, mousePosition,
+    root,
+    screenManager,
+    layerManager,
+    mousePosition,
+
+    pointRegistry,
+    shapeRegistry,
   });
 
   // todo: outputs at wrong layer
@@ -36,7 +53,7 @@ function initCanvas(rootDiv: HTMLDivElement) {
     screenManager,
   });
 
-  const grid = new Grid({
+  const grid2 = new Grid({
     unit: 10,
     offset: 0,
     axis: 'x',

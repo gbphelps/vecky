@@ -1,18 +1,23 @@
-import { PointArgs, IHandle, IAnchor } from './types';
+import { IHandle, IAnchor } from './types';
 import Point from './point';
 import { create, setProps } from '../../utils';
 import Vec2 from '../../vec2';
 import Layer from '../layers/layer';
+import Registry from '../registry';
 
 class Handle extends Point implements IHandle {
   private readonly connector: SVGLineElement;
   private readonly anchor: IAnchor;
   private layer: Layer;
 
-  constructor(args: PointArgs & {anchor: IAnchor}) {
-    const { root, anchor, layer } = args;
+  constructor(args: {
+    anchor: IAnchor,
+    pointRegistry: Registry<Point>,
+    layer: Layer
+  }) {
+    const { anchor, layer, pointRegistry } = args;
 
-    super({ root, layer });
+    super({ pointRegistry, layer });
 
     this.connector = this.createConnector();
     layer.uxLayer.appendChild(this.connector);
@@ -46,6 +51,11 @@ class Handle extends Point implements IHandle {
   setPosition(pos: Vec2) {
     super.setPosition(pos);
     this.update();
+  }
+
+  destroy() {
+    super.destroy();
+    this.layer.uxLayer.removeChild(this.connector);
   }
 }
 

@@ -1,8 +1,10 @@
 import Anchor from './points/anchor';
 import { create, setProps } from '../utils';
-import { PointArgs } from './points/types';
 import Vec2 from '../vec2';
 import Layer from './layers/layer';
+import RegistryObject from './registryObject';
+import Registry from './registry';
+import Point from './points/point';
 
 const COMMAND_LOOKUP: Record<number, string> = {
   1: 'L',
@@ -10,15 +12,19 @@ const COMMAND_LOOKUP: Record<number, string> = {
   3: 'C',
 };
 
-class ShapeWithUI {
+class Shape extends RegistryObject<Shape> {
   element: SVGPathElement;
   private points: Anchor[];
-  root: SVGSVGElement;
   layer: Layer;
   isClosed: boolean;
+  pointRegistry: Registry<Point>;
 
-  constructor(args: PointArgs) {
-    this.root = args.root;
+  constructor(args: {
+    shapeRegistry: Registry<Shape>,
+    pointRegistry: Registry<Point>,
+    layer: Layer
+  }) {
+    super({ registry: args.shapeRegistry });
     this.layer = args.layer;
 
     this.element = create('path', {
@@ -33,6 +39,7 @@ class ShapeWithUI {
 
     this.points = [];
     this.isClosed = false;
+    this.pointRegistry = args.pointRegistry;
   }
 
   get size() {
@@ -56,8 +63,8 @@ class ShapeWithUI {
   makePoint(pos: Vec2) {
     const point = new Anchor({
       shape: this,
-      root: this.root,
       layer: this.layer,
+      pointRegistry: this.pointRegistry,
     });
     point.setPosition(pos);
     return point;
@@ -124,7 +131,7 @@ class ShapeWithUI {
   }
   // insert(idx: number, pos: Vec2) {}
 
-  merge(other: ShapeWithUI, side: 'back' | 'front', reverseThis: boolean) {
+  merge(other: Shape, side: 'back' | 'front', reverseThis: boolean) {
     if (reverseThis) this.reverse();
 
     if (other.size > this.size) {
@@ -143,8 +150,9 @@ class ShapeWithUI {
   }
 
   destroy() {
+    super.destroy();
     this.layer.drawLayer.removeChild(this.element);
   }
 }
 
-export { ShapeWithUI };
+export default Shape;

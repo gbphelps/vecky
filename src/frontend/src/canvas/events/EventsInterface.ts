@@ -3,7 +3,9 @@ import ScreenManager from '../screenManager';
 import MousePosition from '../mousePosition';
 import Vec2 from '../vec2';
 import EventManager from './EventManager';
-import DomEntry from '../entities/domEntry';
+import Point from '../entities/points/point';
+import Shape from '../entities/shape';
+import Registry from '../entities/registry';
 
 interface CustomEscapeEvent {}
 
@@ -38,7 +40,7 @@ interface CustomMouseMoveEvent {
 }
 
 interface CustomMouseDownEvent {
-  element: DomEntry | null,
+  element: Point | Shape | null,
   pos: Vec2
 }
 
@@ -57,6 +59,10 @@ type OnEscapeCallback = (args: CustomEscapeEvent) => void;
 
 type Args = {
     root: SVGSVGElement;
+    screenManager: ScreenManager;
+    mousePosition: MousePosition;
+    pointRegistry: Registry<Point>;
+
     onDragStartCallback?: OnDragStartCallback;
     onDragEndCallback?: OnDragEndCallback;
     onDragCallback?: OnDragCallback;
@@ -65,8 +71,6 @@ type Args = {
     onMouseDownCallback?: OnMouseDownCallback;
     onMouseUpCallback?: OnMouseUpCallback;
     onEscapeCallback?: OnEscapeCallback;
-    screenManager: ScreenManager;
-    mousePosition: MousePosition;
 }
 
 class EventsInterface implements IListener {
@@ -84,6 +88,7 @@ class EventsInterface implements IListener {
 
   screenManager: ScreenManager;
   mousePosition: MousePosition;
+  pointRegistry: Registry<Point>;
 
   dragStartVector: Vec2 | null;
   dragVector: Vec2 | null;
@@ -105,11 +110,13 @@ class EventsInterface implements IListener {
       onEscapeCallback,
       screenManager,
       mousePosition,
+      pointRegistry,
       root,
     } = args;
 
     this.screenManager = screenManager;
     this.mousePosition = mousePosition;
+    this.pointRegistry = pointRegistry;
 
     this.dragVector = null;
     this.dragStartVector = null;
@@ -155,7 +162,7 @@ class EventsInterface implements IListener {
     if (this.onMouseDownCallback) {
       this.onMouseDownCallback({
         pos: this.mousePosition.pos,
-        element: DomEntry.lookup(this.rootElement, elementId),
+        element: this.pointRegistry.get(elementId),
       });
     }
 

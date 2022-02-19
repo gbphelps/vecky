@@ -5,22 +5,30 @@ import {
   CustomMouseUpEvent,
   CustomDragEvent,
 } from '../../events/EventsInterface';
-import { ShapeWithUI } from '../../entities/pointListItem';
+import Shape from '../../entities/shape';
 import LayerManager from '../../entities/layers/layerManager';
 import Anchor from '../../entities/points/anchor';
+import Registry from '../../entities/registry';
+import Point from '../../entities/points/point';
 
 class PenTool extends Tool {
   activeNode: Anchor | null;
   dir: 'next' | 'prev';
 
-  private root: SVGSVGElement;
   private layerManager: LayerManager;
+  private pointRegistry: Registry<Point>;
+  private shapeRegistry: Registry<Shape>;
 
-  constructor(args: IToolArgs & {layerManager: LayerManager}) {
+  constructor(args: IToolArgs & {
+    layerManager: LayerManager,
+    shapeRegistry: Registry<Shape>,
+    pointRegistry: Registry<Point>
+  }) {
     super(args);
 
+    this.pointRegistry = args.pointRegistry;
+    this.shapeRegistry = args.shapeRegistry;
     this.layerManager = args.layerManager;
-    this.root = args.root;
     this.activeNode = null;
     this.dir = 'next';
   }
@@ -40,8 +48,9 @@ class PenTool extends Tool {
 
     if (!this.activeNode) {
       if (!clickedPoint) {
-        const newShape = new ShapeWithUI({
-          root: this.root,
+        const newShape = new Shape({
+          pointRegistry: this.pointRegistry,
+          shapeRegistry: this.shapeRegistry,
           layer: this.layerManager.activeLayer,
         });
 
