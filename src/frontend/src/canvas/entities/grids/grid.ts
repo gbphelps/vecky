@@ -1,18 +1,19 @@
 import ScreenManager from '../../screenManager';
 import { create } from '../../utils';
+import Layer from '../layers/layer';
 
 class GridLine {
   value: number;
   axis: 'x' | 'y';
   element: SVGLineElement;
-  root: SVGSVGElement;
+  layer: Layer;
 
-  constructor({ value, axis, root }: {
+  constructor({ value, axis, layer }: {
       value: number,
       axis: 'x' | 'y',
-      root: SVGSVGElement
+      layer: Layer
    }) {
-    this.root = root;
+    this.layer = layer;
     this.value = value;
     this.axis = axis;
     this.element = this.makeElement(value);
@@ -31,19 +32,19 @@ class GridLine {
         vectorEffect: 'non-scaling-stroke',
       },
     });
-    this.root.appendChild(element);
+    this.layer.drawLayer.appendChild(element);
     return element;
   }
 
   destroy() {
-    this.root.removeChild(this.element);
+    this.layer.drawLayer.removeChild(this.element);
   }
 }
 
 class Grid {
   axis: 'x' | 'y';
   private readonly screenManager: ScreenManager;
-  private readonly root: SVGSVGElement;
+  private readonly layer: Layer;
   unit: number;
   offset: number;
   private gridLines: GridLine[];
@@ -55,17 +56,22 @@ class Grid {
         screenManager: ScreenManager,
         root: SVGSVGElement,
         offset: number,
+        layer: Layer
     },
   ) {
     const {
-      axis, root, screenManager, unit, offset,
+      axis,
+      layer,
+      screenManager,
+      unit,
+      offset,
     } = args;
     this.axis = axis;
-    this.root = root;
     this.screenManager = screenManager;
     this.unit = unit;
     this.offset = offset;
     this.gridLines = [];
+    this.layer = layer;
 
     this.update();
     this.screenManager.subscribe(this.update);
@@ -94,7 +100,7 @@ class Grid {
 
     for (let i = currLo; i >= lo; i -= this.unit) {
       this.gridLines.unshift(new GridLine({
-        root: this.root,
+        layer: this.layer,
         value: i,
         axis: this.axis,
       }));
@@ -102,7 +108,7 @@ class Grid {
 
     for (let i = currHi; i <= hi; i += this.unit) {
       this.gridLines.push(new GridLine({
-        root: this.root,
+        layer: this.layer,
         value: i,
         axis: this.axis,
       }));

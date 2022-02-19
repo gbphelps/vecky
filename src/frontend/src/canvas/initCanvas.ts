@@ -51,6 +51,7 @@ function initCanvas(rootDiv: HTMLDivElement) {
     axis: 'y',
     root,
     screenManager,
+    layer: layerManager.baseLayer,
   });
 
   const grid2 = new Grid({
@@ -59,6 +60,7 @@ function initCanvas(rootDiv: HTMLDivElement) {
     axis: 'x',
     root,
     screenManager,
+    layer: layerManager.baseLayer,
   });
 
   return {
