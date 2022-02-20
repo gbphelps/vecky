@@ -65,7 +65,7 @@ class Polynomial {
   }
 
   pow(arg: number): Polynomial {
-    if (arg === 0) return new Polynomial([0, 1]);
+    if (arg === 0) return new Polynomial([1]);
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let res: Polynomial = this;

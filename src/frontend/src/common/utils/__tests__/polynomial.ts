@@ -17,6 +17,12 @@ describe('Polynomial', () => {
         [3, 1],
       ]));
     });
+    test('pow 0: always return 1', () => {
+      const p = new Polynomial([1, 3, 6]);
+      expect(p.pow(0).coefficients).toEqual(getMap([
+        [0, 1],
+      ]));
+    });
   });
 
   describe('integrate', () => {
