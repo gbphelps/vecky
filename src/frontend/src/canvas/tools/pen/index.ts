@@ -140,7 +140,9 @@ class PenTool extends Tool {
     }
   }
 
-  destroy() {}
+  destroy() {
+    super.destroy();
+  }
 }
 
 export default PenTool;

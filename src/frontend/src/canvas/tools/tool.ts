@@ -33,8 +33,6 @@ interface Tool {
 
 // eslint-disable-next-line no-redeclare
 abstract class Tool {
-  abstract destroy(): void;
-
   eventsInterface: EventsInterface;
 
   constructor({
@@ -59,7 +57,7 @@ abstract class Tool {
     });
   }
 
-  onDestroy() {
+  destroy() {
     this.eventsInterface.destroy();
   }
 }
