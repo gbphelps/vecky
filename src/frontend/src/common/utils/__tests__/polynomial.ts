@@ -19,6 +19,17 @@ describe('Polynomial', () => {
     });
   });
 
+  describe('integrate', () => {
+    test('basic test', () => {
+      const p = new Polynomial([1, 3, 6]);
+      expect(p.integrate().coefficients).toEqual(getMap([
+        [1, 1],
+        [2, 1.5],
+        [3, 2],
+      ]));
+    });
+  });
+
   describe('evaluate', () => {
     test('basic test', () => {
       const p = new Polynomial([1, 2, 3]);

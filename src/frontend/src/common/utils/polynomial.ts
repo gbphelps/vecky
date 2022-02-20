@@ -98,6 +98,18 @@ class Polynomial {
     return res;
   }
 
+  integrate() {
+    const res = new Polynomial();
+
+    this.coefficients.forEach((coeff, degree) => {
+      const newDegree = degree + 1;
+      const newCoeff = coeff / newDegree;
+      res.setCoeff(newDegree, newCoeff);
+    });
+
+    return res;
+  }
+
   times(arg: Polynomial | number): Polynomial {
     const res = new Polynomial();
 
