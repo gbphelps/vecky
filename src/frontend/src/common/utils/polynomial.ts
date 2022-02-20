@@ -52,6 +52,18 @@ class Polynomial {
     return res;
   }
 
+  scale(n: number): Polynomial {
+    const res = new Polynomial();
+    this.coefficients.forEach((coeff, degree) => {
+      res.setCoeff(degree, coeff * n);
+    });
+    return res;
+  }
+
+  minus(arg: Polynomial): Polynomial {
+    return this.plus(arg.scale(-1));
+  }
+
   times(arg: Polynomial): Polynomial {
     const res = new Polynomial();
 
