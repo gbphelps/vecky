@@ -1,21 +1,70 @@
 class Polynomial {
-  coefficients: number[];
-  constructor(coefficients: number[]) {
-    while (coefficients[coefficients.length - 1] === 0) coefficients.pop();
+  coefficients: Map<number, number>;
+
+  constructor(coefficients?: number[] | Map<number, number>) {
+    this.coefficients = new Map();
+    if (!coefficients) return;
+
+    if (Array.isArray(coefficients)) {
+      this.initWithArr(coefficients);
+    } else {
+      this.initWithMap(coefficients);
+    }
+  }
+
+  initWithMap(coefficients: Map<number, number>) {
     this.coefficients = coefficients;
   }
 
-  times(arg: Polynomial): Polynomial {
-    const newCoefficients = new Array(this.coefficients.length + arg.coefficients.length).fill(0);
+  initWithArr(coefficients: number[]) {
+    coefficients.forEach((el, i) => {
+      if (el === 0) return;
+      this.coefficients.set(i, el);
+    });
+  }
 
-    for (let i = 0; i < this.coefficients.length; i++) {
-      for (let j = 0; j < arg.coefficients.length; j++) {
-        if (!newCoefficients[i + j]) newCoefficients[i + j] = 0;
-        newCoefficients[i + j] += this.coefficients[i] * arg.coefficients[j];
-      }
+  getCoeff(i: number) {
+    return this.coefficients.get(i) ?? 0;
+  }
+
+  setCoeff(i: number, val: number) {
+    if (val === 0) {
+      this.coefficients.delete(i);
+    } else {
+      this.coefficients.set(i, val);
     }
+  }
 
-    return new Polynomial(newCoefficients);
+  plus(arg: Polynomial): Polynomial {
+    const res = new Polynomial();
+
+    arg.coefficients.forEach((coeff, degree) => {
+      res.setCoeff(degree, coeff);
+    });
+
+    this.coefficients.forEach((coeff, degree) => {
+      res.setCoeff(
+        degree,
+        res.getCoeff(degree) + coeff,
+      );
+    });
+
+    return res;
+  }
+
+  times(arg: Polynomial): Polynomial {
+    const res = new Polynomial();
+
+    arg.coefficients.forEach((coeffA, degreeA) => {
+      this.coefficients.forEach((coeffB, degreeB) => {
+        res.setCoeff(
+          degreeA + degreeB,
+          res.getCoeff(degreeA + degreeB) + coeffA * coeffB,
+        );
+      });
+    });
+
+    return res;
   }
 }
 
