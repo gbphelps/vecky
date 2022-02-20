@@ -64,8 +64,44 @@ class Polynomial {
     return this.plus(arg.scale(-1));
   }
 
-  times(arg: Polynomial): Polynomial {
+  pow(arg: number): Polynomial {
+    if (arg === 0) return new Polynomial([0, 1]);
+
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let res: Polynomial = this;
+
+    for (let i = 1; i < arg; i++) {
+      res = res.times(this);
+    }
+
+    return res;
+  }
+
+  evaluate(x: number) {
+    let value = 0;
+    this.coefficients.forEach((coeff, degree) => {
+      value += x ** degree * coeff;
+    });
+
+    return value;
+  }
+
+  differentiate() {
     const res = new Polynomial();
+
+    this.coefficients.forEach((coeff, degree) => {
+      const newDegree = degree - 1;
+      const newCoeff = coeff * degree;
+      res.setCoeff(newDegree, newCoeff);
+    });
+
+    return res;
+  }
+
+  times(arg: Polynomial | number): Polynomial {
+    const res = new Polynomial();
+
+    if (typeof arg === 'number') return this.scale(arg);
 
     arg.coefficients.forEach((coeffA, degreeA) => {
       this.coefficients.forEach((coeffB, degreeB) => {

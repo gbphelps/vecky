@@ -7,6 +7,25 @@ function getMap<A, B>(arr: [A, B][]): Map<A, B> {
 }
 
 describe('Polynomial', () => {
+  describe('exponentiation', () => {
+    test('basic test', () => {
+      const p = new Polynomial([1, 1]);
+      expect(p.pow(3).coefficients).toEqual(getMap([
+        [0, 1],
+        [1, 3],
+        [2, 3],
+        [3, 1],
+      ]));
+    });
+  });
+
+  describe('evaluate', () => {
+    test('basic test', () => {
+      const p = new Polynomial([1, 2, 3]);
+      expect(p.evaluate(3)).toEqual(34);
+    });
+  });
+
   describe('init', () => {
     test('omits zeros', () => {
       const p = new Polynomial([0, 0, 0, 0]);
@@ -27,6 +46,16 @@ describe('Polynomial', () => {
     });
   });
 
+  describe('differentiate', () => {
+    test('simple case', () => {
+      expect(new Polynomial([0, 1, 4, 0, 2]).differentiate().coefficients).toEqual(getMap([
+        [0, 1],
+        [1, 8],
+        [3, 8],
+      ]));
+    });
+  });
+
   describe('multiply', () => {
     test('simple case', () => {
       const a = new Polynomial([-1, 1]);
@@ -35,6 +64,17 @@ describe('Polynomial', () => {
       expect(a.times(b).coefficients).toEqual(getMap([
         [0, -1],
         [2, 1],
+      ]));
+    });
+
+    test('works as alias for .scale', () => {
+      const a = new Polynomial([1, 2, 3, 4]);
+
+      expect(a.times(-2).coefficients).toEqual(getMap([
+        [0, -2],
+        [1, -4],
+        [2, -6],
+        [3, -8],
       ]));
     });
 
