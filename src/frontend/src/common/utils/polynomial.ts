@@ -1,8 +1,11 @@
 class Polynomial {
   coefficients: Map<number, number>;
+  degree: number;
 
   constructor(coefficients?: number[] | Map<number, number>) {
     this.coefficients = new Map();
+    this.degree = 0;
+
     if (!coefficients) return;
 
     if (Array.isArray(coefficients)) {
@@ -18,8 +21,7 @@ class Polynomial {
 
   initWithArr(coefficients: number[]) {
     coefficients.forEach((el, i) => {
-      if (el === 0) return;
-      this.coefficients.set(i, el);
+      this.setCoeff(i, el);
     });
   }
 

@@ -18,7 +18,7 @@ function binCoeff(n: number, k: number) {
   return factorial(n) / factorial(k) / factorial(n - k);
 }
 
-function bezierOfOrder(n: number) {
+function bezierOfDegree(n: number) {
   return function bez(...p: number[]) {
     let poly = new Polynomial();
 
@@ -35,12 +35,57 @@ function bezierOfOrder(n: number) {
   };
 }
 
-const cubicBezier = bezierOfOrder(4);
-const quadraticBezier = bezierOfOrder(3);
+const cubicBezier = bezierOfDegree(4);
+const quadraticBezier = bezierOfDegree(3);
+
+// note: minimatrix-polyroots for 2 higher degrees
+function getRoots(nums: number[]): number[] {
+  if (nums.length === 3) {
+    const [c, b, a] = nums;
+    const partA = -b / (2 * a);
+    const partB = Math.sqrt(b ** 2 - 4 * a * c) / (2 * a);
+    return [partA + partB, partA - partB];
+  } if (nums.length === 2) {
+    const [b, m] = nums;
+    return [-b / m];
+  }
+  throw new Error('Degree is too high or too low');
+}
+
+function range(curve: Polynomial) {
+  const coeffs: number[] = new Array(4).fill(0);
+
+  curve
+    .differentiate()
+    .coefficients
+    .forEach((coeff, degree) => {
+      if (degree > 4) throw new Error('');
+      coeffs[degree] = coeff;
+    });
+
+  while (coeffs.length && coeffs[coeffs.length - 1] === 0) coeffs.pop();
+
+  const roots = getRoots(coeffs);
+
+  let [min, max] = [curve.evaluate(0), curve.evaluate(1)]
+    .sort((a, b) => a - b);
+
+  roots.forEach((tval) => {
+    if (tval > 1 || tval < 0) return;
+
+    const val = curve.evaluate(tval);
+    if (val < min) min = val;
+    if (val > max) max = val;
+  });
+
+  return { min, max };
+}
 
 export {
   cubicBezier,
   quadraticBezier,
   binCoeff,
   factorial,
+  range,
+  bezierOfDegree,
 };

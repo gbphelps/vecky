@@ -5,6 +5,7 @@ import Layer from './layers/layer';
 import RegistryObject from './registryObject';
 import Registry from './registry';
 import Point from './points/point';
+import { bezierOfDegree, range } from '../../common/utils/bezier';
 
 const COMMAND_LOOKUP: Record<number, string> = {
   1: 'L',
@@ -18,6 +19,7 @@ class Shape extends RegistryObject<Shape> {
   layer: Layer;
   isClosed: boolean;
   pointRegistry: Registry<Point>;
+  bboxes: SVGPathElement;
 
   constructor(args: {
     shapeRegistry: Registry<Shape>,
@@ -35,11 +37,22 @@ class Shape extends RegistryObject<Shape> {
         vectorEffect: 'non-scaling-stroke',
       },
     });
+
     this.layer.drawLayer.appendChild(this.element);
 
     this.points = [];
     this.isClosed = false;
     this.pointRegistry = args.pointRegistry;
+
+    this.bboxes = create('path', {
+      style: {
+        fill: 'none',
+        stroke: 'red',
+        strokeWidth: '1',
+        vectorEffect: 'non-scaling-stroke',
+      },
+    });
+    this.layer.drawLayer.appendChild(this.bboxes);
   }
 
   get size() {
@@ -81,8 +94,10 @@ class Shape extends RegistryObject<Shape> {
   }
 
   update() {
+    setProps(this.bboxes, { d: '' });
+    setProps(this.element, { d: '' });
+
     if (!this.points.length) {
-      setProps(this.element, { d: '' });
       return;
     }
 
@@ -106,12 +121,24 @@ class Shape extends RegistryObject<Shape> {
       });
 
       if (controlPoints.length) {
+        this.addBBox([this.points[i - 1].pos, ...controlPoints]);
+
         const command = COMMAND_LOOKUP[controlPoints.length];
         d.push(`${command} ${controlPoints.map((p) => `${p.x} ${p.y}`).join(' ')}`);
       }
     }
 
     setProps(this.element, { d: d.join(' ') });
+  }
+
+  addBBox(controlPoints: Vec2[]) {
+    const bz = bezierOfDegree(controlPoints.length);
+    const rX = range(bz(...controlPoints.map((p) => p.x)));
+    const rY = range(bz(...controlPoints.map((p) => p.y)));
+    let d = this.bboxes.getAttribute('d') ?? '';
+    d += `M ${rX.min} ${rY.min} L ${rX.max} ${rY.min} L ${rX.max} ${rY.max} L ${rX.min} ${rY.max} Z`;
+
+    setProps(this.bboxes, { d });
   }
 
   close() {
