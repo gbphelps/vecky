@@ -1,4 +1,4 @@
-import { setProps, create } from '../../utils';
+import { setProps, create } from '../../utils/misc';
 import Vec2 from '../../vec2';
 import RegistryObject from '../registryObject';
 import Registry from '../registry';

@@ -1,5 +1,5 @@
 import ScreenManager from '../../screenManager';
-import { create } from '../../utils';
+import { create } from '../../utils/misc';
 import Layer from '../layers/layer';
 
 class GridLine {

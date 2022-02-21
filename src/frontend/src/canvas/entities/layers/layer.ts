@@ -1,4 +1,4 @@
-import { create } from '../../utils';
+import { create } from '../../utils/misc';
 
 class Layer {
   drawLayer: SVGGElement;

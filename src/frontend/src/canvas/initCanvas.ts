@@ -1,4 +1,4 @@
-import { create } from './utils';
+import { create } from './utils/misc';
 import ZoomTool from './tools/zoomTool';
 import ScreenManager from './screenManager';
 import MousePosition from './mousePosition';

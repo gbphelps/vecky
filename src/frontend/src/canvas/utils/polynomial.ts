@@ -1,4 +1,5 @@
 type DeepArr = (DeepArr | number)[]
+type SimpleFunction = (t: number) => number;
 
 function getAllPointers(arr: DeepArr) {
   const els: Record<string, number> = {};
@@ -188,6 +189,39 @@ class Polynomial2 {
 
     return res;
   }
+
+  /// //////////////////////////////////
+  /* add an extra zeroed-out dimension */
+  unproject(newDimIndex: number) {
+    if (newDimIndex > this.dimension) throw new Error('Dimension index too high!');
+    const res = new Polynomial2();
+    Object.keys(this.coefficients).forEach((k) => {
+      const degs = this.parseKey(k);
+      degs.splice(newDimIndex, 0, 0);
+      res.setCoeff(degs, this.coefficients[k]);
+    });
+    return res;
+  }
+
+  // todo test this
+  decompose(dimIndex: number) {
+    const polys: Polynomial2[] = [];
+    Object.keys(this.coefficients).forEach((k) => {
+      const degs = this.parseKey(k);
+      const deg = degs.splice(dimIndex, 1)[0];
+
+      if (!polys[deg]) polys[deg] = new Polynomial2();
+      polys[deg].setCoeff(
+        degs,
+        this.coefficients[k],
+      );
+    });
+
+    return polys.map((p) => p ?? new Polynomial2());
+  }
+
+  getSolver(dim: number, substitutions: Record<number, SimpleFunction>) {}
+  /// //////////////////////////////////
 }
 
 export default Polynomial2;

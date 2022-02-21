@@ -1,4 +1,4 @@
-import Polynomial from '../polynomial2';
+import Polynomial from '../polynomial';
 
 function getMap<A, B>(arr: [A, B][]): Map<A, B> {
   const map: Map<A, B> = new Map();

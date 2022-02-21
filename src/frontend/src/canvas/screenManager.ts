@@ -1,4 +1,4 @@
-import { setProps } from './utils';
+import { setProps } from './utils/misc';
 import Vec2 from './vec2';
 import Publisher from './publishers/publisher';
 
