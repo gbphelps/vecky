@@ -123,7 +123,7 @@ function commonTangents(
       da.x.times(a.y.minus(b.y)),
     );
 
-  zero2.getSolver(1, { 0: root1 });
+  zero2.get1dSolver(1, { 0: root1 });
 }
 
 function abstractQuadraticRoots(a: Polynomial, b: Polynomial, c: Polynomial) {

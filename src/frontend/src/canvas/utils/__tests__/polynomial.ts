@@ -7,6 +7,83 @@ function getMap<A, B>(arr: [A, B][]): Map<A, B> {
 }
 
 describe('Polynomial', () => {
+  describe('1dsolver', () => {
+    test('circle in [x^2 + y^2 - R^2 = 0] format intersecting line', () => {
+      // circle radius 5 at origin;
+      // x^2 + y^2 - 25 = 0;
+      const circle = new Polynomial({
+        '0:0': -25, // -25
+        '2:0': 1, // 1x^2
+        '0:2': 1, // 1y^2
+      }); // = 0
+
+      const line = (t: number) => (4 / 3) * t;
+
+      const solver = circle.get1dSolver(0, { 1: line }); // convert to dim 0 (x dim)
+
+      // we set the other side of the circle to zero,
+      // so the intersection will happen where the solver is zero
+      expect(solver(3)).toEqual(0);
+      expect(solver(-3)).toEqual(0);
+
+      // just to prove that we're not randomly falsey here
+      expect(solver(4)).not.toEqual(0);
+    });
+
+    test('circle in [x^2 + y^2 = R^2] format intersecting line', () => {
+      // circle radius 5 at origin;
+      // x^2 + y^2 - 25 = 0;
+      const circle = new Polynomial({
+        '0:0': 0, // 0
+        '2:0': 1, // 1x^2
+        '0:2': 1, // 1y^2
+      }); // = 0
+
+      const line = (t: number) => (3 / 4) * t;
+
+      const solver = circle.get1dSolver(0, { 1: line }); // convert to dim 0 (x dim)
+
+      // we set the other side of the circle to zero,
+      // so the intersection will happen where the solver is zero
+      expect(solver(4)).toEqual(25);
+      expect(solver(-4)).toEqual(25);
+
+      // just to prove that we're not randomly falsey here
+      expect(solver(3)).not.toEqual(25);
+    });
+
+    test('eq1: 3xy + 4x + 2y + 7 = 0 | eq2: x = y - 4', () => {
+      const curve = new Polynomial({
+        '0:0': 7,
+        '1:1': 3,
+        '1:0': 4,
+        '0:1': 2,
+      });
+
+      const line = (t: number) => t - 4;
+
+      // note: we're converting into y,
+      // see eq2 in test description
+      const solver = curve.get1dSolver(
+        1, // y
+        { 0: line }, // x Subst: x = y - 4
+      );
+
+      // by substitution, we know
+      // 3(y-4)y + 4(y-4) + 2y = -7 ==>
+      // 3y^2 - 6y - 9 = 0 ==>
+      // (3y + 3) * (y - 3) = 0
+      // y = -1, 3
+
+      // expect both roots to satisfy eq1
+      expect(solver(-1)).toEqual(0);
+      expect(solver(3)).toEqual(0);
+
+      // expect any other value NOT to satisfy eq1
+      expect(solver(2)).not.toEqual(0);
+    });
+  });
+
   describe('exponentiation', () => {
     test('basic test', () => {
       const p = new Polynomial([1, 1]);

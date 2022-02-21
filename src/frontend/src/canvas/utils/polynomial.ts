@@ -1,6 +1,8 @@
 type DeepArr = (DeepArr | number)[]
 type SimpleFunction = (t: number) => number;
 
+const IDENTITY = <T>(t: T) => t;
+
 function getAllPointers(arr: DeepArr) {
   const els: Record<string, number> = {};
 
@@ -22,7 +24,7 @@ function getAllPointers(arr: DeepArr) {
 class Polynomial2 {
   coefficients: Record<string, number>;
 
-  constructor(coefficients?: number[] | Record<string, number>) {
+  constructor(coefficients?: DeepArr | Record<string, number>) {
     this.coefficients = {};
 
     if (!coefficients) return;
@@ -220,7 +222,39 @@ class Polynomial2 {
     return polys.map((p) => p ?? new Polynomial2());
   }
 
-  getSolver(dim: number, substitutions: Record<number, SimpleFunction>) {}
+  get1dSolver(dim: number, substitutions: Record<number, SimpleFunction>) {
+    const needed = new Set(
+      new Array(this.dimension)
+        .fill(null).map((_, i) => i),
+    );
+    needed.delete(dim);
+    Object.keys(substitutions)
+      .map((a) => +a)
+      .forEach((a) => needed.delete(a));
+    if (needed.size > 0) throw new Error('Not enough substitutions!');
+
+    return (t: number) => {
+      let value = 0;
+      Object.keys(this.coefficients).forEach((k) => {
+        const degs = this.parseKey(k);
+        let currVal = this.coefficients[k];
+
+        degs.forEach((deg, i) => {
+          const func =
+          // use substitution if exists
+          substitutions[i]
+          // esle this is the dim we're solving for
+          // and it doesn't need to be converted
+          ?? IDENTITY;
+
+          currVal *= func(t) ** deg;
+        });
+        value += currVal;
+      });
+
+      return value;
+    };
+  }
   /// //////////////////////////////////
 }
 
