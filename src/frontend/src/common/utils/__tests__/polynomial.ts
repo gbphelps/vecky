@@ -39,7 +39,7 @@ describe('Polynomial', () => {
   describe('evaluate', () => {
     test('basic test', () => {
       const p = new Polynomial([1, 2, 3]);
-      expect(p.evaluate([3])).toEqual(34);
+      expect(p.evaluate(3)).toEqual(34);
     });
   });
 

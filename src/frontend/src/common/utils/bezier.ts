@@ -1,4 +1,4 @@
-import Polynomial from './polynomial';
+import Polynomial from './polynomial2';
 
 const oneMinusT = new Polynomial([1, -1]);
 const t = new Polynomial([0, 1]);
@@ -45,23 +45,26 @@ function getRoots(nums: number[]): number[] {
     const partA = -b / (2 * a);
     const partB = Math.sqrt(b ** 2 - 4 * a * c) / (2 * a);
     return [partA + partB, partA - partB];
-  } if (nums.length === 2) {
+  }
+
+  if (nums.length === 2) {
     const [b, m] = nums;
     return [-b / m];
   }
+
+  if (nums.length === 1) return [];
+
   throw new Error('Degree is too high or too low');
 }
 
 function range(curve: Polynomial) {
   const coeffs: number[] = new Array(4).fill(0);
 
-  curve
-    .differentiate()
-    .coefficients
-    .forEach((coeff, degree) => {
-      if (degree > 4) throw new Error('');
-      coeffs[degree] = coeff;
-    });
+  const diff = curve.differentiate();
+  Object.keys(diff.coefficients).forEach((k) => {
+    const deg = curve.parseKey(k)[0];
+    coeffs[deg] = diff.coefficients[k];
+  });
 
   while (coeffs.length && coeffs[coeffs.length - 1] === 0) coeffs.pop();
 

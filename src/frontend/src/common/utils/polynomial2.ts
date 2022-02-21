@@ -118,7 +118,13 @@ class Polynomial2 {
     return res;
   }
 
-  evaluate(x: number[]) {
+  evaluate(arg: number[] | number) {
+    if (typeof arg === 'number' && this.dimension > 1) {
+      throw new Error('Must use array of vars!');
+    }
+
+    const x = typeof arg === 'number' ? [arg] : arg;
+
     let value = 0;
     Object.keys(this.coefficients).forEach((key) => {
       const degs = this.parseKey(key);
