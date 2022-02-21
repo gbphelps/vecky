@@ -1,6 +1,6 @@
 import Anchor from './points/anchor';
 import { create, setProps } from '../utils/misc';
-import Vec2 from '../vec2';
+import Vec2 from '../utils/vec2';
 import Layer from './layers/layer';
 import RegistryObject from './registryObject';
 import Registry from './registry';

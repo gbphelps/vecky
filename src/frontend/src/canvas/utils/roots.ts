@@ -1,13 +1,7 @@
 import Polynomial from './polynomial';
+import { lerp, oppSigns } from './misc';
 
 type SimpleFunction = (t: number) => number;
-
-function oppSigns(a: number, b: number) {
-  return (a < 0 && b > 0) || (a > 0 && b < 0);
-}
-function lerp(a: number, b: number, w: number) {
-  return a + (b - a) * w;
-}
 
 function processBracket(args: {
     fn: SimpleFunction,

@@ -24,34 +24,16 @@ function create<T extends keyof TypeMap>(type: T, props?: SVGAttributes<TypeMap[
   return el;
 }
 
-interface DoubleLinkedList<T> {
-  next: DoubleLinkedList<T> | null,
-  prev: DoubleLinkedList<T> | null,
-  reverseNode: () => void,
+function oppSigns(a: number, b: number) {
+  return (a < 0 && b > 0) || (a > 0 && b < 0);
+}
+function lerp(a: number, b: number, w: number) {
+  return a + (b - a) * w;
 }
 
-function reverseDoubleLinkedList<T>(ll: DoubleLinkedList<T>) {
-  let head = ll;
-  while (head.next) head = head.next;
-
-  function _s(node: DoubleLinkedList<T> | null) {
-    if (!node) return node;
-
-    node.reverseNode();
-
-    const next = _s(node.prev);
-
-    // eslint-disable-next-line no-param-reassign
-    node.next = next;
-    if (next) next.prev = node;
-    return node;
-  }
-
-  _s(head);
-  head.prev = null;
-
-  return head;
-}
-
-export { setProps, create, reverseDoubleLinkedList };
-export type { DoubleLinkedList };
+export {
+  setProps,
+  create,
+  lerp,
+  oppSigns,
+};

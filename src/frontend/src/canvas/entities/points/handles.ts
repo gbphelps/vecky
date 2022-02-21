@@ -1,6 +1,6 @@
 import { IHandle, IAnchor } from './types';
 import Handle from './handle';
-import Vec2 from '../../vec2';
+import Vec2 from '../../utils/vec2';
 import Layer from '../layers/layer';
 import Point from './point';
 import Registry from '../registry';

@@ -2,7 +2,7 @@ import { IAnchor } from './types';
 import Handles from './handles';
 import Point from './point';
 import Shape from '../shape';
-import Vec2 from '../../vec2';
+import Vec2 from '../../utils/vec2';
 import Layer from '../layers/layer';
 import Registry from '../registry';
 

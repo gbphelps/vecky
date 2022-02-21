@@ -1,4 +1,4 @@
-import Vec2 from '../vec2';
+import Vec2 from '../utils/vec2';
 import Publisher from './publisher';
 
 class Position extends Publisher<Vec2> {

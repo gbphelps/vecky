@@ -6,6 +6,11 @@ class Vec2 {
     this.x = x ?? 0;
     this.y = y ?? 0;
   }
+
+  get magnitude() {
+    return Math.sqrt(this.x ** 2 + this.y ** 2);
+  }
+
   clone(): Vec2 {
     return new Vec2(this.x, this.y);
   }
@@ -20,6 +25,10 @@ class Vec2 {
 
   times(n: number) {
     return new Vec2(this.x * n, this.y * n);
+  }
+
+  distance(other: Vec2) {
+    return this.minus(other).magnitude;
   }
 }
 

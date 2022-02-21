@@ -1,7 +1,7 @@
 import { IListener } from './types';
 import ScreenManager from '../screenManager';
 import MousePosition from '../mousePosition';
-import Vec2 from '../vec2';
+import Vec2 from '../utils/vec2';
 import EventManager from './EventManager';
 import Point from '../entities/points/point';
 import Shape from '../entities/shape';

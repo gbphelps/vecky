@@ -1,5 +1,5 @@
 import { setProps, create } from '../../utils/misc';
-import Vec2 from '../../vec2';
+import Vec2 from '../../utils/vec2';
 import RegistryObject from '../registryObject';
 import Registry from '../registry';
 import Layer from '../layers/layer';

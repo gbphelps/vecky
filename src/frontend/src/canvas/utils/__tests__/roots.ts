@@ -1,4 +1,4 @@
-import { findRoots, processBracket } from '../roots';
+import { processBracket } from '../roots';
 import Polynomial from '../polynomial';
 
 describe('processBracket', () => {
