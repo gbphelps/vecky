@@ -62,7 +62,7 @@ describe('Polynomial', () => {
 
       const line = (t: number) => t - 4;
 
-      // note: we're converting into y,
+      // note: we're solving for y, not x,
       // see eq2 in test description
       const solver = curve.get1dSolver(
         1, // y
