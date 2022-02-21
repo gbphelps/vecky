@@ -100,4 +100,4 @@ function abstractQuadraticRoots(a: Polynomial, b: Polynomial, c: Polynomial) {
   };
 }
 
-export { findRoots, abstractQuadraticRoots };
+export { findRoots, abstractQuadraticRoots, processBracket };

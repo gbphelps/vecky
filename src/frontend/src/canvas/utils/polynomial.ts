@@ -21,7 +21,7 @@ function getAllPointers(arr: DeepArr) {
   return els;
 }
 
-class Polynomial2 {
+class Polynomial {
   coefficients: Record<string, number>;
 
   constructor(coefficients?: DeepArr | Record<string, number>) {
@@ -76,8 +76,8 @@ class Polynomial2 {
     }
   }
 
-  plus(arg: Polynomial2): Polynomial2 {
-    const res = new Polynomial2({ ...this.coefficients });
+  plus(arg: Polynomial): Polynomial {
+    const res = new Polynomial({ ...this.coefficients });
 
     Object.keys(arg.coefficients).forEach((key) => {
       const degs = this.parseKey(key);
@@ -90,29 +90,29 @@ class Polynomial2 {
     return res;
   }
 
-  scale(n: number): Polynomial2 {
+  scale(n: number): Polynomial {
     const hash = Object.keys(this.coefficients).reduce((all, key) => {
       // eslint-disable-next-line no-param-reassign
       all[key] = this.coefficients[key] * n;
       return all;
     }, {} as Record<string, number>);
 
-    return new Polynomial2(hash);
+    return new Polynomial(hash);
   }
 
-  minus(arg: Polynomial2): Polynomial2 {
+  minus(arg: Polynomial): Polynomial {
     return this.plus(arg.scale(-1));
   }
 
-  pow(arg: number): Polynomial2 {
+  pow(arg: number): Polynomial {
     if (arg === 0) {
-      return new Polynomial2({
+      return new Polynomial({
         [this.getZeroKey()]: 1,
       });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let res: Polynomial2 = this;
+    let res: Polynomial = this;
 
     for (let i = 1; i < arg; i++) {
       res = res.times(this);
@@ -121,7 +121,7 @@ class Polynomial2 {
     return res;
   }
 
-  evaluate(arg: number[] | number) {
+  evaluate(arg: number[] | number): number {
     if (typeof arg === 'number' && this.dimension > 1) {
       throw new Error('Must use array of vars!');
     }
@@ -140,7 +140,7 @@ class Polynomial2 {
   }
 
   differentiate(dim?: number) {
-    const res = new Polynomial2();
+    const res = new Polynomial();
 
     Object.keys(this.coefficients).forEach((key) => {
       const degs = this.parseKey(key);
@@ -154,7 +154,7 @@ class Polynomial2 {
   }
 
   integrate(dim?: number) {
-    const res = new Polynomial2();
+    const res = new Polynomial();
 
     Object.keys(this.coefficients).forEach((key) => {
       const degs = this.parseKey(key);
@@ -167,8 +167,8 @@ class Polynomial2 {
     return res;
   }
 
-  times(arg: Polynomial2 | number): Polynomial2 {
-    const res = new Polynomial2();
+  times(arg: Polynomial | number): Polynomial {
+    const res = new Polynomial();
 
     if (typeof arg === 'number') return this.scale(arg);
 
@@ -196,7 +196,7 @@ class Polynomial2 {
   /* add an extra zeroed-out dimension */
   unproject(newDimIndex: number) {
     if (newDimIndex > this.dimension) throw new Error('Dimension index too high!');
-    const res = new Polynomial2();
+    const res = new Polynomial();
     Object.keys(this.coefficients).forEach((k) => {
       const degs = this.parseKey(k);
       degs.splice(newDimIndex, 0, 0);
@@ -207,19 +207,19 @@ class Polynomial2 {
 
   // todo test this
   decompose(dimIndex: number) {
-    const polys: Polynomial2[] = [];
+    const polys: Polynomial[] = [];
     Object.keys(this.coefficients).forEach((k) => {
       const degs = this.parseKey(k);
       const deg = degs.splice(dimIndex, 1)[0];
 
-      if (!polys[deg]) polys[deg] = new Polynomial2();
+      if (!polys[deg]) polys[deg] = new Polynomial();
       polys[deg].setCoeff(
         degs,
         this.coefficients[k],
       );
     });
 
-    return polys.map((p) => p ?? new Polynomial2());
+    return polys.map((p) => p ?? new Polynomial());
   }
 
   get1dSolver(dim: number, substitutions: Record<number, SimpleFunction>) {
@@ -258,4 +258,4 @@ class Polynomial2 {
   /// //////////////////////////////////
 }
 
-export default Polynomial2;
+export default Polynomial;
