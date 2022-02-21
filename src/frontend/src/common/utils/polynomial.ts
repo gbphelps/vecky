@@ -1,10 +1,8 @@
 class Polynomial {
   coefficients: Map<number, number>;
-  degree: number;
 
   constructor(coefficients?: number[] | Map<number, number>) {
     this.coefficients = new Map();
-    this.degree = 0;
 
     if (!coefficients) return;
 
