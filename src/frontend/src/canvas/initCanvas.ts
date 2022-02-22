@@ -121,20 +121,18 @@ function initCanvas(rootDiv: HTMLDivElement) {
     const x2 = bezierOfDegree(4)(...A.map((b) => b.x));
     const y2 = bezierOfDegree(4)(...A.map((b) => b.y));
 
-    const opts = ct[1][i];
+    const opt = ct[1][i];
 
-    opts.forEach((opt) => {
-      root.appendChild(create('line', {
-        x1: x.evaluate(k),
-        y1: y.evaluate(k),
-        x2: x2.evaluate(opt),
-        y2: y2.evaluate(opt),
-        style: {
-          stroke: 'black',
-          vectorEffect: 'non-scaling-stroke',
-        },
-      }));
-    });
+    root.appendChild(create('line', {
+      x1: x.evaluate(k),
+      y1: y.evaluate(k),
+      x2: x2.evaluate(opt),
+      y2: y2.evaluate(opt),
+      style: {
+        stroke: 'black',
+        vectorEffect: 'non-scaling-stroke',
+      },
+    }));
   });
 
   return {

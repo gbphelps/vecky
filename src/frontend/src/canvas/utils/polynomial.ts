@@ -131,9 +131,13 @@ class Polynomial {
     let value = 0;
     Object.keys(this.coefficients).forEach((key) => {
       const degs = this.parseKey(key);
+      let v = this.coefficients[key];
+
       for (let i = 0; i < degs.length; i++) {
-        value += x[i] ** degs[i] * this.coefficients[key];
+        v *= x[i] ** degs[i];
       }
+
+      value += v;
     });
 
     return value;

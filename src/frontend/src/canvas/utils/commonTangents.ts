@@ -18,8 +18,6 @@ function commonTangents(
     };
   });
 
-  console.log(a, b);
-
   const [da, db] = [a, b].map((curve, i) => ({
     x: curve.x.differentiate(i),
     y: curve.y.differentiate(i),
@@ -33,10 +31,11 @@ function commonTangents(
     );
 
   // solve for dim 0 (s) in terms of dim 1 (t)
+  // this has max degree of [2,2], so
+  // we can safely use quadratic eq on it
   const [C, B, A] = zero1.decompose(0);
 
   const { rootFn, imaginaryBounds } = abstractQuadraticRoots(A, B, C);
-  console.log({ imaginaryBounds });
 
   const root1 = (t: number) => rootFn(t)[0] ?? NaN;
   const root2 = (t: number) => rootFn(t)[1] ?? NaN;
@@ -52,23 +51,6 @@ function commonTangents(
   const solver1 = zero2.get1dSolver(1, { 0: root1 });
   const solver2 = zero2.get1dSolver(1, { 0: root2 });
 
-  // const getResults = (solver: SimpleFunction) => {
-  //   const res = [];
-  //   let sign = 0;
-  //   for (let i = 0; i <= 100; i++) {
-  //     const t = i / 100;
-  //     const r = solver(t);
-
-  //     if (Number.isNaN(r)) continue;
-
-  //     const s = r < 0 ? -1 : 1;
-  //     if (sign && s !== sign) res.push(t);
-  //     sign = s;
-  //   }
-
-  //   return res;
-  // };
-
   const getResults = (solver: SimpleFunction) => findRoots({
     fn: solver,
     range: [0, 1],
@@ -80,11 +62,12 @@ function commonTangents(
   const aResults = [...getResults(solver1), ...getResults(solver2)];
   const bResults = aResults.map((r) => {
     const s = zero2.get1dSolver(0, { 1: () => r });
-    const preliminary = getResults(s);
-    return preliminary;
-  });
+    const tOpts = getResults(s);
 
-  console.log([aResults, bResults]);
+    return tOpts.filter(
+      (t) => Math.abs(zero1.evaluate([t, r])) < 1e-8,
+    )[0] ?? NaN;
+  });
 
   return [aResults, bResults];
 

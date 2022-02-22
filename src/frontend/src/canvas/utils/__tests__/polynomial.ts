@@ -1,4 +1,5 @@
 import Polynomial from '../polynomial';
+import { bezierOfDegree } from '../bezier';
 
 function getMap<A, B>(arr: [A, B][]): Map<A, B> {
   const map: Map<A, B> = new Map();
@@ -7,6 +8,19 @@ function getMap<A, B>(arr: [A, B][]): Map<A, B> {
 }
 
 describe('Polynomial', () => {
+  describe('Projection', () => {
+    const points = [
+      0, 6, 3, 8,
+    ];
+    const b = bezierOfDegree(4)(...points);
+    const bp1 = b.unproject(1);
+    const bp0 = b.unproject(0);
+
+    expect(b.evaluate(0.5)).toEqual(4.375);
+    expect(bp0.evaluate([0, 0.5])).toEqual(4.375);
+    expect(bp1.evaluate([0.5, 0])).toEqual(4.375);
+  });
+
   describe('1dsolver', () => {
     test('circle in [x^2 + y^2 - R^2 = 0] format intersecting line', () => {
       // circle radius 5 at origin;
