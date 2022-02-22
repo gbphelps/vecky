@@ -21,6 +21,8 @@ function processBracket(args: {
   const num = x[0] * fn(x[1]) - x[1] * fn(x[0]);
   const dem = fn(x[1]) - fn(x[0]);
 
+  if (dem === 0) return (x[0] + x[1]) / 2;
+
   return processBracket({
     fn,
     x: [x[1], num / dem],
@@ -44,23 +46,23 @@ function findRoots(args: {
     maxIterations,
   } = args;
 
-  const intervals: number[] = [];
   const roots = [];
 
   const getT = (i: number) => lerp(range[0], range[1], i / numSegments);
 
+  let prevSign = 0;
   for (let i = 0; i <= numSegments; i++) {
     const t = getT(i);
     const ans = fn(t);
 
+    let s = ans < 0 ? -1 : 1;
+
     if (Math.abs(ans) < precision) {
       roots.push(t);
-      intervals.push(0);
-    } else {
-      intervals.push(ans);
+      s = 0;
     }
 
-    if (i > 0 && oppSigns(ans, intervals[intervals.length - 1])) {
+    if (prevSign && s && s !== prevSign) {
       const res = processBracket({
         fn,
         x: [getT(i - 1), t],
@@ -70,6 +72,8 @@ function findRoots(args: {
 
       roots.push(res);
     }
+
+    prevSign = s;
   }
 
   return roots;

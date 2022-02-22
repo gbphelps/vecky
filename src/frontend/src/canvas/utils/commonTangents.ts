@@ -52,22 +52,30 @@ function commonTangents(
   const solver1 = zero2.get1dSolver(1, { 0: root1 });
   const solver2 = zero2.get1dSolver(1, { 0: root2 });
 
-  const getResults = (solver: SimpleFunction) => {
-    const res = [];
-    let sign = 0;
-    for (let i = 0; i <= 100; i++) {
-      const t = i / 100;
-      const r = solver(t);
+  // const getResults = (solver: SimpleFunction) => {
+  //   const res = [];
+  //   let sign = 0;
+  //   for (let i = 0; i <= 100; i++) {
+  //     const t = i / 100;
+  //     const r = solver(t);
 
-      if (Number.isNaN(r)) continue;
+  //     if (Number.isNaN(r)) continue;
 
-      const s = r < 0 ? -1 : 1;
-      if (sign && s !== sign) res.push(t);
-      sign = s;
-    }
+  //     const s = r < 0 ? -1 : 1;
+  //     if (sign && s !== sign) res.push(t);
+  //     sign = s;
+  //   }
 
-    return res;
-  };
+  //   return res;
+  // };
+
+  const getResults = (solver: SimpleFunction) => findRoots({
+    fn: solver,
+    range: [0, 1],
+    numSegments: 100,
+    maxIterations: 20,
+    precision: 1e-16,
+  });
 
   const aResults = [...getResults(solver1), ...getResults(solver2)];
   const bResults = aResults.map((r) => {
