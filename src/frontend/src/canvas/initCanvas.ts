@@ -19,14 +19,14 @@ const A = [
   new Vec2(0, 0),
   new Vec2(100, -100),
   new Vec2(100, 100),
-  new Vec2(0, 30),
+  new Vec2(0, 0),
 ];
 
 const B = [
   new Vec2(200, 0),
   new Vec2(100, -200),
   new Vec2(100, 200),
-  new Vec2(200, 300),
+  new Vec2(200, 0),
 ];
 
 const getP = (a: Vec2[]) => a.slice(1).reduce((all, { x, y }, i) => `${all} ${x} ${y}`, `M ${a[0].x} ${a[0].y} C`);
