@@ -60,16 +60,21 @@ function commonTangents(
   });
 
   const aResults = [...getResults(solver1), ...getResults(solver2)];
-  const bResults = aResults.map((r) => {
+
+  const pairs: [number, number][] = [];
+
+  aResults.forEach((r) => {
     const s = zero2.get1dSolver(0, { 1: () => r });
     const tOpts = getResults(s);
 
-    return tOpts.filter(
+    const correctT = tOpts.filter(
       (t) => Math.abs(zero1.evaluate([t, r])) < 1e-8,
     )[0] ?? NaN;
+
+    if (!Number.isNaN(correctT)) pairs.push([correctT, r]);
   });
 
-  return [aResults, bResults];
+  return pairs;
 
   // const solutions = findRoots(solver);
   // todo implement me!
