@@ -2,6 +2,8 @@ import Vec2 from './vec2';
 import { bezierOfDegree } from './bezier';
 import { findRoots, abstractQuadraticRoots } from './roots';
 
+type SimpleFunction = (t: number) => number;
+
 function commonTangents(
   points1: Vec2[],
   points2: Vec2[],
@@ -23,7 +25,7 @@ function commonTangents(
     y: curve.y.differentiate(i),
   }));
 
-  // constraint: same tangent
+  // constraint #1: same tangent
   // db.y / db.x = da.y /da.x
   const zero1 = db.y.times(da.x)
     .minus(
@@ -33,12 +35,13 @@ function commonTangents(
   // solve for dim 0 (s) in terms of dim 1 (t)
   const [C, B, A] = zero1.decompose(0);
 
-  const { rootFn, zeros } = abstractQuadraticRoots(A, B, C);
+  const { rootFn, imaginaryBounds } = abstractQuadraticRoots(A, B, C);
+  console.log({ imaginaryBounds });
 
-  const root1 = (t: number) => rootFn(t)[0];
-  const root2 = (t: number) => rootFn(t)[1];
+  const root1 = (t: number) => rootFn(t)[0] ?? NaN;
+  const root2 = (t: number) => rootFn(t)[1] ?? NaN;
 
-  // constraint: line between them matches tangent
+  // constraint #2: line between them matches tangent
   // da.y / da.x = (a.y - b.y) / (a.x - b.x)
   const zero2 = da.y.times(a.x.minus(b.x))
     .minus(
@@ -49,7 +52,7 @@ function commonTangents(
   const solver1 = zero2.get1dSolver(1, { 0: root1 });
   const solver2 = zero2.get1dSolver(1, { 0: root2 });
 
-  const getResults = (solver) => {
+  const getResults = (solver: SimpleFunction) => {
     const res = [];
     let sign = 0;
     for (let i = 0; i <= 100; i++) {
@@ -62,14 +65,15 @@ function commonTangents(
       if (sign && s !== sign) res.push(t);
       sign = s;
     }
-    console.log(res);
+
     return res;
   };
 
   const aResults = [...getResults(solver1), ...getResults(solver2)];
   const bResults = aResults.map((r) => {
     const s = zero2.get1dSolver(0, { 1: () => r });
-    return getResults(s);
+    const preliminary = getResults(s);
+    return preliminary;
   });
 
   console.log([aResults, bResults]);

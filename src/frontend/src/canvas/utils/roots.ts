@@ -80,7 +80,7 @@ function abstractQuadraticRoots(a: Polynomial, b: Polynomial, c: Polynomial) {
   const twoA = a.times(2);
   const negB = b.times(-1);
 
-  const zeros = findRoots({
+  const imaginaryBounds = findRoots({
     fn: sqrt.evaluate,
     range: [0, 1],
     numSegments: 20,
@@ -108,7 +108,7 @@ function abstractQuadraticRoots(a: Polynomial, b: Polynomial, c: Polynomial) {
 
   return {
     rootFn,
-    zeros,
+    imaginaryBounds,
   };
 }
 
