@@ -25,6 +25,8 @@ function create<T extends keyof TypeMap>(type: T, props?: SVGAttributes<TypeMap[
 }
 
 function oppSigns(a: number, b: number) {
+  if (Number.isNaN(a) || Number.isNaN(b)) return false;
+
   return (a < 0 && b > 0) || (a > 0 && b < 0);
 }
 function lerp(a: number, b: number, w: number) {

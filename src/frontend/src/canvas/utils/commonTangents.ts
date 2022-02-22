@@ -33,9 +33,10 @@ function commonTangents(
   // solve for dim 0 (s) in terms of dim 1 (t)
   const [C, B, A] = zero1.decompose(0);
 
-  const roots = abstractQuadraticRoots(A, B, C);
-  const root1 = (t: number) => roots(t)[0];
-  const root2 = (t: number) => roots(t)[1];
+  const { rootFn, zeros } = abstractQuadraticRoots(A, B, C);
+
+  const root1 = (t: number) => rootFn(t)[0];
+  const root2 = (t: number) => rootFn(t)[1];
 
   // constraint: line between them matches tangent
   // da.y / da.x = (a.y - b.y) / (a.x - b.x)
