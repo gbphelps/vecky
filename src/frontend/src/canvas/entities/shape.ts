@@ -55,6 +55,34 @@ class Shape extends RegistryObject<Shape> {
     this.layer.drawLayer.appendChild(this.bboxes);
   }
 
+  get curves() {
+    const arr = [...this.points];
+    if (this.isClosed) arr.push(this.points[0]);
+
+    const res = [];
+
+    for (let i = 1; i < arr.length; i++) {
+      const p1 = arr[i - 1].pos;
+      const p2 = arr[i - 1].handlePositions.next;
+      const p3 = arr[i].handlePositions.prev;
+      const p4 = arr[i].pos;
+
+      const points: Vec2[] = [];
+      [p1, p2, p3, p4].forEach((p) => {
+        if (p) points.push(p);
+      });
+
+      const makeBezier = bezierOfDegree(points.length);
+      const curve = {
+        x: makeBezier(...points.map((p) => p.x)),
+        y: makeBezier(...points.map((p) => p.y)),
+      };
+      res.push(curve);
+    }
+
+    return res;
+  }
+
   get size() {
     return this.points.length;
   }

@@ -45,7 +45,7 @@ function commonTangents(
   // transform everything into dim 1 (t)
   const solver = zero2.get1dSolver(1, { 0: root1 });
 
-  const solutions = findRoots(solver);
+  // const solutions = findRoots(solver);
   // todo implement me!
   // check this solver between t=0 and t=1 at various intervals,
   // then run some numeric solver (secant method?) on the brackets found

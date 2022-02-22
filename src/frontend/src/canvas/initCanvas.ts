@@ -9,6 +9,7 @@ import Grid from './entities/grids/grid';
 import Registry from './entities/registry';
 import Point from './entities/points/point';
 import Shape from './entities/shape';
+import PointFinderTool from './tools/pointFinder';
 
 function initCanvas(rootDiv: HTMLDivElement) {
   const pointRegistry = new Registry<Point>();
@@ -61,6 +62,14 @@ function initCanvas(rootDiv: HTMLDivElement) {
     root,
     screenManager,
     layer: layerManager.baseLayer,
+  });
+
+  const cpTool = new PointFinderTool({
+    root,
+    screenManager,
+    mousePosition,
+    pointRegistry,
+    shapeRegistry,
   });
 
   return {

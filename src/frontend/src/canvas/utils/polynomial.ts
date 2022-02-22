@@ -121,7 +121,7 @@ class Polynomial {
     return res;
   }
 
-  evaluate(arg: number[] | number): number {
+  evaluate = (arg: number[] | number):number => {
     if (typeof arg === 'number' && this.dimension > 1) {
       throw new Error('Must use array of vars!');
     }
@@ -137,7 +137,7 @@ class Polynomial {
     });
 
     return value;
-  }
+  };
 
   differentiate(dim?: number) {
     const res = new Polynomial();
