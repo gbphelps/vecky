@@ -45,10 +45,9 @@ function findRoots(args: {
   } = args;
 
   const intervals: number[] = [];
-  const rootBrackets: [number, number][] = [];
   const roots = [];
 
-  const getT = (i: number) => lerp(range[0], range[1], numSegments / i);
+  const getT = (i: number) => lerp(range[0], range[1], i / numSegments);
 
   for (let i = 0; i <= numSegments; i++) {
     const t = getT(i);
@@ -62,20 +61,18 @@ function findRoots(args: {
     }
 
     if (i > 0 && oppSigns(ans, intervals[intervals.length - 1])) {
-      rootBrackets.push([getT(i - 1), t]);
+      const res = processBracket({
+        fn,
+        x: [getT(i - 1), t],
+        precision,
+        iterations: maxIterations,
+      });
+
+      roots.push(res);
     }
   }
 
-  const bracketRoots = rootBrackets.map(
-    (bracket) => processBracket({
-      fn,
-      x: bracket,
-      precision,
-      iterations: maxIterations,
-    }),
-  );
-
-  return [roots, ...bracketRoots];
+  return roots;
 }
 
 function abstractQuadraticRoots(a: Polynomial, b: Polynomial, c: Polynomial) {
