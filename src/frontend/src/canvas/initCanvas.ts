@@ -10,26 +10,6 @@ import Registry from './entities/registry';
 import Point from './entities/points/point';
 import Shape from './entities/shape';
 import PointFinderTool from './tools/pointFinder';
-import Vec2 from './utils/vec2';
-
-import commonTangents from './utils/commonTangents';
-import { bezierOfDegree } from './utils/bezier';
-
-const A = [
-  new Vec2(0, 0),
-  new Vec2(100, -100),
-  new Vec2(100, 100),
-  new Vec2(0, 0),
-];
-
-const B = [
-  new Vec2(200, 0),
-  new Vec2(100, -200),
-  new Vec2(100, 200),
-  new Vec2(200, 0),
-];
-
-const getP = (a: Vec2[]) => a.slice(1).reduce((all, { x, y }, i) => `${all} ${x} ${y}`, `M ${a[0].x} ${a[0].y} C`);
 
 function initCanvas(rootDiv: HTMLDivElement) {
   const pointRegistry = new Registry<Point>();
@@ -90,48 +70,6 @@ function initCanvas(rootDiv: HTMLDivElement) {
     mousePosition,
     pointRegistry,
     shapeRegistry,
-  });
-
-  const a = create('path', {
-    d: getP(A),
-    style: {
-      fill: 'none',
-      stroke: 'black',
-      vectorEffect: 'non-scaling-stroke',
-    },
-  });
-  root.appendChild(a);
-
-  const b = create('path', {
-    d: getP(B),
-    style: {
-      fill: 'none',
-      stroke: 'black',
-      vectorEffect: 'non-scaling-stroke',
-    },
-  });
-  root.appendChild(b);
-
-  const ct = commonTangents(A, B);
-
-  ct.forEach(([ta, tb]) => {
-    const x = bezierOfDegree(4)(...A.map((p) => p.x));
-    const y = bezierOfDegree(4)(...A.map((p) => p.y));
-
-    const x2 = bezierOfDegree(4)(...B.map((p) => p.x));
-    const y2 = bezierOfDegree(4)(...B.map((p) => p.y));
-
-    root.appendChild(create('line', {
-      x1: x.evaluate(ta),
-      y1: y.evaluate(ta),
-
-      x2: x2.evaluate(tb),
-      y2: y2.evaluate(tb),
-      style: {
-        stroke: 'black',
-        vectorEffect: 'non-scaling-stroke',
-      },
-    }));
   });
 
   return {
