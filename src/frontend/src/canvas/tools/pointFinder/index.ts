@@ -21,6 +21,7 @@ class PointFinder extends Tool {
       r: '.5%',
       style: {
         fill: 'black',
+        pointerEvents: 'none',
       },
     });
 
@@ -35,7 +36,7 @@ class PointFinder extends Tool {
 
     // todo we can reject a bunch of these before even
     // testing them by using bounding boxes or something
-    // reject everything out of screen
+    // ALSO FOR SURE reject everything out of screen
     Object.values(this.shapeRegistry.manifest)
       .forEach((v) => {
         v.curves.forEach((c) => {
