@@ -68,6 +68,7 @@ function range(curve: Polynomial): [number, number] {
   });
 
   while (coeffs.length && coeffs[coeffs.length - 1] === 0) coeffs.pop();
+  if (!coeffs.length) return [0, 0];
 
   const roots = getRootsFromCoefficients(coeffs);
 
