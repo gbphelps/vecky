@@ -2,8 +2,6 @@ import Vec2 from './vec2';
 import Polynomial from './polynomial';
 import { findRoots } from './roots';
 
-type SimpleFunction = (t: number) => number
-
 interface ClosestPointArgs {
     x: Polynomial,
     y: Polynomial,
@@ -13,13 +11,13 @@ interface ClosestPointArgs {
     numSegments: number
 }
 
-// function closestPoint(args: ClosestPointArgs): {
+// function cpHelper(args: ClosestPointArgs): {
 //   point: Vec2,
 //   distance: number
 // } {
 //   const {
-//     xf,
-//     yf,
+//     x,
+//     y,
 //     range,
 //     point,
 //     iterations,
@@ -37,8 +35,8 @@ interface ClosestPointArgs {
 //   let bestI = -Infinity;
 
 //   const points = times.map((t) => new Vec2(
-//     xf(t),
-//     yf(t),
+//     x.evaluate(t),
+//     y.evaluate(t),
 //   ));
 
 //   const distances = points.map((p) => p.distance(point));
@@ -61,14 +59,21 @@ interface ClosestPointArgs {
 //     };
 //   }
 
-//   return closestPoint({
-//     xf,
-//     yf,
+//   return cpHelper({
+//     x,
+//     y,
 //     range: newRange,
 //     point,
 //     iterations: iterations - 1,
 //     numSegments: 4,
 //   });
+// }
+
+// function closestPoint(args: ClosestPointArgs) {
+//   const start = performance.now();
+//   const ans = cpHelper(args);
+//   console.log(performance.now() - start);
+//   return ans;
 // }
 
 type Result = {
@@ -111,10 +116,12 @@ function closestPoint(args: ClosestPointArgs): Result {
     return { point: pos, distance: dist };
   });
 
-  return opts.reduce((a: Result, opt: Result) => {
+  const result = opts.reduce((a: Result, opt: Result) => {
     if (a.distance < opt.distance) return a;
     return opt;
   }, { distance: Infinity, point: new Vec2() });
+
+  return result;
 }
 
 export default closestPoint;
