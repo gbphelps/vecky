@@ -1,4 +1,7 @@
-import { cubicBezier, binCoeff, factorial } from '../bezier';
+import {
+  cubicBezier, binCoeff, factorial, split2d,
+} from '../bezier';
+import Vec2 from '../vec2';
 
 describe('cubic', () => {
   test('basic', () => {
@@ -34,5 +37,33 @@ describe('binCoeff', () => {
   test('basic test', () => {
     expect([0, 1, 2].map((n) => binCoeff(2, n))).toEqual([1, 2, 1]);
     expect([0, 1, 2, 3].map((n) => binCoeff(3, n))).toEqual([1, 3, 3, 1]);
+  });
+});
+
+describe('split2d', () => {
+  test('sanity check', () => {
+    const points = [
+      new Vec2(0, 0),
+      new Vec2(100, -100),
+      new Vec2(100, 100),
+      new Vec2(0, 0),
+    ];
+
+    const stringify = (s: {}) => JSON.parse(JSON.stringify(s));
+
+    expect(stringify(split2d(points, 0.3))).toEqual([
+      [
+        { x: 0, y: 0 },
+        { x: 30, y: -30 },
+        { x: 51, y: -33 },
+        { x: 63, y: -25.2 },
+      ],
+      [
+        { x: 63, y: -25.2 },
+        { x: 91, y: -7 },
+        { x: 70, y: 70 },
+        { x: 0, y: 0 },
+      ],
+    ]);
   });
 });
