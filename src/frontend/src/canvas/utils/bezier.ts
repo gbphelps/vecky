@@ -1,4 +1,6 @@
 import Polynomial from './polynomial';
+import Vec2 from './vec2';
+import { lerp } from './misc';
 
 const ONE_MINUS_T = new Polynomial([1, -1]);
 const T = new Polynomial([0, 1]);
@@ -38,7 +40,6 @@ function bezierOfDegree(n: number) {
 const cubicBezier = bezierOfDegree(4);
 const quadraticBezier = bezierOfDegree(3);
 
-// note: minimatrix-polyroots for 2 higher degrees
 function getRootsFromCoefficients(nums: number[]): number[] {
   if (nums.length === 3) {
     const [c, b, a] = nums;
@@ -84,6 +85,38 @@ function range(curve: Polynomial) {
   return { min, max };
 }
 
+function split(points: number[], t: number) {
+  let arr = points;
+  const c1 = [points[0]];
+  const c2 = [points[points.length - 1]];
+
+  while (arr.length) {
+    const newArr = [];
+    for (let i = 1; i < arr.length; i++) {
+      const val = lerp(arr[i - 1], arr[i], t);
+      newArr.push(val);
+    }
+    c1.push(newArr[0]);
+    c2.unshift(newArr[newArr.length - 1]);
+    arr = newArr;
+  }
+
+  return [c1, c2];
+}
+
+function split2d(points: Vec2[], t: number) {
+  const x = points.map((p) => p.x);
+  const y = points.map((p) => p.y);
+
+  const [x1, x2] = split(x, t);
+  const [y1, y2] = split(y, t);
+
+  return [
+    x1.map((xVal, i) => new Vec2(xVal, y1[i])),
+    x2.map((xVal, i) => new Vec2(xVal, y2[i])),
+  ];
+}
+
 export {
   cubicBezier,
   quadraticBezier,
@@ -91,4 +124,6 @@ export {
   factorial,
   range,
   bezierOfDegree,
+  split,
+  split2d,
 };
