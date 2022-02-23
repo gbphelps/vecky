@@ -90,7 +90,7 @@ function split(points: number[], t: number) {
   const c1 = [points[0]];
   const c2 = [points[points.length - 1]];
 
-  while (arr.length) {
+  while (arr.length > 1) {
     const newArr = [];
     for (let i = 1; i < arr.length; i++) {
       const val = lerp(arr[i - 1], arr[i], t);
