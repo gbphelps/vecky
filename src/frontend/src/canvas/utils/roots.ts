@@ -1,5 +1,5 @@
 import Polynomial from './polynomial';
-import { lerp, oppSigns } from './misc';
+import { lerp } from './misc';
 
 type SimpleFunction = (t: number) => number;
 
@@ -92,7 +92,10 @@ function abstractQuadraticRoots(a: Polynomial, b: Polynomial, c: Polynomial) {
     maxIterations: Infinity,
   });
 
+  const lookup: Record<number, number[]> = {};
+
   function rootFn(t: number) {
+    if (lookup[t]) return lookup[t];
     // need to find the roots on this function to find "no-no" zones
     // pass these in the result
 
@@ -106,6 +109,8 @@ function abstractQuadraticRoots(a: Polynomial, b: Polynomial, c: Polynomial) {
       (p1 + Math.sqrt(p2)) / denom,
       (p1 - Math.sqrt(p2)) / denom,
     ];
+
+    lookup[t] = roots;
 
     return roots;
   }

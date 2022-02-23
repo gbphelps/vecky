@@ -49,6 +49,16 @@ function getAbstractCubicRoots(A:Polynomial, B:Polynomial, C:Polynomial, D:Polyn
       B.pow(3).times(2),
     );
   const rBtm = A.pow(3).times(54);
+
+  const lookup: Record<number, number[]> = {};
+
+  return function getRoots(t: number): number[] {
+    if (lookup[t]) return lookup[t];
+
+    const R = rTop.evaluate(t) / rBtm.evaluate(t);
+    const Q = qTop.evaluate(t) / qBtm.evaluate(t);
+    const b = Q ** 3 + R ** 2;
+  };
 }
 
 function intersections(aPoints: Vec2[], bPoints: Vec2[]) {
