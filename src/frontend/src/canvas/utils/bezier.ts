@@ -58,7 +58,7 @@ function getRootsFromCoefficients(nums: number[]): number[] {
   throw new Error('Degree is too high or too low');
 }
 
-function range(curve: Polynomial) {
+function range(curve: Polynomial): [number, number] {
   const coeffs: number[] = new Array(4).fill(0);
 
   const diff = curve.differentiate();
@@ -82,7 +82,7 @@ function range(curve: Polynomial) {
     if (val > max) max = val;
   });
 
-  return { min, max };
+  return [min, max];
 }
 
 function split(points: number[], t: number) {
@@ -117,6 +117,50 @@ function split2d(points: Vec2[], t: number) {
   ];
 }
 
+function bezier2d(points: Vec2[]) {
+  const x = bezierOfDegree(points.length)(...points.map((p) => p.x));
+  const y = bezierOfDegree(points.length)(...points.map((p) => p.y));
+  return {
+    x, y,
+  };
+}
+
+type BBox = {
+  x: [number, number],
+  y: [number, number]
+}
+
+function getOverlap(a: BBox, b: BBox): BBox | null {
+  const noXOverlap = a.x[0] > b.x[1] || b.x[0] > a.x[1];
+  if (noXOverlap) return null;
+
+  const noYOverlap = a.y[0] > b.y[1] || b.y[0] > a.y[1];
+  if (noYOverlap) return null;
+
+  return {
+    x: [
+      Math.max(a.x[0], b.x[0]),
+      Math.min(a.x[1], b.x[1]),
+    ],
+    y: [
+      Math.max(a.y[0], b.y[0]),
+      Math.min(a.y[1], b.y[1]),
+    ],
+  };
+}
+
+function bbox(points: Vec2[]): BBox {
+  const b = bezier2d(points);
+
+  const xRange = range(b.x);
+  const yRange = range(b.y);
+
+  return {
+    x: xRange,
+    y: yRange,
+  };
+}
+
 export {
   cubicBezier,
   quadraticBezier,
@@ -126,4 +170,7 @@ export {
   bezierOfDegree,
   split,
   split2d,
+  bezier2d,
+  bbox,
+  getOverlap,
 };
