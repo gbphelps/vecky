@@ -41,8 +41,8 @@ class PointFinder extends Tool {
       .forEach((v) => {
         v.curves.forEach((c) => {
           const d = closestPoint({
-            xf: c.x.evaluate,
-            yf: c.y.evaluate,
+            x: c.x,
+            y: c.y,
             range: [0, 1],
             point: e.pos,
             iterations: 10,
