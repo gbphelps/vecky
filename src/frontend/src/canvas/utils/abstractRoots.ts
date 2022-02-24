@@ -57,7 +57,7 @@ function getAbstractCubicRoots(A:Polynomial, B:Polynomial, C:Polynomial, D:Polyn
 
   return {
     rootFn,
-    imaginaryBounds: [0, ...bounds, 1],
+    imaginaryBounds: bounds,
   };
 }
 

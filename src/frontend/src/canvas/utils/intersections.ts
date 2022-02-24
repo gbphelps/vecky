@@ -75,14 +75,26 @@ function intersections(aPoints: Vec2[], bPoints: Vec2[]): Vec2[] {
     results = results.concat(findRoots({
       fn: solver,
       range: [0, 1],
-      // should probably start with the
-      // naive implementation (commented out above)
-      // and just use this for extra precision
-      // because 5000 is a LOT of segments haha
-      numSegments: 5000,
+      numSegments: 20,
       maxIterations: 20,
       precision: 1e-16,
     }));
+
+    for (let i = 0; i < imaginaryBounds.length; i++) {
+      const bound = imaginaryBounds[i];
+      const range: [number, number] = Number.isNaN(solver(bound - 0.01))
+        ? [bound, bound + 0.01]
+        : [bound - 0.01, bound];
+      // TODO probably sample more densely right beside the bound
+
+      results = results.concat(findRoots({
+        fn: solver,
+        range,
+        numSegments: 100,
+        maxIterations: 20,
+        precision: 1e-16,
+      }));
+    }
   });
 
   return results
