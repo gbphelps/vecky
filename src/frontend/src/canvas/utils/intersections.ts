@@ -154,7 +154,7 @@ function intersections(aPoints: Vec2[], bPoints: Vec2[]): {
       // note baked-in assumption that we've found
       // a single root with roughIntersections
 
-      if (rootB == null) return;
+      if (rootB == null || Number.isNaN(rootB)) return;
 
       const solverA = zero1.get1dSolver(0, { 1: () => rootB });
 
@@ -167,8 +167,6 @@ function intersections(aPoints: Vec2[], bPoints: Vec2[]): {
       })[0];
       // note baked-in assumption that we've found
       // a single root with roughIntersections
-
-      if (rootA == null) return;
 
       const point = new Vec2(
         b.x.evaluate([0, rootB]),
