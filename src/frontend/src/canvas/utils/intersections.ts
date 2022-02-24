@@ -102,8 +102,11 @@ function _rough(
   return res;
 }
 
-function intersections(aPoints: Vec2[], bPoints: Vec2[]): Vec2[] {
-  const checkpoints = roughIntersections(aPoints, bPoints).map(({ tb }) => tb);
+function intersections(aPoints: Vec2[], bPoints: Vec2[]): {
+  point: Vec2,
+  tb: number,
+}[] {
+  const checkpoints = roughIntersections(aPoints, bPoints);
 
   const [a, b] = [aPoints, bPoints].map((points, i) => {
     const bz = bezierOfDegree(points.length);
@@ -131,28 +134,58 @@ function intersections(aPoints: Vec2[], bPoints: Vec2[]): Vec2[] {
 
   // insert dim0 function to convert all to dim1
 
-  let results: number[] = [];
+  const results: {
+    ta: number,
+    tb: number,
+    point: Vec2
+  }[] = [];
   [root1, root2, root3].forEach((r) => {
     const solver = zero2.get1dSolver(1, { 0: r });
 
-    for (let i = 0; i < checkpoints.length; i++) {
-      const range = checkpoints[i];
-      results = results.concat(findRoots({
+    checkpoints.forEach((checkpoint) => {
+      const range = checkpoint.tb;
+      const rootB = findRoots({
         fn: solver,
         range,
         numSegments: 10,
         maxIterations: 20,
         precision: 1e-16,
-      }));
-    }
+      })[0];
+      // note baked-in assumption that we've found
+      // a single root with roughIntersections
+
+      if (rootB == null) return;
+
+      const solverA = zero1.get1dSolver(0, { 1: () => rootB });
+
+      const rootA = findRoots({
+        fn: solverA,
+        range: checkpoint.ta,
+        numSegments: 10,
+        maxIterations: 20,
+        precision: 1e-16,
+      })[0];
+      // note baked-in assumption that we've found
+      // a single root with roughIntersections
+
+      if (rootA == null) return;
+
+      const point = new Vec2(
+        b.x.evaluate([0, rootB]),
+        b.y.evaluate([0, rootB]),
+      );
+
+      results.push({
+        point,
+        ta: rootA,
+        tb: rootB,
+      });
+    });
   });
 
-  return results
-    .filter((n) => !Number.isNaN(n))
-    .map((s) => new Vec2(
-      b.x.evaluate([0, s]),
-      b.y.evaluate([0, s]),
-    ));
+  console.log(results);
+
+  return results;
 }
 
 export default intersections;

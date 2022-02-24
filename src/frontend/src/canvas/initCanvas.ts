@@ -103,7 +103,7 @@ function intersectionsDemo(root: SVGSVGElement) {
       },
     }));
   }
-  ix.forEach((p) => createPoint(p, 'blue'));
+  ix.forEach((p) => createPoint(p.point, 'blue'));
 }
 
 function initCanvas(rootDiv: HTMLDivElement) {
