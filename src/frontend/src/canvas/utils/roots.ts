@@ -79,46 +79,4 @@ function findRoots(args: {
   return roots;
 }
 
-function abstractQuadraticRoots(a: Polynomial, b: Polynomial, c: Polynomial) {
-  const sqrt = b.pow(2).minus(a.times(c).times(4));
-  const twoA = a.times(2);
-  const negB = b.times(-1);
-
-  const imaginaryBounds = findRoots({
-    fn: sqrt.evaluate,
-    range: [0, 1],
-    numSegments: 20,
-    precision: 1e-16,
-    maxIterations: Infinity,
-  });
-
-  const lookup: Record<number, number[]> = {};
-
-  function rootFn(t: number) {
-    if (lookup[t]) return lookup[t];
-    // need to find the roots on this function to find "no-no" zones
-    // pass these in the result
-
-    const oneRoot = Object.keys(sqrt.coefficients).length === 0;
-
-    const p1 = negB.evaluate(t);
-    const p2 = sqrt.evaluate(t);
-    const denom = twoA.evaluate(t);
-
-    const roots = oneRoot ? [p1 / denom] : [
-      (p1 + Math.sqrt(p2)) / denom,
-      (p1 - Math.sqrt(p2)) / denom,
-    ];
-
-    lookup[t] = roots;
-
-    return roots;
-  }
-
-  return {
-    rootFn,
-    imaginaryBounds,
-  };
-}
-
-export { findRoots, abstractQuadraticRoots, processBracket };
+export { findRoots, processBracket };

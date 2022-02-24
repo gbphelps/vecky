@@ -1,12 +1,8 @@
-import { Complex as X } from 'complex.js';
 import {
-  getOverlap,
-  bbox,
-  split2d,
   bezierOfDegree,
 } from './bezier';
 import Vec2 from './vec2';
-import Polynomial from './polynomial';
+import { getAbstractCubicRoots } from './abstractRoots';
 
 // function intersections(a: Vec2[], b: Vec2[], iterations: number): Vec2[] {
 //   let res: Vec2[] = [];
@@ -39,47 +35,6 @@ import Polynomial from './polynomial';
 //   return res;
 // }
 
-function getAbstractCubicRoots(A:Polynomial, B:Polynomial, C:Polynomial, D:Polynomial) {
-  const qTop = A.times(C).times(3).minus(B.pow(2));
-  const qBtm = A.pow(2).times(9);
-  const rTop = A.times(B).times(C).times(9)
-    .minus(
-      A.pow(2).times(D).times(27),
-    )
-    .minus(
-      B.pow(3).times(2),
-    );
-  const rBtm = A.pow(3).times(54);
-
-  const lookup: Record<number, number[]> = {};
-
-  return function getRoots(t: number): number[] {
-    if (lookup[t]) return lookup[t];
-
-    const R = rTop.evaluate(t) / rBtm.evaluate(t);
-    const Q = qTop.evaluate(t) / qBtm.evaluate(t);
-    const QR = X(Q ** 3 + R ** 2).pow(1 / 2);
-
-    const S = (X(R).add(QR)).pow(1 / 3);
-    const T = (X(R).sub(QR)).pow(1 / 3);
-
-    const BA = B.evaluate(t) / (3 * A.evaluate(t));
-    const IST = X(0, Math.sqrt(3) / 2).mul(S.sub(T));
-    const STBA = S.add(T).div(-2).sub(BA);
-
-    const res = [
-      S.add(T).sub(BA),
-      STBA.add(IST),
-      STBA.sub(IST),
-    ]
-      .filter((a) => Math.abs(a.im) < 1e-10)
-      .map((a) => a.re);
-
-    lookup[t] = res;
-    return res;
-  };
-}
-
 function intersections(aPoints: Vec2[], bPoints: Vec2[]) {
   const [a, b] = [aPoints, bPoints].map((points, i) => {
     const bz = bezierOfDegree(points.length);
@@ -111,4 +66,3 @@ function intersections(aPoints: Vec2[], bPoints: Vec2[]) {
 }
 
 export default intersections;
-export { getAbstractCubicRoots };

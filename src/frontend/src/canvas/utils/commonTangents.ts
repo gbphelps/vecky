@@ -1,6 +1,7 @@
 import Vec2 from './vec2';
 import { bezierOfDegree } from './bezier';
-import { findRoots, abstractQuadraticRoots } from './roots';
+import { findRoots } from './roots';
+import { getAbstractQuadraticRoots } from './abstractRoots';
 
 type SimpleFunction = (t: number) => number;
 
@@ -35,7 +36,7 @@ function commonTangents(
   // we can safely use quadratic eq on it
   const [C, B, A] = zero1.decompose(0);
 
-  const { rootFn, imaginaryBounds } = abstractQuadraticRoots(A, B, C);
+  const { rootFn, imaginaryBounds } = getAbstractQuadraticRoots(A, B, C);
 
   const root1 = (t: number) => rootFn(t)[0] ?? NaN;
   const root2 = (t: number) => rootFn(t)[1] ?? NaN;
