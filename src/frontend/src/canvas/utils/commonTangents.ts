@@ -8,7 +8,7 @@ type SimpleFunction = (t: number) => number;
 function commonTangents(
   points1: Vec2[],
   points2: Vec2[],
-) {
+):[Vec2, Vec2][] {
   const [a, b] = [points1, points2].map((points, i) => {
     const n = points.length;
     const x = bezierOfDegree(n)(...points.map((p) => p.x));
@@ -75,7 +75,17 @@ function commonTangents(
     if (!Number.isNaN(correctT)) pairs.push([correctT, r]);
   });
 
-  return pairs;
+  return pairs.map(([t, s]) => {
+    const x1 = a.x.evaluate([t, 0]);
+    const y1 = a.y.evaluate([t, 0]);
+    const x2 = b.x.evaluate([0, s]);
+    const y2 = b.y.evaluate([0, s]);
+
+    return [
+      new Vec2(x1, y1),
+      new Vec2(x2, y2),
+    ];
+  });
 
   // const solutions = findRoots(solver);
   // todo implement me!
