@@ -46,6 +46,7 @@ function getAbstractCubicRoots(A:Polynomial, B:Polynomial, C:Polynomial, D:Polyn
     rootFn,
     imaginaryBounds: [
     // todo IMPLEMENT ME
+    // better yet, implement me for each of the three root eqs
     ],
   };
 }

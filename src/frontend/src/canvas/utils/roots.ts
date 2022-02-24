@@ -13,9 +13,6 @@ function processBracket(args: {
     fn, x, precision, iterations,
   } = args;
 
-  console.log(x);
-  console.log(Math.abs(x[1] - x[0]));
-
   if (
     Math.abs(x[1] - x[0]) < precision ||
     iterations === 0
@@ -66,7 +63,6 @@ function findRoots(args: {
     }
 
     if (prevSign && s && s !== prevSign) {
-      console.log('________________');
       const res = processBracket({
         fn,
         x: [getT(i - 1), t],
