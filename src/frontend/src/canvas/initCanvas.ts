@@ -11,7 +11,7 @@ import Point from './entities/points/point';
 import Shape from './entities/shape';
 import PointFinderTool from './tools/pointFinder';
 import Vec2 from './utils/vec2';
-// import { commonNormals, commonTangents } from './utils/commonSlopes';
+import { commonNormals, commonTangents } from './utils/commonSlopes';
 import intersections from './utils/intersections';
 
 // function commonSlopesDemo(root: SVGSVGElement) {
@@ -119,6 +119,7 @@ function initCanvas(rootDiv: HTMLDivElement) {
   rootDiv.appendChild(root);
 
   intersectionsDemo(root);
+  // commonSlopesDemo(root);
 
   const screenManager = new ScreenManager(root);
   const mousePosition = new MousePosition({ screenManager, root });

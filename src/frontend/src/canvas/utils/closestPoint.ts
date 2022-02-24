@@ -8,7 +8,7 @@ interface ClosestPointArgs {
     range: [number, number],
     point: Vec2,
     iterations: number,
-    numSegments: number
+    numSegments: number,
 }
 
 // function cpHelper(args: ClosestPointArgs): {
