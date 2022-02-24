@@ -1,11 +1,17 @@
 import {
   bezierOfDegree,
+  // bbox,
+  // getOverlap,
+  // split2d,
 } from './bezier';
 import Vec2 from './vec2';
 import { getAbstractCubicRoots } from './abstractRoots';
 import { findRoots } from './roots';
 
 // function intersections(a: Vec2[], b: Vec2[], iterations: number): Vec2[] {
+//   // eslint-disable-next-line no-param-reassign
+//   if (iterations == null) iterations = 20;
+
 //   let res: Vec2[] = [];
 
 //   const boxA = bbox(a);
@@ -69,11 +75,11 @@ function intersections(aPoints: Vec2[], bPoints: Vec2[]): Vec2[] {
     results = results.concat(findRoots({
       fn: solver,
       range: [0, 1],
-      // todo: lol this works but you really
-      // need to slice this based on imaginary
-      // ranges that should be returned by
-      // getAbstractCubicRoots
-      numSegments: 10000,
+      // should probably start with the
+      // naive implementation (commented out above)
+      // and just use this for extra precision
+      // because 5000 is a LOT of segments haha
+      numSegments: 5000,
       maxIterations: 20,
       precision: 1e-16,
     }));

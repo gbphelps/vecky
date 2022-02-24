@@ -14,6 +14,19 @@ function getAbstractCubicRoots(A:Polynomial, B:Polynomial, C:Polynomial, D:Polyn
     );
   const rBtm = A.pow(3).times(54);
 
+  const dsc = (t: number) => {
+    const R = rTop.evaluate(t) / rBtm.evaluate(t);
+    const Q = qTop.evaluate(t) / qBtm.evaluate(t);
+    return Q ** 3 + R ** 2;
+  };
+  const bounds = findRoots({
+    fn: dsc,
+    maxIterations: 20,
+    numSegments: 100,
+    precision: 1e-16,
+    range: [0, 1],
+  });
+
   const lookup: Record<number, number[]> = {};
 
   function rootFn(t: number): number[] {
@@ -44,10 +57,7 @@ function getAbstractCubicRoots(A:Polynomial, B:Polynomial, C:Polynomial, D:Polyn
 
   return {
     rootFn,
-    imaginaryBounds: [
-    // todo IMPLEMENT ME
-    // better yet, implement me for each of the three root eqs
-    ],
+    imaginaryBounds: [0, ...bounds, 1],
   };
 }
 
