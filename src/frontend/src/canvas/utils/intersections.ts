@@ -56,13 +56,16 @@ function intersections(aPoints: Vec2[], bPoints: Vec2[]) {
   const [D, C, B, A] = zero1.decompose(0);
   const cubicRoots = getAbstractCubicRoots(A, B, C, D);
 
-  const root1 = (t: number) => cubicRoots(t)[0];
-  const root2 = (t: number) => cubicRoots(t)[1];
-  const root3 = (t: number) => cubicRoots(t)[2];
+  const root1 = (t: number) => cubicRoots(t)[0] ?? NaN;
+  const root2 = (t: number) => cubicRoots(t)[1] ?? NaN;
+  const root3 = (t: number) => cubicRoots(t)[2] ?? NaN;
 
   // insert dim0 function to convert all to dim1
 
-  zero2.get1dSolver(1, { 0: root1 });
+  const results = [];
+  [root1, root2, root3].forEach((r) => {
+    const solver = zero2.get1dSolver(1, { 0: r });
+  });
 }
 
 export default intersections;

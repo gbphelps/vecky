@@ -5,9 +5,10 @@ import { getAbstractQuadraticRoots } from './abstractRoots';
 
 type SimpleFunction = (t: number) => number;
 
-function commonTangents(
+function commonSlopes(
   points1: Vec2[],
   points2: Vec2[],
+  type: 'normal' | 'tangent',
 ):[Vec2, Vec2][] {
   const [a, b] = [points1, points2].map((points, i) => {
     const n = points.length;
@@ -41,12 +42,20 @@ function commonTangents(
   const root1 = (t: number) => rootFn(t)[0] ?? NaN;
   const root2 = (t: number) => rootFn(t)[1] ?? NaN;
 
-  // constraint #2: line between them matches tangent
+  // constraint #2:
+  const zero2 = type === 'tangent'
+  // line between them matches tangent:
   // da.y / da.x = (a.y - b.y) / (a.x - b.x)
-  const zero2 = da.y.times(a.x.minus(b.x))
-    .minus(
-      da.x.times(a.y.minus(b.y)),
-    );
+    ? da.y.times(a.x.minus(b.x))
+      .minus(
+        da.x.times(a.y.minus(b.y)),
+      )
+      // line between them perpendicular to tangent:
+      // da.y / da.x = -(a.x - b.x) / (a.y - b.y)
+    : da.y.times(a.y.minus(b.y))
+      .plus(
+        da.x.times(a.x.minus(b.x)),
+      );
 
   // transform everything into dim 1 (t)
   const solver1 = zero2.get1dSolver(1, { 0: root1 });
@@ -93,4 +102,12 @@ function commonTangents(
   // then run some numeric solver (secant method?) on the brackets found
 }
 
-export default commonTangents;
+function commonTangents(a: Vec2[], b: Vec2[]) {
+  return commonSlopes(a, b, 'tangent');
+}
+
+function commonNormals(a: Vec2[], b: Vec2[]) {
+  return commonSlopes(a, b, 'normal');
+}
+
+export { commonTangents, commonNormals };

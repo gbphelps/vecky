@@ -1,4 +1,4 @@
-import commonTangents from '../commonTangents';
+import { commonTangents } from '../commonSlopes';
 import Vec2 from '../vec2';
 
 describe('Common Tangents', () => {
