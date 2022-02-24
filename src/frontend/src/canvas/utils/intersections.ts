@@ -1,3 +1,4 @@
+import { Complex as X } from 'complex.js';
 import {
   getOverlap,
   bbox,
@@ -57,7 +58,25 @@ function getAbstractCubicRoots(A:Polynomial, B:Polynomial, C:Polynomial, D:Polyn
 
     const R = rTop.evaluate(t) / rBtm.evaluate(t);
     const Q = qTop.evaluate(t) / qBtm.evaluate(t);
-    const b = Q ** 3 + R ** 2;
+    const QR = X(Q ** 3 + R ** 2).pow(1 / 2);
+
+    const S = (X(R).add(QR)).pow(1 / 3);
+    const T = (X(R).sub(QR)).pow(1 / 3);
+
+    const BA = B.evaluate(t) / (3 * A.evaluate(t));
+    const IST = X(0, Math.sqrt(3) / 2).mul(S.sub(T));
+    const STBA = S.add(T).div(-2).sub(BA);
+
+    const res = [
+      S.add(T).sub(BA),
+      STBA.add(IST),
+      STBA.sub(IST),
+    ]
+      .filter((a) => Math.abs(a.im) < 1e-10)
+      .map((a) => a.re);
+
+    lookup[t] = res;
+    return res;
   };
 }
 
@@ -92,3 +111,4 @@ function intersections(aPoints: Vec2[], bPoints: Vec2[]) {
 }
 
 export default intersections;
+export { getAbstractCubicRoots };

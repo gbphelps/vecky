@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "tf": "run(){ cd src/frontend && jest --testMatch=**/__tests__/*$1*; }; run",
-
     "frontend-dev": "webpack --watch --config=src/frontend/webpack.config.js",
     "server-dev": "tsc -p src/server/tsconfig.json --watch & nodemon src/server/dist/src/index.js && fg",
     "lint": "eslint . --ext .ts",
@@ -16,11 +15,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/complex.js": "^2.0.3",
     "@types/connect-redis": "^0.0.18",
     "@types/csurf": "^1.11.2",
     "@types/express-session": "^1.17.4",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.1",
+    "complex.js": "^2.0.15",
     "connect-redis": "^6.1.1",
     "cookie-parser": "^1.4.6",
     "csurf": "^1.11.0",
