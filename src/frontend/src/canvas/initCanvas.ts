@@ -10,6 +10,56 @@ import Registry from './entities/registry';
 import Point from './entities/points/point';
 import Shape from './entities/shape';
 import PointFinderTool from './tools/pointFinder';
+import Vec2 from './utils/vec2';
+import { commonNormals, commonTangents } from './utils/commonSlopes';
+
+function demo(root: SVGSVGElement) {
+  const a = [
+    new Vec2(50, 0),
+    new Vec2(100, -100),
+    new Vec2(100, 100),
+    new Vec2(0, 0),
+  ];
+
+  const b = [
+    new Vec2(200, 0),
+    new Vec2(100, -200),
+    new Vec2(100, 200),
+    new Vec2(200, 100),
+  ];
+
+  const cn = commonNormals(a, b);
+  const ct = commonTangents(a, b);
+
+  const style: any = {
+    fill: 'none',
+    vectorEffect: 'non-scaling-stroke',
+    strokeWidth: 1,
+    stroke: 'black',
+  };
+
+  [a, b].forEach((ps) => {
+    root.appendChild(create('path', {
+      d: ps.slice(1).reduce((all, p) => `${all} ${p.x} ${p.y}`, `M ${ps[0].x} ${ps[0].y} C`),
+      style,
+    }));
+  });
+
+  function createLine([p1, p2]: [Vec2, Vec2], color: string) {
+    root.appendChild(create('line', {
+      x1: p1.x,
+      y1: p1.y,
+      x2: p2.x,
+      y2: p2.y,
+      style: {
+        ...style,
+        stroke: color,
+      },
+    }));
+  }
+  cn.forEach((l) => createLine(l, 'red'));
+  ct.forEach((l) => createLine(l, 'blue'));
+}
 
 function initCanvas(rootDiv: HTMLDivElement) {
   const pointRegistry = new Registry<Point>();
@@ -22,6 +72,8 @@ function initCanvas(rootDiv: HTMLDivElement) {
     },
   });
   rootDiv.appendChild(root);
+
+  demo(root);
 
   const screenManager = new ScreenManager(root);
   const mousePosition = new MousePosition({ screenManager, root });
