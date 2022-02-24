@@ -3,6 +3,11 @@ declare module '*.scss' {
     export default styles;
 }
 
+declare module 'complex.js' {
+    const type: any;
+    export default type;
+}
+
 // eslint-disable-next-line no-underscore-dangle
 declare let __user__: {
     username: string,

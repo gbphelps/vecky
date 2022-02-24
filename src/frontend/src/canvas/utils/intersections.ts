@@ -3,6 +3,7 @@ import {
 } from './bezier';
 import Vec2 from './vec2';
 import { getAbstractCubicRoots } from './abstractRoots';
+import { findRoots } from './roots';
 
 // function intersections(a: Vec2[], b: Vec2[], iterations: number): Vec2[] {
 //   let res: Vec2[] = [];
@@ -35,7 +36,7 @@ import { getAbstractCubicRoots } from './abstractRoots';
 //   return res;
 // }
 
-function intersections(aPoints: Vec2[], bPoints: Vec2[]) {
+function intersections(aPoints: Vec2[], bPoints: Vec2[]): Vec2[] {
   const [a, b] = [aPoints, bPoints].map((points, i) => {
     const bz = bezierOfDegree(points.length);
     const x = bz(...points.map((p) => p.x)).unproject(1 - i);
@@ -54,18 +55,36 @@ function intersections(aPoints: Vec2[], bPoints: Vec2[]) {
 
   // solve for dim0 in terms of dim1
   const [D, C, B, A] = zero1.decompose(0);
-  const cubicRoots = getAbstractCubicRoots(A, B, C, D);
+  const { rootFn, imaginaryBounds } = getAbstractCubicRoots(A, B, C, D);
 
-  const root1 = (t: number) => cubicRoots(t)[0] ?? NaN;
-  const root2 = (t: number) => cubicRoots(t)[1] ?? NaN;
-  const root3 = (t: number) => cubicRoots(t)[2] ?? NaN;
+  const root1 = (t: number) => rootFn(t)[0] ?? NaN;
+  const root2 = (t: number) => rootFn(t)[1] ?? NaN;
+  const root3 = (t: number) => rootFn(t)[2] ?? NaN;
 
   // insert dim0 function to convert all to dim1
 
-  const results = [];
+  let results: number[] = [];
   [root1, root2, root3].forEach((r) => {
     const solver = zero2.get1dSolver(1, { 0: r });
+    results = results.concat(findRoots({
+      fn: solver,
+      range: [0, 1],
+      // todo: lol this works but you really
+      // need to slice this based on imaginary
+      // ranges that should be returned by
+      // getAbstractCubicRoots
+      numSegments: 10000,
+      maxIterations: 20,
+      precision: 1e-16,
+    }));
   });
+
+  return results
+    .filter((n) => !Number.isNaN(n))
+    .map((s) => new Vec2(
+      b.x.evaluate([0, s]),
+      b.y.evaluate([0, s]),
+    ));
 }
 
 export default intersections;

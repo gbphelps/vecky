@@ -223,7 +223,11 @@ class Polynomial {
       );
     });
 
-    return polys.map((p) => p ?? new Polynomial());
+    for (let i = 0; i < polys.length; i++) {
+      if (!polys[i]) polys[i] = new Polynomial();
+    }
+
+    return polys;
   }
 
   get1dSolver(dim: number, substitutions: Record<number, SimpleFunction>) {

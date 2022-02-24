@@ -1,4 +1,4 @@
-import { Complex as X } from 'complex.js';
+import X from 'complex.js';
 import Polynomial from './polynomial';
 import { findRoots } from './roots';
 
@@ -16,18 +16,18 @@ function getAbstractCubicRoots(A:Polynomial, B:Polynomial, C:Polynomial, D:Polyn
 
   const lookup: Record<number, number[]> = {};
 
-  return function getRoots(t: number): number[] {
+  function rootFn(t: number): number[] {
     if (lookup[t]) return lookup[t];
 
     const R = rTop.evaluate(t) / rBtm.evaluate(t);
     const Q = qTop.evaluate(t) / qBtm.evaluate(t);
-    const QR = X(Q ** 3 + R ** 2).pow(1 / 2);
+    const QR = new X(Q ** 3 + R ** 2).pow(1 / 2);
 
-    const S = (X(R).add(QR)).pow(1 / 3);
-    const T = (X(R).sub(QR)).pow(1 / 3);
+    const S = (new X(R).add(QR)).pow(1 / 3);
+    const T = (new X(R).sub(QR)).pow(1 / 3);
 
     const BA = B.evaluate(t) / (3 * A.evaluate(t));
-    const IST = X(0, Math.sqrt(3) / 2).mul(S.sub(T));
+    const IST = new X(0, Math.sqrt(3) / 2).mul(S.sub(T));
     const STBA = S.add(T).div(-2).sub(BA);
 
     const res = [
@@ -40,6 +40,13 @@ function getAbstractCubicRoots(A:Polynomial, B:Polynomial, C:Polynomial, D:Polyn
 
     lookup[t] = res;
     return res;
+  }
+
+  return {
+    rootFn,
+    imaginaryBounds: [
+    // todo IMPLEMENT ME
+    ],
   };
 }
 
