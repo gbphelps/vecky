@@ -1,4 +1,4 @@
-import { setProps, create } from '../../utils/misc';
+import { setProps, create, unmount } from '../../utils/misc';
 import Vec2 from '../../utils/vec2';
 import RegistryObject from '../registryObject';
 import Registry from '../registry';
@@ -68,7 +68,7 @@ class DomPoint {
   }
 
   destroy() {
-    this.layer.uxLayer.removeChild(this.element);
+    unmount(this.element);
   }
 }
 

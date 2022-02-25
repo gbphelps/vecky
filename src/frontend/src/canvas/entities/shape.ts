@@ -1,11 +1,11 @@
 import Anchor from './points/anchor';
-import { create, setProps } from '../utils/misc';
+import { create, setProps, unmount } from '../utils/misc';
 import Vec2 from '../utils/vec2';
 import Layer from './layers/layer';
 import RegistryObject from './registryObject';
 import Registry from './registry';
 import Point from './points/point';
-import { bezierOfDegree, range } from '../utils/bezier';
+import { bezierOfDegree } from '../utils/bezier';
 
 const COMMAND_LOOKUP: Record<number, string> = {
   1: 'L',
@@ -182,7 +182,7 @@ class Shape extends RegistryObject<Shape> {
 
   destroy() {
     super.destroy();
-    this.layer.drawLayer.removeChild(this.element);
+    unmount(this.element);
   }
 }
 

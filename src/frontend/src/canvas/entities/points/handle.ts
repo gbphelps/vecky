@@ -1,6 +1,6 @@
 import { IHandle, IAnchor } from './types';
 import Point from './point';
-import { create, setProps } from '../../utils/misc';
+import { create, setProps, unmount } from '../../utils/misc';
 import Vec2 from '../../utils/vec2';
 import Layer from '../layers/layer';
 import Registry from '../registry';
@@ -55,7 +55,7 @@ class Handle extends Point implements IHandle {
 
   destroy() {
     super.destroy();
-    this.layer.uxLayer.removeChild(this.connector);
+    unmount(this.connector);
   }
 }
 

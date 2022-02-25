@@ -24,6 +24,11 @@ function create<T extends keyof TypeMap>(type: T, props?: SVGAttributes<TypeMap[
   return el;
 }
 
+function unmount(element: SVGElement) {
+  if (!element.parentElement) return;
+  element.parentElement.removeChild(element);
+}
+
 function oppSigns(a: number, b: number) {
   if (Number.isNaN(a) || Number.isNaN(b)) return false;
 
@@ -38,4 +43,5 @@ export {
   create,
   lerp,
   oppSigns,
+  unmount,
 };

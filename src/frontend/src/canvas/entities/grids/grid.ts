@@ -1,5 +1,5 @@
 import ScreenManager from '../../screenManager';
-import { create } from '../../utils/misc';
+import { create, unmount } from '../../utils/misc';
 import Layer from '../layers/layer';
 
 class GridLine {
@@ -37,7 +37,7 @@ class GridLine {
   }
 
   destroy() {
-    this.layer.drawLayer.removeChild(this.element);
+    unmount(this.element);
   }
 }
 
