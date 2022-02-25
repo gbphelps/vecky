@@ -32,8 +32,8 @@ class PointFinder extends Tool {
   }
 
   get maxDistance() {
-    return this.screenManager.height ** 2
-    + this.screenManager.width ** 2 * 0.05;
+    return Math.sqrt(this.screenManager.height ** 2
+    + this.screenManager.width ** 2) * 0.05;
   }
 
   shouldSkip(pos: Vec2, curve: {x: Polynomial, y: Polynomial}) {
@@ -76,12 +76,15 @@ class PointFinder extends Tool {
       point: new Vec2(),
       distance: Infinity,
     };
+
     const { maxDistance } = this;
 
     Object.values(this.shapeRegistry.manifest)
       .forEach((v) => {
         v.curves.forEach((c) => {
-          if (this.shouldSkip(e.pos, c)) return;
+          if (this.shouldSkip(e.pos, c)) {
+            return;
+          }
 
           const d = closestPoint({
             x: c.x,
