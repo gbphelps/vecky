@@ -31,12 +31,12 @@ class PointFinder extends Tool {
     });
   }
 
-  shouldSkip(pos: Vec2, curve: {x: Polynomial, y: Polynomial}) {
-    const maxDistance = Math.sqrt(
-      this.screenManager.height ** 2 +
-      this.screenManager.width ** 2,
-    ) * 0.05;
+  get maxDistance() {
+    return this.screenManager.height ** 2
+    + this.screenManager.width ** 2 * 0.05;
+  }
 
+  shouldSkip(pos: Vec2, curve: {x: Polynomial, y: Polynomial}) {
     const right = this.screenManager.left + this.screenManager.width;
     const bottom = this.screenManager.top + this.screenManager.height;
     const { left, top } = this.screenManager;
@@ -64,7 +64,7 @@ class PointFinder extends Tool {
         ...yr.map((yValue) => (yValue - pos.y) ** 2),
       );
 
-    if (xSide + ySide > maxDistance ** 2) {
+    if (xSide + ySide > this.maxDistance ** 2) {
       return true;
     }
 
@@ -76,6 +76,7 @@ class PointFinder extends Tool {
       point: new Vec2(),
       distance: Infinity,
     };
+    const { maxDistance } = this;
 
     Object.values(this.shapeRegistry.manifest)
       .forEach((v) => {
@@ -96,7 +97,7 @@ class PointFinder extends Tool {
         });
       });
 
-    if (best.distance === Infinity) {
+    if (best.distance > maxDistance) {
       unmount(this.element);
     } else {
       this.root.appendChild(this.element);
