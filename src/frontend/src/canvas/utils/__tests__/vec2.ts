@@ -50,4 +50,14 @@ describe('vec2', () => {
     expect(a).toMatchObject({ x: 3, y: 8 });
     expect(b).toMatchObject({ x: 30, y: 80 });
   });
+
+  new Array(9).fill(null).map((_, i) => i / 8).forEach((frac) => {
+    test(`rotate ${frac} * pi`, () => {
+      const theta = frac * Math.PI;
+      const vec = new Vec2(1 / 2, Math.sqrt(3) / 2).rotate(theta);
+
+      expect(vec.x).toBeCloseTo(Math.cos(theta + Math.PI / 3));
+      expect(vec.y).toBeCloseTo(Math.sin(theta + Math.PI / 3));
+    });
+  });
 });

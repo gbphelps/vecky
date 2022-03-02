@@ -27,6 +27,16 @@ class Vec2 {
     return new Vec2(this.x * n, this.y * n);
   }
 
+  rotate(theta: number) {
+    const sin = Math.sin(theta);
+    const cos = Math.cos(theta);
+
+    return new Vec2(
+      cos * this.x - sin * this.y,
+      sin * this.x + cos * this.y,
+    );
+  }
+
   distance(other: Vec2) {
     return this.minus(other).magnitude;
   }
