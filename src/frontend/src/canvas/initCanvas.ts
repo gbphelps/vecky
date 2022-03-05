@@ -13,6 +13,7 @@ import PointFinderTool from './tools/pointFinder';
 import Vec2 from './utils/vec2';
 import { commonNormals, commonTangents } from './utils/commonSlopes';
 import intersections from './utils/intersections';
+import { fullCircle } from './utils/arcBezier';
 
 // function commonSlopesDemo(root: SVGSVGElement) {
 //   const a = [
@@ -62,48 +63,68 @@ import intersections from './utils/intersections';
 //   ct.forEach((l) => createLine(l, 'blue'));
 // }
 
-function intersectionsDemo(root: SVGSVGElement) {
-  const a = [
-    new Vec2(0, -20),
-    new Vec2(0, 100),
-    new Vec2(20, -100),
-    new Vec2(20, 20),
-  ];
+// function intersectionsDemo(root: SVGSVGElement) {
+//   const a = [
+//     new Vec2(0, -20),
+//     new Vec2(0, 100),
+//     new Vec2(20, -100),
+//     new Vec2(20, 20),
+//   ];
 
-  const b = [
-    new Vec2(-10, -10),
-    new Vec2(110, -10),
-    new Vec2(-90, 10),
-    new Vec2(30, 10),
-  ];
+//   const b = [
+//     new Vec2(-10, -10),
+//     new Vec2(110, -10),
+//     new Vec2(-90, 10),
+//     new Vec2(30, 10),
+//   ];
 
-  const style: any = {
-    fill: 'none',
-    vectorEffect: 'non-scaling-stroke',
-    strokeWidth: 1,
-    stroke: 'black',
-  };
+//   const style: any = {
+//     fill: 'none',
+//     vectorEffect: 'non-scaling-stroke',
+//     strokeWidth: 1,
+//     stroke: 'black',
+//   };
 
-  const ix = intersections(a, b);
+//   const ix = intersections(a, b);
 
-  [a, b].forEach((ps) => {
-    root.appendChild(create('path', {
-      d: ps.slice(1).reduce((all, p) => `${all} ${p.x} ${p.y}`, `M ${ps[0].x} ${ps[0].y} C`),
-      style,
-    }));
+//   [a, b].forEach((ps) => {
+//     root.appendChild(create('path', {
+//       d: ps.slice(1).reduce((all, p) => `${all} ${p.x} ${p.y}`, `M ${ps[0].x} ${ps[0].y} C`),
+//       style,
+//     }));
+//   });
+
+//   function createPoint(p1: Vec2, color: string) {
+//     root.appendChild(create('circle', {
+//       r: '1%',
+//       cx: p1.x,
+//       cy: p1.y,
+//       style: {
+//         fill: color,
+//       },
+//     }));
+//   }
+//   ix.forEach((p) => createPoint(p.point, 'blue'));
+// }
+
+function circleDemo(root: SVGSVGElement) {
+  const circle = fullCircle({
+    center: new Vec2(50, 40),
+    radius: 40,
+    nSeg: 4,
   });
 
-  function createPoint(p1: Vec2, color: string) {
-    root.appendChild(create('circle', {
-      r: '1%',
-      cx: p1.x,
-      cy: p1.y,
-      style: {
-        fill: color,
-      },
-    }));
+  let path = `M ${circle[0].x} ${circle[0].y}`;
+
+  for (let i = 1; i < circle.length; i += 3) {
+    path += `C 
+    ${circle[i].x} ${circle[i].y} 
+    ${circle[i + 1].x} ${circle[i + 1].y} 
+    ${circle[i + 2].x} ${circle[i + 2].y}`;
   }
-  ix.forEach((p) => createPoint(p.point, 'blue'));
+  path += 'Z';
+
+  root.appendChild(create('path', { d: path }));
 }
 
 function initCanvas(rootDiv: HTMLDivElement) {
@@ -118,7 +139,8 @@ function initCanvas(rootDiv: HTMLDivElement) {
   });
   rootDiv.appendChild(root);
 
-  intersectionsDemo(root);
+  circleDemo(root);
+  // intersectionsDemo(root);
   // commonSlopesDemo(root);
 
   const screenManager = new ScreenManager(root);

@@ -60,4 +60,11 @@ describe('vec2', () => {
       expect(vec.y).toBeCloseTo(Math.sin(theta + Math.PI / 3));
     });
   });
+
+  test('angle', () => {
+    const vec1 = new Vec2(1 / 2, Math.sqrt(3) / 2);
+    const vec2 = new Vec2(-Math.sqrt(3) / 2, 1 / 2);
+    expect(vec1.angle(vec2)).toBeCloseTo(Math.PI / 2);
+    expect(vec2.angle(vec1)).toBeCloseTo(-Math.PI / 2);
+  });
 });

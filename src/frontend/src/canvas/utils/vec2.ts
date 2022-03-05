@@ -37,6 +37,23 @@ class Vec2 {
     );
   }
 
+  dot(other: Vec2) {
+    return this.x * other.x + this.y * other.y;
+  }
+
+  cross(other: Vec2) {
+    return this.x * other.y - this.y * other.x;
+  }
+
+  angle(other: Vec2) {
+    let ratio = this.cross(other) /
+    (this.magnitude * other.magnitude);
+    ratio = Math.min(1, ratio);
+    ratio = Math.max(-1, ratio);
+
+    return Math.asin(ratio);
+  }
+
   distance(other: Vec2) {
     return this.minus(other).magnitude;
   }

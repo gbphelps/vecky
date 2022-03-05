@@ -230,6 +230,27 @@ class Polynomial {
     return polys;
   }
 
+  partialEval(nums: Record<number, number>) {
+    const res = new Polynomial();
+    Object.keys(this.coefficients).forEach((k) => {
+      const degrees = this.parseKey(k);
+      let coeff = this.coefficients[k];
+
+      degrees.forEach((degree, dimension) => {
+        if (nums[dimension]) {
+          coeff *= nums[dimension] ** degree;
+        }
+      });
+
+      const newDegs = degrees.filter(
+        (_, dimension) => nums[dimension] == null,
+      );
+
+      res.setCoeff(newDegs, coeff);
+    });
+    return res;
+  }
+
   get1dSolver(dim: number, substitutions: Record<number, SimpleFunction>) {
     const needed = new Set(
       new Array(this.dimension)
