@@ -78,22 +78,18 @@ function makeCircleShape(args: {
     layer,
   });
 
-  circle.forEach((point, i) => {
-    if (i % 3 === 0) {
-      shape.push(point);
-      return;
-    }
+  circle.pop();
+  for (let i = 0; i < circle.length / 3; i++) {
+    const s = i * 3;
+    const point = circle[s];
+    const prev = circle[s - 1] ?? circle[circle.length - 1];
+    shape.push(point);
+    shape.lastPoint().setHandle('prev', prev);
+  }
 
-    if (i % 3 === 1) {
-      const parent = shape.nthPoint(Math.floor(i / 3));
-      parent.setHandle('next', point);
-    } else {
-      const parent = shape.nthPoint(Math.floor(i / 3) + 1)
-      ?? shape.firstPoint();
+  shape.close();
 
-      parent.setHandle('prev', point);
-    }
-  });
+  return shape;
 }
 
 export { fullCircle, makeCircleShape };

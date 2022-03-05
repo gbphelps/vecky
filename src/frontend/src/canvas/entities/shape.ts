@@ -185,8 +185,11 @@ class Shape extends RegistryObject<Shape> {
   }
 
   destroy() {
-    super.destroy();
+    this.points.forEach((p) => {
+      p.destroy();
+    });
     unmount(this.element);
+    super.destroy();
   }
 }
 

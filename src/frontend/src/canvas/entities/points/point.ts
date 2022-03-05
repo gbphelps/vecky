@@ -113,6 +113,7 @@ class Point extends RegistryObject<Point> {
   }
 
   destroy() {
+    super.destroy();
     this.domPoint.destroy();
   }
 }

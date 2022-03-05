@@ -74,6 +74,11 @@ class Handles {
     h2.setPosition(pos2);
     this[otherKey] = h2;
   }
+
+  destroy() {
+    this._prev?.destroy();
+    this._next?.destroy();
+  }
 }
 
 export default Handles;

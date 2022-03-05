@@ -25,7 +25,10 @@ function create<T extends keyof TypeMap>(type: T, props?: SVGAttributes<TypeMap[
 }
 
 function unmount(element: SVGElement) {
-  if (!element.parentElement) return;
+  if (!element.parentElement) {
+    // console.log('element is not mounted!');
+    return;
+  }
   element.parentElement.removeChild(element);
 }
 

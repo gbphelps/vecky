@@ -181,8 +181,6 @@ function intersections(aPoints: Vec2[], bPoints: Vec2[]): {
     });
   });
 
-  console.log(results);
-
   return results;
 }
 

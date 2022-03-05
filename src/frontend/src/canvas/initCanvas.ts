@@ -14,6 +14,7 @@ import Vec2 from './utils/vec2';
 import { commonNormals, commonTangents } from './utils/commonSlopes';
 import intersections from './utils/intersections';
 import { fullCircle } from './utils/arcBezier';
+import ArcTool from './tools/arcTool';
 
 // function commonSlopesDemo(root: SVGSVGElement) {
 //   const a = [
@@ -155,14 +156,23 @@ function initCanvas(rootDiv: HTMLDivElement) {
   });
   // const dragScreenTool = new DragScreenTool({ root: svg, screenManager, mousePosition });
 
-  const penTool = new PenTool({
+  // const penTool = new PenTool({
+  //   root,
+  //   screenManager,
+  //   layerManager,
+  //   mousePosition,
+
+  //   pointRegistry,
+  //   shapeRegistry,
+  // });
+
+  const arcTool = new ArcTool({
     root,
+    shapeRegistry,
     screenManager,
     layerManager,
     mousePosition,
-
     pointRegistry,
-    shapeRegistry,
   });
 
   // todo: outputs at wrong layer
