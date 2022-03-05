@@ -92,6 +92,8 @@ class EventsInterface implements IListener {
 
   dragStartVector: Vec2 | null;
   dragVector: Vec2 | null;
+  mouseDownVector: Vec2 | null;
+
   wasDragged: boolean;
 
   rootEvents: EventManager;
@@ -120,6 +122,7 @@ class EventsInterface implements IListener {
 
     this.dragVector = null;
     this.dragStartVector = null;
+    this.mouseDownVector = null;
 
     this.rootElement = root;
     this.onDragStartCallback = onDragStartCallback;
@@ -158,6 +161,8 @@ class EventsInterface implements IListener {
   }
 
   mouseDown = (e: MouseEvent) => {
+    this.mouseDownVector = this.mousePosition.pos;
+
     const elementId = (e.target as SVGElement | null)?.dataset?.id ?? '';
     if (this.onMouseDownCallback) {
       this.onMouseDownCallback({
@@ -187,7 +192,9 @@ class EventsInterface implements IListener {
     if (!this.selectedElement) throw new Error();
 
     this.wasDragged = true;
-    this.dragStartVector = this.mousePosition.pos;
+
+    if (!this.mouseDownVector) throw new Error();
+    this.dragStartVector = this.mouseDownVector;
 
     if (!this.onDragStartCallback) return;
 
@@ -198,6 +205,8 @@ class EventsInterface implements IListener {
   };
 
   onMouseUp = () => {
+    this.mouseDownVector = null;
+
     if (
       this.dragStartVector
       && this.dragVector
