@@ -82,6 +82,10 @@ class Shape extends RegistryObject<Shape> {
     return idx;
   }
 
+  nthPoint(i: number) {
+    return this.points[i];
+  }
+
   lastPoint() {
     return this.points[this.points.length - 1];
   }

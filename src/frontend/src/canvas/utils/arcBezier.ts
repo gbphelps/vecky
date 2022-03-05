@@ -1,4 +1,8 @@
 import Vec2 from './vec2';
+import Shape from '../entities/shape';
+import Registry from '../entities/registry';
+import Point from '../entities/points/point';
+import Layer from '../entities/layers/layer';
 
 function arcBezier(args: { start: Vec2, center: Vec2, theta: number }) {
   const { start: startPoint, center, theta } = args;
@@ -45,5 +49,52 @@ function fullCircle(args: {
   return points;
 }
 
-export { fullCircle };
+function makeCircleShape(args: {
+  radius: number,
+  center: Vec2,
+  nSeg: number,
+  shapeRegistry: Registry<Shape>,
+  pointRegistry: Registry<Point>,
+  layer: Layer
+}) {
+  const {
+    radius,
+    center,
+    nSeg,
+    shapeRegistry,
+    pointRegistry,
+    layer,
+  } = args;
+
+  const circle = fullCircle({
+    radius,
+    center,
+    nSeg,
+  });
+
+  const shape = new Shape({
+    shapeRegistry,
+    pointRegistry,
+    layer,
+  });
+
+  circle.forEach((point, i) => {
+    if (i % 3 === 0) {
+      shape.push(point);
+      return;
+    }
+
+    if (i % 3 === 1) {
+      const parent = shape.nthPoint(Math.floor(i / 3));
+      parent.setHandle('next', point);
+    } else {
+      const parent = shape.nthPoint(Math.floor(i / 3) + 1)
+      ?? shape.firstPoint();
+
+      parent.setHandle('prev', point);
+    }
+  });
+}
+
+export { fullCircle, makeCircleShape };
 export default arcBezier;

@@ -139,10 +139,6 @@ class PenTool extends Tool {
       this.activeNode = shape.lastPoint();
     }
   }
-
-  destroy() {
-    super.destroy();
-  }
 }
 
 export default PenTool;
