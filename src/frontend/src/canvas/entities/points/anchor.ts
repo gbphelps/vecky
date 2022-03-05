@@ -72,13 +72,9 @@ class Anchor extends Point implements IAnchor {
   }
 
   destroy() {
+    this._shape.deletePoint(this);
     this._handles.destroy();
     super.destroy();
-  }
-
-  deleteFromShape() {
-    this.destroy();
-    this._shape.deletePoint(this);
   }
 }
 
