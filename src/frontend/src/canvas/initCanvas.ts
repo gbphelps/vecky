@@ -156,24 +156,24 @@ function initCanvas(rootDiv: HTMLDivElement) {
   });
   // const dragScreenTool = new DragScreenTool({ root: svg, screenManager, mousePosition });
 
-  // const penTool = new PenTool({
-  //   root,
-  //   screenManager,
-  //   layerManager,
-  //   mousePosition,
-
-  //   pointRegistry,
-  //   shapeRegistry,
-  // });
-
-  const arcTool = new ArcTool({
+  const penTool = new PenTool({
     root,
-    shapeRegistry,
     screenManager,
     layerManager,
     mousePosition,
+
     pointRegistry,
+    shapeRegistry,
   });
+
+  // const arcTool = new ArcTool({
+  //   root,
+  //   shapeRegistry,
+  //   screenManager,
+  //   layerManager,
+  //   mousePosition,
+  //   pointRegistry,
+  // });
 
   // todo: outputs at wrong layer
   const grid = new Grid({
