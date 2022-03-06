@@ -21,9 +21,17 @@ class PointFinder extends Tool {
   shapeRegistry: Registry<Shape>;
   element: SVGCircleElement;
   gridManager: GridManager;
+  snapGrid: boolean;
+  snapCurves: boolean;
 
   constructor(args:Args) {
     super(args);
+
+    this.snapGrid = true;
+
+    // TODO IMPLEMENT ME
+    this.snapCurves = true;
+
     this.gridManager = args.gridManager;
     this.screenManager = args.screenManager;
     this.root = args.root;
@@ -39,12 +47,12 @@ class PointFinder extends Tool {
     });
   }
 
-  // get maxDistance() {
-  //   return Math.sqrt(this.screenManager.height ** 2
-  //   + this.screenManager.width ** 2) * 0.05;
-  // }
+  get maxCurveDistance() {
+    return Math.sqrt(this.screenManager.height ** 2
+    + this.screenManager.width ** 2) * 0.05;
+  }
 
-  get maxDistance() {
+  get maxGridDistance() {
     return new Vec2(
       this.gridManager.x.unit / 2,
       this.gridManager.y.unit / 2,
@@ -79,7 +87,7 @@ class PointFinder extends Tool {
         ...yr.map((yValue) => (yValue - pos.y) ** 2),
       );
 
-    if (xSide + ySide > this.maxDistance ** 2) {
+    if (xSide + ySide > this.maxGridDistance ** 2) {
       return true;
     }
 
@@ -123,8 +131,14 @@ class PointFinder extends Tool {
 
     const bestGrid = this.bestGridPos(e.pos);
 
-    if (best.distance > bestGrid.distance) {
+    if (this.snapGrid && best.distance > bestGrid.distance) {
+      // if best distance is bad and we're allowing snap grid, replace it
       best = bestGrid;
+    } else if (!this.snapGrid && best.distance > this.maxCurveDistance) {
+      // else if we're not allowing snap grid and distance is bad
+      // given zoomed size of screen, surpress point finder
+      unmount(this.element);
+      return;
     }
 
     this.root.appendChild(this.element);
