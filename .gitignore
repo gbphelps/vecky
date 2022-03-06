@@ -1,4 +1,6 @@
 .env
 node_modules
 bundle.js
+bundle.js.map
+main.css.map
 **/server/dist

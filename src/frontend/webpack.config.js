@@ -6,6 +6,7 @@ module.exports = {
   entry: './src/frontend/src/index.tsx',
   output: { path: path.join(__dirname, '../server/src/public'), filename: 'bundle.js' },
   mode: process.env.NODE_ENV || 'development',
+  devtool: 'source-map',
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
