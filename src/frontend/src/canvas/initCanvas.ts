@@ -108,26 +108,6 @@ import GridManager from './gridManager';
 //   ix.forEach((p) => createPoint(p.point, 'blue'));
 // }
 
-function circleDemo(root: SVGSVGElement) {
-  const circle = fullCircle({
-    center: new Vec2(50, 40),
-    radius: 40,
-    nSeg: 4,
-  });
-
-  let path = `M ${circle[0].x} ${circle[0].y}`;
-
-  for (let i = 1; i < circle.length; i += 3) {
-    path += `C 
-    ${circle[i].x} ${circle[i].y} 
-    ${circle[i + 1].x} ${circle[i + 1].y} 
-    ${circle[i + 2].x} ${circle[i + 2].y}`;
-  }
-  path += 'Z';
-
-  root.appendChild(create('path', { d: path }));
-}
-
 function initCanvas(rootDiv: HTMLDivElement) {
   const pointRegistry = new Registry<Point>();
   const shapeRegistry = new Registry<Shape>();
@@ -140,7 +120,6 @@ function initCanvas(rootDiv: HTMLDivElement) {
   });
   rootDiv.appendChild(root);
 
-  circleDemo(root);
   // intersectionsDemo(root);
   // commonSlopesDemo(root);
 
