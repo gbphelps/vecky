@@ -175,3 +175,5 @@ export {
   bbox,
   getOverlap,
 };
+
+export type { BBox };

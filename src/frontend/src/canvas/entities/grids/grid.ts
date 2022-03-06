@@ -27,7 +27,7 @@ class GridLine {
       y2: this.axis === 'y' ? i : Number.MAX_SAFE_INTEGER,
       style: {
         pointerEvents: 'none',
-        stroke: '#aaaaff',
+        stroke: i === 0 ? 'red' : '#aaaaff',
         strokeWidth: 1,
         vectorEffect: 'non-scaling-stroke',
       },
@@ -133,6 +133,13 @@ class Grid {
 
   snapPosition(pos: number) {
     return Math.round((pos - this.offset) / this.unit) * this.unit + this.offset;
+  }
+
+  getCell(pos: number) {
+    return [
+      Math.floor((pos - this.offset) / this.unit) * this.unit + this.offset,
+      Math.ceil((pos - this.offset) / this.unit) * this.unit + this.offset,
+    ];
   }
 
   destroy() {

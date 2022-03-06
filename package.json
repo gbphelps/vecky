@@ -32,6 +32,7 @@
     "express-session": "^1.17.2",
     "knex": "^1.0.2",
     "luxon": "^2.3.0",
+    "minimatrix-polyroots": "^3.0.5",
     "mongodb": "^4.3.1",
     "mongoose": "^6.2.0",
     "pg": "^8.7.3",

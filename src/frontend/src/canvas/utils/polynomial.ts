@@ -36,12 +36,31 @@ class Polynomial {
     }
   }
 
+  // get degree() {
+  //   return Object.keys(this.coefficients).reduce((all, curr) => {
+  //     const degrees = this.parseKey(curr);
+  //     degrees.forEach((d, v) => {
+  //       if (all[v] == null) {
+  //         // eslint-disable-next-line no-param-reassign
+  //         all[v] = d;
+  //       } else {
+  //         // eslint-disable-next-line no-param-reassign
+  //         all[v] = Math.max(all[v], d);
+  //       }
+  //     });
+  //     return all;
+  //   }, {} as Record<number, number>);
+  // }
+
   getKey(dims: number[]) {
     return dims.join(':');
   }
 
   get dimension() {
-    return this.parseKey(Object.keys(this.coefficients)[0]).length;
+    const coeffs = Object.keys(this.coefficients);
+    if (!coeffs.length) return 0;
+
+    return this.parseKey(coeffs[0]).length;
   }
 
   getZeroKey() {
