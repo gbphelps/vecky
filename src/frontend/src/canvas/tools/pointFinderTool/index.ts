@@ -8,15 +8,23 @@ import Vec2 from '../../utils/vec2';
 import ScreenManager from '../../screenManager';
 import { range as getRange, getOverlap } from '../../utils/bezier';
 import Polynomial from '../../utils/polynomial';
+import GridManager from '../../gridManager';
+
+interface Args extends IToolArgs {
+  shapeRegistry: Registry<Shape>;
+  gridManager: GridManager;
+}
 
 class PointFinder extends Tool {
+  screenManager: ScreenManager;
+  root: SVGSVGElement;
   shapeRegistry: Registry<Shape>;
   element: SVGCircleElement;
-  root: SVGSVGElement;
-  screenManager: ScreenManager;
+  gridManager: GridManager;
 
-  constructor(args: IToolArgs & {shapeRegistry: Registry<Shape>}) {
+  constructor(args:Args) {
     super(args);
+    this.gridManager = args.gridManager;
     this.screenManager = args.screenManager;
     this.root = args.root;
     this.shapeRegistry = args.shapeRegistry;
@@ -31,9 +39,16 @@ class PointFinder extends Tool {
     });
   }
 
+  // get maxDistance() {
+  //   return Math.sqrt(this.screenManager.height ** 2
+  //   + this.screenManager.width ** 2) * 0.05;
+  // }
+
   get maxDistance() {
-    return Math.sqrt(this.screenManager.height ** 2
-    + this.screenManager.width ** 2) * 0.05;
+    return new Vec2(
+      this.gridManager.x.unit / 2,
+      this.gridManager.y.unit / 2,
+    ).magnitude;
   }
 
   shouldSkip(pos: Vec2, curve: {x: Polynomial, y: Polynomial}) {
@@ -71,13 +86,19 @@ class PointFinder extends Tool {
     return false;
   }
 
+  bestGridPos(pos: Vec2) {
+    const rounded = this.gridManager.snapPosition(pos);
+    return {
+      point: rounded,
+      distance: pos.minus(rounded).magnitude,
+    };
+  }
+
   onMouseMove(e: CustomMouseMoveEvent) {
     let best = {
       point: new Vec2(),
       distance: Infinity,
     };
-
-    const { maxDistance } = this;
 
     Object.values(this.shapeRegistry.manifest)
       .forEach((v) => {
@@ -100,16 +121,18 @@ class PointFinder extends Tool {
         });
       });
 
-    if (best.distance > maxDistance) {
-      unmount(this.element);
-    } else {
-      this.root.appendChild(this.element);
+    const bestGrid = this.bestGridPos(e.pos);
 
-      setProps(this.element, {
-        cx: best.point.x,
-        cy: best.point.y,
-      });
+    if (best.distance > bestGrid.distance) {
+      best = bestGrid;
     }
+
+    this.root.appendChild(this.element);
+
+    setProps(this.element, {
+      cx: best.point.x,
+      cy: best.point.y,
+    });
   }
 
   destroy() {

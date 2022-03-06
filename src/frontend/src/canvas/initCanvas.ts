@@ -5,16 +5,16 @@ import MousePosition from './mousePosition';
 // import DragScreenTool from './tools/dragScreenTool';
 import PenTool from './tools/penTool';
 import LayerManager from './entities/layers/layerManager';
-import Grid from './entities/grids/grid';
 import Registry from './entities/registry';
 import Point from './entities/points/point';
 import Shape from './entities/shape';
 import PointFinderTool from './tools/pointFinderTool';
 import Vec2 from './utils/vec2';
-import { commonNormals, commonTangents } from './utils/commonSlopes';
-import intersections from './utils/intersections';
+// import { commonNormals, commonTangents } from './utils/commonSlopes';
+// import intersections from './utils/intersections';
 import { fullCircle } from './utils/arcBezier';
-import ArcTool from './tools/arcTool';
+// import ArcTool from './tools/arcTool';
+import GridManager from './gridManager';
 
 // function commonSlopesDemo(root: SVGSVGElement) {
 //   const a = [
@@ -175,20 +175,7 @@ function initCanvas(rootDiv: HTMLDivElement) {
   //   pointRegistry,
   // });
 
-  // todo: outputs at wrong layer
-  const grid = new Grid({
-    unit: 10,
-    offset: 0,
-    axis: 'y',
-    root,
-    screenManager,
-    layer: layerManager.baseLayer,
-  });
-
-  const grid2 = new Grid({
-    unit: 10,
-    offset: 0,
-    axis: 'x',
+  const gridManager = new GridManager({
     root,
     screenManager,
     layer: layerManager.baseLayer,
@@ -200,6 +187,7 @@ function initCanvas(rootDiv: HTMLDivElement) {
     mousePosition,
     pointRegistry,
     shapeRegistry,
+    gridManager,
   });
 
   return {

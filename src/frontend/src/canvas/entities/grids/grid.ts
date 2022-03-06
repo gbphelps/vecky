@@ -131,6 +131,10 @@ class Grid {
     this.insert(lo, hi);
   };
 
+  snapPosition(pos: number) {
+    return Math.round((pos - this.offset) / this.unit) * this.unit + this.offset;
+  }
+
   destroy() {
     this.screenManager.unsubscribe(this.update);
   }
