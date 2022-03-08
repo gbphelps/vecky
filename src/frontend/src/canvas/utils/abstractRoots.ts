@@ -3,6 +3,8 @@ import Polynomial from './polynomial';
 import { findRoots } from './roots';
 
 function getAbstractCubicRoots(A:Polynomial, B:Polynomial, C:Polynomial, D:Polynomial) {
+  if (A.isZero()) return getAbstractQuadraticRoots(B, C, D);
+
   const qTop = A.times(C).times(3).minus(B.pow(2));
   const qBtm = A.pow(2).times(9);
   const rTop = A.times(B).times(C).times(9)
@@ -62,6 +64,8 @@ function getAbstractCubicRoots(A:Polynomial, B:Polynomial, C:Polynomial, D:Polyn
 }
 
 function getAbstractQuadraticRoots(a: Polynomial, b: Polynomial, c: Polynomial) {
+  if (a.isZero()) return getAbstractLinearRoot(b, c);
+
   const sqrt = b.pow(2).minus(a.times(c).times(4));
   const twoA = a.times(2);
   const negB = b.times(-1);
@@ -101,6 +105,11 @@ function getAbstractQuadraticRoots(a: Polynomial, b: Polynomial, c: Polynomial) 
     rootFn,
     imaginaryBounds,
   };
+}
+
+function getAbstractLinearRoot(A: Polynomial, B: Polynomial) {
+  const rootFn = (t: number) => [B.times(-1).evaluate(t) / A.evaluate(t)];
+  return { rootFn };
 }
 
 export { getAbstractCubicRoots, getAbstractQuadraticRoots };

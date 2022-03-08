@@ -52,6 +52,10 @@ class Polynomial {
   //   }, {} as Record<number, number>);
   // }
 
+  isZero() {
+    return Object.values(this.coefficients).every((c) => !c);
+  }
+
   getKey(dims: number[]) {
     return dims.join(':');
   }
