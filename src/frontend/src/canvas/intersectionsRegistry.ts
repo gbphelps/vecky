@@ -5,6 +5,7 @@ import Registry from './entities/registry';
 import { bbox, bezier2d } from './utils/bezier';
 import GridManager from './gridManager';
 import cubicLineIntercepts from './utils/cubicLineIntercepts';
+import { create } from './utils/misc';
 
 function stringify(curve: Vec2[]) {
   return JSON.stringify(curve);
@@ -16,10 +17,14 @@ class IntersectionsRegistry {
   gridXLookup: Record<string, {[key: number]: Vec2[]}>;
   gridYLookup: Record<string, {[key: number]: Vec2[]}>;
   shapeRegistry: Registry<Shape>;
+  root: SVGSVGElement;
+  debug: boolean;
+  debugElement: SVGGElement;
 
   constructor(args: {
       shapeRegistry: Registry<Shape>,
-      gridManager: GridManager
+      gridManager: GridManager,
+      root: SVGSVGElement,
     }) {
     this.intersectionLookup = {};
     this.gridXLookup = {};
@@ -27,11 +32,49 @@ class IntersectionsRegistry {
 
     this.shapeRegistry = args.shapeRegistry;
     this.gridManager = args.gridManager;
+    this.root = args.root;
+
+    this.debug = true;
+    this.debugElement = create('g');
+    this.root.appendChild(this.debugElement);
+  }
+
+  updateDebugger() {
+    if (!this.debug) return;
+
+    const debugPoint = (p: Vec2) => create('circle', {
+      r: '.5%',
+      cx: p.x,
+      cy: p.y,
+      fill: 'red',
+    });
+
+    this.debugElement.innerHTML = '';
+
+    Object.values(this.intersectionLookup).forEach((v) => {
+      Object.values(v).forEach((points) => {
+        points.forEach(({ point }) => this.debugElement.appendChild(debugPoint(point)));
+      });
+    });
+
+    [this.gridXLookup, this.gridYLookup].forEach((gridLookup) => {
+      Object.values(gridLookup).forEach((v) => {
+        Object.values(v).forEach((points) => {
+          points.forEach((point) => this.debugElement.appendChild(debugPoint(point)));
+        });
+      });
+    });
   }
 
   addIntersections(c1: Vec2[], c2: Vec2[]) {
     const key1 = stringify(c1);
     const key2 = stringify(c2);
+
+    if (key1 === key2) {
+      // TODO IMPLEMENT ME!
+      return;
+    }
+
     if (this.intersectionLookup[key1]?.[key2]) return;
 
     const inx = intersections(c1, c2);
@@ -46,6 +89,8 @@ class IntersectionsRegistry {
       ta: tb,
       tb: ta,
     }));
+
+    this.updateDebugger();
   }
 
   addCurve(curve: Vec2[]) {
@@ -68,6 +113,7 @@ class IntersectionsRegistry {
     partners.forEach((partnerKey) => {
       delete this.intersectionLookup[partnerKey]?.[selfKey];
     });
+    this.updateDebugger();
   }
 
   addAllGridIntersections(points: Vec2[]) {
@@ -93,6 +139,8 @@ class IntersectionsRegistry {
       const roots = cubicLineIntercepts(i, 'y', curve);
       this.gridYLookup[key][i] = roots;
     }
+
+    this.updateDebugger();
   }
 
   addShape(s: Shape) {
@@ -104,6 +152,11 @@ class IntersectionsRegistry {
       };
 
       Object.values(this.shapeRegistry.manifest).forEach((shape) => {
+        // TODO: while we want to calculate self-intersections, we
+        // have to modify the algorithm, because technically there are
+        // infinitely many self intersections where c(t) == c(s) && s == t
+        // we want some way to check ONLY c(t) == c(s) && s != t. Divide
+        // in half I guess?
         shape.pointCurves.forEach(addIntersections);
       });
     });

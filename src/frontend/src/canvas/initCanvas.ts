@@ -137,6 +137,7 @@ function initCanvas(rootDiv: HTMLDivElement) {
   const intersectionsRegistry = new IntersectionsRegistry({
     shapeRegistry,
     gridManager,
+    root,
   });
 
   const zoomTool = new ZoomTool({

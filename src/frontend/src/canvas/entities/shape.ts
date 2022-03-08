@@ -50,10 +50,6 @@ class Shape extends RegistryObject<Shape> {
     this.pointRegistry = args.pointRegistry;
   }
 
-  updateIntersections() {
-
-  }
-
   get pointCurves() {
     const arr = [...this.points];
     if (this.isClosed) arr.push(this.points[0]);
@@ -136,28 +132,15 @@ class Shape extends RegistryObject<Shape> {
 
     const d = [`M ${this.points[0].x} ${this.points[0].y}`];
 
-    for (
-      let i = 1;
-      i < this.points.length + (this.isClosed ? 1 : 0);
-      i++
-    ) {
-      const controlPoints: Vec2[] = [];
+    const pc = this.pointCurves;
 
-      const handle1 = this.points[i - 1].handlePositions.next;
-
-      const handle2 = this.points[i % this.points.length].handlePositions.prev;
-
-      const endpoint: Vec2 | undefined = this.points[i % this.points.length].pos;
-
-      [handle1, handle2, endpoint].forEach((p) => {
-        if (p) controlPoints.push(p);
-      });
-
+    pc.forEach((points) => {
+      const controlPoints = points.slice(1);
       if (controlPoints.length) {
         const command = COMMAND_LOOKUP[controlPoints.length];
         d.push(`${command} ${controlPoints.map((p) => `${p.x} ${p.y}`).join(' ')}`);
       }
-    }
+    });
 
     setProps(this.element, { d: d.join(' ') });
   }

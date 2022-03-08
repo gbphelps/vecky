@@ -7,6 +7,7 @@ import {
 import Vec2 from './vec2';
 import { getAbstractCubicRoots } from './abstractRoots';
 import { findRoots } from './roots';
+import Polynomial from './polynomial';
 
 /*
   generate back-of-napkin ranges for the intersections.
@@ -127,7 +128,13 @@ function intersections(aPoints: Vec2[], bPoints: Vec2[]): {
 
   // solve for dim0 in terms of dim1
   const [D, C, B, A] = zero1.decompose(0);
-  const { rootFn } = getAbstractCubicRoots(A, B, C, D);
+  const zero = new Polynomial([0]);
+  const { rootFn } = getAbstractCubicRoots(
+    A ?? zero,
+    B ?? zero,
+    C ?? zero,
+    D ?? zero,
+  );
 
   const root1 = (t: number) => rootFn(t)[0] ?? NaN;
   const root2 = (t: number) => rootFn(t)[1] ?? NaN;

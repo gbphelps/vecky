@@ -121,6 +121,15 @@ class PenTool extends Tool {
   }
 
   onMouseUp(e: CustomMouseUpEvent) {
+    // TODO TODO finish debugging intersections
+    // cubic + cubic work really well,
+    // cubic + anything else works pretty poorly - is curve-splitting at lower
+    // levels working? Is abstractCubicRoots working at lower levels?
+    // if (this.activeNode?.getShape()) {
+    //   window.intersectionsRegistry = this.intersectionsRegistry;
+    //   this.intersectionsRegistry.addShape(this.activeNode.getShape());
+    // }
+
     if (!this.activeNode) return;
 
     if (this.activeNode.getShape().isClosed || !this.activeNode.isEdge()) {
