@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react';
 import initCanvas from './initCanvas';
 
 function Canvas() {
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!ref.current) return;
     const canvas = initCanvas(ref.current);

@@ -9,12 +9,13 @@ import Registry from './entities/registry';
 import Point from './entities/points/point';
 import Shape from './entities/shape';
 import PointFinderTool from './tools/pointFinderTool';
-import Vec2 from './utils/vec2';
+// import Vec2 from './utils/vec2';
 // import { commonNormals, commonTangents } from './utils/commonSlopes';
 // import intersections from './utils/intersections';
-import { fullCircle } from './utils/arcBezier';
+// import { fullCircle } from './utils/arcBezier';
 // import ArcTool from './tools/arcTool';
 import GridManager from './gridManager';
+import IntersectionsRegistry from './intersectionsRegistry';
 
 // function commonSlopesDemo(root: SVGSVGElement) {
 //   const a = [
@@ -127,6 +128,17 @@ function initCanvas(rootDiv: HTMLDivElement) {
   const mousePosition = new MousePosition({ screenManager, root });
   const layerManager = new LayerManager({ root });
 
+  const gridManager = new GridManager({
+    root,
+    screenManager,
+    layer: layerManager.baseLayer,
+  });
+
+  const intersectionsRegistry = new IntersectionsRegistry({
+    shapeRegistry,
+    gridManager,
+  });
+
   const zoomTool = new ZoomTool({
     root,
     screenManager,
@@ -140,9 +152,9 @@ function initCanvas(rootDiv: HTMLDivElement) {
     screenManager,
     layerManager,
     mousePosition,
-
     pointRegistry,
     shapeRegistry,
+    intersectionsRegistry,
   });
 
   // const arcTool = new ArcTool({
@@ -153,12 +165,6 @@ function initCanvas(rootDiv: HTMLDivElement) {
   //   mousePosition,
   //   pointRegistry,
   // });
-
-  const gridManager = new GridManager({
-    root,
-    screenManager,
-    layer: layerManager.baseLayer,
-  });
 
   const cpTool = new PointFinderTool({
     root,

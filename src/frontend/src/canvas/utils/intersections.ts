@@ -105,6 +105,7 @@ function _rough(
 function intersections(aPoints: Vec2[], bPoints: Vec2[]): {
   point: Vec2,
   tb: number,
+  ta: number,
 }[] {
   const checkpoints = roughIntersections(aPoints, bPoints);
 

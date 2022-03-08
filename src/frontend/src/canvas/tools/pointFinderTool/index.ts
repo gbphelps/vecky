@@ -1,4 +1,3 @@
-import { getCubicRoots } from 'minimatrix-polyroots';
 import Tool, { IToolArgs } from '../tool';
 import Shape from '../../entities/shape';
 import Registry from '../../entities/registry';
@@ -10,29 +9,7 @@ import ScreenManager from '../../screenManager';
 import { range as getRange, getOverlap, BBox } from '../../utils/bezier';
 import Polynomial from '../../utils/polynomial';
 import GridManager from '../../gridManager';
-
-function cubicIntercepts(n: number, dim: 'x' | 'y', curve: { x: Polynomial, y: Polynomial }): Vec2[] {
-  const cv = curve[dim];
-
-  const D = (cv.coefficients[0] ?? 0) - n;
-  const C = cv.coefficients[1] ?? 0;
-  const B = cv.coefficients[2] ?? 0;
-  const A = cv.coefficients[3] ?? 0;
-
-  const prec = 1e-16;
-
-  const ts = getCubicRoots(A, B, C, D).filter(({ real, imag }) => {
-    if (Math.abs(imag) > prec) return false;
-    if (real < 0 - prec) return false;
-    if (real > 1 + prec) return false;
-    return true;
-  }).map(({ real }) => real);
-
-  return ts.map((t) => new Vec2(
-    curve.x.evaluate(t),
-    curve.y.evaluate(t),
-  ));
-}
+import cubicLineIntercepts from '../../utils/cubicLineIntercepts';
 
 function distanceToBox(point: Vec2, box: BBox) {
   const { x, y } = point;
@@ -131,7 +108,7 @@ class PointFinder extends Tool {
     const rounded = this.gridManager.snapPosition(pos);
     return {
       point: rounded,
-      distance: pos.minus(rounded).magnitude,
+      distance: pos.distance(rounded),
     };
   }
 
@@ -202,11 +179,11 @@ class PointFinder extends Tool {
     const yOpts = this.gridManager.y.getCell(projected.y);
 
     xOpts.forEach((x) => {
-      opts.push(...cubicIntercepts(x, 'x', curve));
+      opts.push(...cubicLineIntercepts(x, 'x', curve));
     });
 
     yOpts.forEach((y) => {
-      opts.push(...cubicIntercepts(y, 'y', curve));
+      opts.push(...cubicLineIntercepts(y, 'y', curve));
     });
 
     const p = opts.reduce((best, curr) => {

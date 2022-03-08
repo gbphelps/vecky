@@ -3,6 +3,7 @@ import Shape from '../entities/shape';
 import Registry from '../entities/registry';
 import Point from '../entities/points/point';
 import Layer from '../entities/layers/layer';
+import IntersectionsRegistry from '../intersectionsRegistry';
 
 function arcBezier(args: { start: Vec2, center: Vec2, theta: number }) {
   const { start: startPoint, center, theta } = args;
@@ -55,7 +56,8 @@ function makeCircleShape(args: {
   nSeg: number,
   shapeRegistry: Registry<Shape>,
   pointRegistry: Registry<Point>,
-  layer: Layer
+  layer: Layer,
+  intersectionsRegistry: IntersectionsRegistry
 }) {
   const {
     radius,
@@ -64,6 +66,7 @@ function makeCircleShape(args: {
     shapeRegistry,
     pointRegistry,
     layer,
+    intersectionsRegistry,
   } = args;
 
   const circle = fullCircle({
@@ -76,6 +79,7 @@ function makeCircleShape(args: {
     shapeRegistry,
     pointRegistry,
     layer,
+    intersectionsRegistry,
   });
 
   circle.pop();

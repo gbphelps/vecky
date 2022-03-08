@@ -10,6 +10,7 @@ import LayerManager from '../../entities/layers/layerManager';
 import Anchor from '../../entities/points/anchor';
 import Registry from '../../entities/registry';
 import Point from '../../entities/points/point';
+import IntersectionsRegistry from '../../intersectionsRegistry';
 
 class PenTool extends Tool {
   activeNode: Anchor | null;
@@ -18,14 +19,17 @@ class PenTool extends Tool {
   private layerManager: LayerManager;
   private pointRegistry: Registry<Point>;
   private shapeRegistry: Registry<Shape>;
+  private intersectionsRegistry: IntersectionsRegistry;
 
   constructor(args: IToolArgs & {
     layerManager: LayerManager,
     shapeRegistry: Registry<Shape>,
-    pointRegistry: Registry<Point>
+    pointRegistry: Registry<Point>,
+    intersectionsRegistry: IntersectionsRegistry
   }) {
     super(args);
 
+    this.intersectionsRegistry = args.intersectionsRegistry;
     this.pointRegistry = args.pointRegistry;
     this.shapeRegistry = args.shapeRegistry;
     this.layerManager = args.layerManager;
@@ -52,6 +56,7 @@ class PenTool extends Tool {
           pointRegistry: this.pointRegistry,
           shapeRegistry: this.shapeRegistry,
           layer: this.layerManager.activeLayer,
+          intersectionsRegistry: this.intersectionsRegistry,
         });
 
         newShape.push(e.pos);

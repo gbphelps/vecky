@@ -6,10 +6,12 @@ import { makeCircleShape } from '../../utils/arcBezier';
 import Registry from '../../entities/registry';
 import LayerManager from '../../entities/layers/layerManager';
 import Point from '../../entities/points/point';
+import IntersectionsRegistry from '../../intersectionsRegistry';
 
 interface Args extends IToolArgs {
     shapeRegistry: Registry<Shape>,
-    layerManager: LayerManager
+    layerManager: LayerManager,
+    intersectionsRegistry: IntersectionsRegistry
 }
 
 class ArcTool extends Tool {
@@ -18,6 +20,7 @@ class ArcTool extends Tool {
   layerManager: LayerManager;
   shapeRegistry: Registry<Shape>;
   pointRegistry: Registry<Point>;
+  intersectionsRegistry: IntersectionsRegistry;
 
   constructor(args: Args) {
     super(args);
@@ -26,6 +29,7 @@ class ArcTool extends Tool {
     this.layerManager = args.layerManager;
     this.shapeRegistry = args.shapeRegistry;
     this.pointRegistry = args.pointRegistry;
+    this.intersectionsRegistry = args.intersectionsRegistry;
   }
 
   onDragEnd(): void {
@@ -49,6 +53,7 @@ class ArcTool extends Tool {
       layer: this.layerManager.activeLayer,
       shapeRegistry: this.shapeRegistry,
       pointRegistry: this.pointRegistry,
+      intersectionsRegistry: this.intersectionsRegistry,
     });
   }
 }

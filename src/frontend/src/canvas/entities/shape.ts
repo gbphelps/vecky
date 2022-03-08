@@ -6,6 +6,7 @@ import RegistryObject from './registryObject';
 import Registry from './registry';
 import Point from './points/point';
 import { bezierOfDegree } from '../utils/bezier';
+import IntersectionsRegistry from '../intersectionsRegistry';
 
 const COMMAND_LOOKUP: Record<number, string> = {
   1: 'L',
@@ -19,14 +20,19 @@ class Shape extends RegistryObject<Shape> {
   layer: Layer;
   isClosed: boolean;
   pointRegistry: Registry<Point>;
+  shapeRegistry: Registry<Shape>;
+  intersectionsRegistry: IntersectionsRegistry;
 
   constructor(args: {
     shapeRegistry: Registry<Shape>,
     pointRegistry: Registry<Point>,
-    layer: Layer
+    layer: Layer,
+    intersectionsRegistry: IntersectionsRegistry
   }) {
     super({ registry: args.shapeRegistry });
     this.layer = args.layer;
+    this.shapeRegistry = args.shapeRegistry;
+    this.intersectionsRegistry = args.intersectionsRegistry;
 
     this.element = create('path', {
       style: {
@@ -44,7 +50,11 @@ class Shape extends RegistryObject<Shape> {
     this.pointRegistry = args.pointRegistry;
   }
 
-  get curves() {
+  updateIntersections() {
+
+  }
+
+  get pointCurves() {
     const arr = [...this.points];
     if (this.isClosed) arr.push(this.points[0]);
 
@@ -60,16 +70,19 @@ class Shape extends RegistryObject<Shape> {
       [p1, p2, p3, p4].forEach((p) => {
         if (p) points.push(p);
       });
+      res.push(points);
+    }
+    return res;
+  }
 
+  get curves() {
+    return this.pointCurves.map((points) => {
       const makeBezier = bezierOfDegree(points.length);
-      const curve = {
+      return {
         x: makeBezier(...points.map((p) => p.x)),
         y: makeBezier(...points.map((p) => p.y)),
       };
-      res.push(curve);
-    }
-
-    return res;
+    });
   }
 
   get size() {
