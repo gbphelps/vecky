@@ -57,13 +57,13 @@ class IntersectionsRegistry {
       });
     });
 
-    [this.gridXLookup, this.gridYLookup].forEach((gridLookup) => {
-      Object.values(gridLookup).forEach((v) => {
-        Object.values(v).forEach((points) => {
-          points.forEach((point) => this.debugElement.appendChild(debugPoint(point)));
-        });
-      });
-    });
+    // [this.gridXLookup, this.gridYLookup].forEach((gridLookup) => {
+    //   Object.values(gridLookup).forEach((v) => {
+    //     Object.values(v).forEach((points) => {
+    //       points.forEach((point) => this.debugElement.appendChild(debugPoint(point)));
+    //     });
+    //   });
+    // });
   }
 
   addIntersections(c1: Vec2[], c2: Vec2[]) {

@@ -1,13 +1,14 @@
 import { CustomWheelEvent } from '../../events/EventsInterface';
 import ScreenManager from '../../screenManager';
-import Tool, { IToolArgs } from '../tool';
+import Tool from '../tool';
+import { TContext } from '../../types';
 
 const ZOOM_INC = 1.001;
 
 class ZoomTool extends Tool {
   screenManager: ScreenManager;
 
-  constructor(args: IToolArgs) {
+  constructor(args: TContext) {
     super(args);
     this.screenManager = args.screenManager;
   }

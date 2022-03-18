@@ -1,4 +1,4 @@
-import Tool, { IToolArgs } from '../tool';
+import Tool from '../tool';
 import {
   CustomMouseDownEvent,
   CustomMouseMoveEvent,
@@ -11,6 +11,7 @@ import Anchor from '../../entities/points/anchor';
 import Registry from '../../entities/registry';
 import Point from '../../entities/points/point';
 import IntersectionsRegistry from '../../intersectionsRegistry';
+import { TContext } from '../../types';
 
 class PenTool extends Tool {
   activeNode: Anchor | null;
@@ -21,12 +22,7 @@ class PenTool extends Tool {
   private shapeRegistry: Registry<Shape>;
   private intersectionsRegistry: IntersectionsRegistry;
 
-  constructor(args: IToolArgs & {
-    layerManager: LayerManager,
-    shapeRegistry: Registry<Shape>,
-    pointRegistry: Registry<Point>,
-    intersectionsRegistry: IntersectionsRegistry
-  }) {
+  constructor(args: TContext) {
     super(args);
 
     this.intersectionsRegistry = args.intersectionsRegistry;
@@ -125,10 +121,9 @@ class PenTool extends Tool {
     // cubic + cubic work really well,
     // cubic + anything else works pretty poorly - is curve-splitting at lower
     // levels working? Is abstractCubicRoots working at lower levels?
-    // if (this.activeNode?.getShape()) {
-    //   window.intersectionsRegistry = this.intersectionsRegistry;
-    //   this.intersectionsRegistry.addShape(this.activeNode.getShape());
-    // }
+    if (this.activeNode?.getShape()) {
+      this.intersectionsRegistry.addShape(this.activeNode.getShape());
+    }
 
     if (!this.activeNode) return;
 

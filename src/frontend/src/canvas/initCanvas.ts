@@ -16,6 +16,7 @@ import PointFinderTool from './tools/pointFinderTool';
 // import ArcTool from './tools/arcTool';
 import GridManager from './gridManager';
 import IntersectionsRegistry from './intersectionsRegistry';
+import ToolManager from './toolManager';
 
 // function commonSlopesDemo(root: SVGSVGElement) {
 //   const a = [
@@ -140,15 +141,7 @@ function initCanvas(rootDiv: HTMLDivElement) {
     root,
   });
 
-  const zoomTool = new ZoomTool({
-    root,
-    screenManager,
-    mousePosition,
-    pointRegistry,
-  });
-  // const dragScreenTool = new DragScreenTool({ root: svg, screenManager, mousePosition });
-
-  const penTool = new PenTool({
+  const ctx = {
     root,
     screenManager,
     layerManager,
@@ -156,25 +149,19 @@ function initCanvas(rootDiv: HTMLDivElement) {
     pointRegistry,
     shapeRegistry,
     intersectionsRegistry,
-  });
-
-  // const arcTool = new ArcTool({
-  //   root,
-  //   shapeRegistry,
-  //   screenManager,
-  //   layerManager,
-  //   mousePosition,
-  //   pointRegistry,
-  // });
-
-  const cpTool = new PointFinderTool({
-    root,
-    screenManager,
-    mousePosition,
-    pointRegistry,
-    shapeRegistry,
     gridManager,
-  });
+  };
+
+  const zoomTool = new ZoomTool(ctx);
+  // const dragScreenTool = new DragScreenTool({ root: svg, screenManager, mousePosition });
+
+  const toolManager = new ToolManager(ctx);
+
+  const penTool = new PenTool(ctx);
+
+  // const arcTool = new ArcTool(ctx);
+
+  const pointFinderTool = new PointFinderTool(ctx);
 
   return {
     destroy: () => {

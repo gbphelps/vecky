@@ -1,4 +1,4 @@
-import Tool, { IToolArgs } from '../tool';
+import Tool from '../tool';
 import Shape from '../../entities/shape';
 import { CustomDragEvent, CustomDragStartEvent } from '../../events/EventsInterface';
 import Vec2 from '../../utils/vec2';
@@ -7,12 +7,7 @@ import Registry from '../../entities/registry';
 import LayerManager from '../../entities/layers/layerManager';
 import Point from '../../entities/points/point';
 import IntersectionsRegistry from '../../intersectionsRegistry';
-
-interface Args extends IToolArgs {
-    shapeRegistry: Registry<Shape>,
-    layerManager: LayerManager,
-    intersectionsRegistry: IntersectionsRegistry
-}
+import { TContext } from '../../types';
 
 class ArcTool extends Tool {
   shape: Shape | null;
@@ -22,7 +17,7 @@ class ArcTool extends Tool {
   pointRegistry: Registry<Point>;
   intersectionsRegistry: IntersectionsRegistry;
 
-  constructor(args: Args) {
+  constructor(args: TContext) {
     super(args);
     this.shape = null;
     this.center = null;

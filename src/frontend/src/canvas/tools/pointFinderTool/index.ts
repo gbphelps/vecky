@@ -1,4 +1,4 @@
-import Tool, { IToolArgs } from '../tool';
+import Tool from '../tool';
 import Shape from '../../entities/shape';
 import Registry from '../../entities/registry';
 import { CustomMouseMoveEvent } from '../../events/EventsInterface';
@@ -10,6 +10,7 @@ import { range as getRange, getOverlap, BBox } from '../../utils/bezier';
 import Polynomial from '../../utils/polynomial';
 import GridManager from '../../gridManager';
 import cubicLineIntercepts from '../../utils/cubicLineIntercepts';
+import { TContext } from '../../types';
 
 function distanceToBox(point: Vec2, box: BBox) {
   const { x, y } = point;
@@ -29,11 +30,6 @@ function distanceToBox(point: Vec2, box: BBox) {
   return Math.sqrt(xDim ** 2 + yDim ** 2);
 }
 
-interface Args extends IToolArgs {
-  shapeRegistry: Registry<Shape>;
-  gridManager: GridManager;
-}
-
 class PointFinder extends Tool {
   screenManager: ScreenManager;
   root: SVGSVGElement;
@@ -43,7 +39,7 @@ class PointFinder extends Tool {
   snapGrid: boolean;
   snapCurves: boolean;
 
-  constructor(args:Args) {
+  constructor(args: TContext) {
     super(args);
 
     this.snapGrid = true;

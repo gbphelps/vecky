@@ -8,17 +8,7 @@ import EventsInterface, {
   CustomMouseUpEvent,
   CustomEscapeEvent,
 } from '../events/EventsInterface';
-import ScreenManager from '../screenManager';
-import MousePosition from '../mousePosition';
-import Point from '../entities/points/point';
-import Registry from '../entities/registry';
-
-interface IToolArgs {
-  screenManager: ScreenManager;
-  mousePosition: MousePosition;
-  root: SVGSVGElement;
-  pointRegistry: Registry<Point>
-}
+import { TContext } from '../types';
 
 interface Tool {
   onMouseMove(e: CustomMouseMoveEvent): void
@@ -40,7 +30,8 @@ abstract class Tool {
     mousePosition,
     root,
     pointRegistry,
-  }: IToolArgs) {
+
+  }: TContext) {
     this.eventsInterface = new EventsInterface({
       pointRegistry,
       root,
@@ -57,10 +48,13 @@ abstract class Tool {
     });
   }
 
+  mouseDownInit() {
+
+  }
+
   destroy() {
     this.eventsInterface.destroy();
   }
 }
 
 export default Tool;
-export type { IToolArgs };
