@@ -14,20 +14,23 @@ class ToolManager extends Tool {
   ctx: TContext;
 
   constructor(args: TContext) {
-    super(args);
+    super(args, null);
     this.activeTool = null;
     this.ctx = args;
   }
 
-  setTool(tool: Tool) {
-    if (this.activeTool) this.activeTool.destroy();
-    this.activeTool = tool;
+  setTool<T extends ToolUnion>(ToolClass: T, toolArgs?: ConstructorParameters<T>[2]) {
+    const dehydratedToolState = this.activeTool?.destroy() ?? null;
+    this.activeTool = new ToolClass(
+      this.ctx,
+      dehydratedToolState,
+      toolArgs,
+    );
   }
 
   handleAnchorClick(element: Anchor) {
     if (this.activeTool instanceof PenTool && !element.isEdge()) {
-      console.log('setting tool to anchor');
-      this.setTool(new AnchorTool(this.ctx, element));
+      setTimeout(() => this.setTool(AnchorTool, element));
     }
   }
 

@@ -48,6 +48,14 @@ interface CustomMouseUpEvent {
   pos: Vec2
 }
 
+interface DehydratedEventState {
+  dragStartVector: Vec2 | null;
+  dragVector: Vec2 | null;
+  mouseDownVector: Vec2 | null;
+  selectedElement: SVGElement | null;
+  wasDragged: boolean;
+}
+
 type OnDragEndCallback = (args: CustomDragEndEvent) => void;
 type OnDragCallback = (args: CustomDragEvent) => void;
 type OnMouseMoveCallback = (args: CustomMouseMoveEvent) => void;
@@ -62,6 +70,8 @@ type Args = {
     screenManager: ScreenManager;
     mousePosition: MousePosition;
     pointRegistry: Registry<Point>;
+
+    initialState: DehydratedEventState | null;
 
     onDragStartCallback?: OnDragStartCallback;
     onDragEndCallback?: OnDragEndCallback;
@@ -114,6 +124,7 @@ class EventsInterface implements IListener {
       mousePosition,
       pointRegistry,
       root,
+      initialState,
     } = args;
 
     this.screenManager = screenManager;
@@ -143,6 +154,7 @@ class EventsInterface implements IListener {
     this.keyEvents = new EventManager(document);
 
     if (onWheelCallback) this.rootEvents.add('wheel', this.onWheel);
+
     this.rootEvents.add('mousedown', this.mouseDown);
 
     if (this.onEscapeCallback) {
@@ -153,6 +165,13 @@ class EventsInterface implements IListener {
 
     // note: this MUST come after the mousedown event.
     if (onMouseMoveCallback) this.rootEvents.add('mousemove', this.onMouseMove);
+
+    if (initialState) this.rehydrate(initialState);
+  }
+
+  rehydrate(state: DehydratedEventState) {
+    Object.assign(this, state);
+    if (state.mouseDownVector) this.setMouseDownEvents();
   }
 
   onEscape() {
@@ -173,10 +192,14 @@ class EventsInterface implements IListener {
 
     this.selectedElement = e.target as SVGElement;
 
+    this.setMouseDownEvents();
+  };
+
+  setMouseDownEvents() {
     this.docEvents.add('mousemove', this.onDragStart, { once: true });
     this.docEvents.add('mousemove', this.onDrag);
     this.docEvents.add('mouseup', this.onMouseUp, { once: true });
-  };
+  }
 
   onWheel = (e: WheelEvent) => {
     e.preventDefault();
@@ -263,10 +286,17 @@ class EventsInterface implements IListener {
     });
   };
 
-  destroy = () => {
+  destroy = (): DehydratedEventState => {
     this.rootEvents.destroy();
     this.docEvents.destroy();
     this.keyEvents.destroy();
+    return {
+      dragStartVector: this.dragStartVector,
+      dragVector: this.dragVector,
+      mouseDownVector: this.mouseDownVector,
+      selectedElement: this.selectedElement,
+      wasDragged: this.wasDragged,
+    };
   };
 }
 
@@ -281,4 +311,5 @@ export type {
   CustomMouseDownEvent,
   CustomMouseUpEvent,
   CustomEscapeEvent,
+  DehydratedEventState,
 };

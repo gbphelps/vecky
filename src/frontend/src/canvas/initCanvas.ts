@@ -152,11 +152,11 @@ function initCanvas(rootDiv: HTMLDivElement) {
     gridManager,
   };
 
-  const zoomTool = new ZoomTool(ctx);
+  const zoomTool = new ZoomTool(ctx, null);
   // const dragScreenTool = new DragScreenTool({ root: svg, screenManager, mousePosition });
 
   const toolManager = new ToolManager(ctx);
-  toolManager.setTool(new PenTool(ctx));
+  toolManager.setTool(PenTool);
 
   // const pointFinderTool = new PointFinderTool(ctx);
 

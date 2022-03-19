@@ -31,6 +31,7 @@ class Anchor extends Point implements IAnchor {
 
     super.setPosition(pos);
     this._handles.updateHandlesByOffset(offset);
+    // TODO Logic in here to clean and update intersections!
   }
 
   setHandle(type: 'next' | 'prev', pos: Vec2) {

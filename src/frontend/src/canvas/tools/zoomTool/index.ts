@@ -1,4 +1,4 @@
-import { CustomWheelEvent } from '../../events/EventsInterface';
+import { CustomWheelEvent, DehydratedEventState } from '../../events/EventsInterface';
 import ScreenManager from '../../screenManager';
 import Tool from '../tool';
 import { TContext } from '../../types';
@@ -8,8 +8,8 @@ const ZOOM_INC = 1.001;
 class ZoomTool extends Tool {
   screenManager: ScreenManager;
 
-  constructor(args: TContext) {
-    super(args);
+  constructor(args: TContext, dehydratedEventState: DehydratedEventState | null) {
+    super(args, dehydratedEventState);
     this.screenManager = args.screenManager;
   }
 

@@ -1,7 +1,7 @@
 import Tool from '../tool';
 import Shape from '../../entities/shape';
 import Registry from '../../entities/registry';
-import { CustomMouseMoveEvent } from '../../events/EventsInterface';
+import { CustomMouseMoveEvent, DehydratedEventState } from '../../events/EventsInterface';
 import { create, setProps, unmount } from '../../utils/misc';
 import closestPoint from '../../utils/closestPoint';
 import Vec2 from '../../utils/vec2';
@@ -39,8 +39,8 @@ class PointFinder extends Tool {
   snapGrid: boolean;
   snapCurves: boolean;
 
-  constructor(args: TContext) {
-    super(args);
+  constructor(args: TContext, dehydratedEventState: DehydratedEventState | null) {
+    super(args, dehydratedEventState);
 
     this.snapGrid = true;
     this.snapCurves = true;
@@ -219,8 +219,9 @@ class PointFinder extends Tool {
   }
 
   destroy() {
-    super.destroy();
+    const state = super.destroy();
     unmount(this.element);
+    return state;
   }
 }
 

@@ -4,6 +4,7 @@ import {
   CustomMouseMoveEvent,
   CustomMouseUpEvent,
   CustomDragEvent,
+  DehydratedEventState,
 } from '../../events/EventsInterface';
 import Shape from '../../entities/shape';
 import LayerManager from '../../entities/layers/layerManager';
@@ -22,13 +23,16 @@ class PenTool extends Tool {
   private shapeRegistry: Registry<Shape>;
   private intersectionsRegistry: IntersectionsRegistry;
 
-  constructor(args: TContext) {
-    super(args);
+  constructor(
+    ctx: TContext,
+    initialEventState: DehydratedEventState | null,
+  ) {
+    super(ctx, initialEventState);
 
-    this.intersectionsRegistry = args.intersectionsRegistry;
-    this.pointRegistry = args.pointRegistry;
-    this.shapeRegistry = args.shapeRegistry;
-    this.layerManager = args.layerManager;
+    this.intersectionsRegistry = ctx.intersectionsRegistry;
+    this.pointRegistry = ctx.pointRegistry;
+    this.shapeRegistry = ctx.shapeRegistry;
+    this.layerManager = ctx.layerManager;
     this.activeNode = null;
     this.dir = 'next';
   }
