@@ -44,6 +44,19 @@ class Handles {
     this._next = store;
   }
 
+  updateHandlesByOffset(offset: Vec2) {
+    if (this._next) {
+      this._next.setPosition(
+        this._next.pos.plus(offset),
+      );
+    }
+    if (this._prev) {
+      this._prev.setPosition(
+        this._prev.pos.plus(offset),
+      );
+    }
+  }
+
   setHandlePos(handle: 'prev' | 'next', pos: Vec2) {
     const handleKey = HANDLE_KEY[handle];
 

@@ -156,12 +156,9 @@ function initCanvas(rootDiv: HTMLDivElement) {
   // const dragScreenTool = new DragScreenTool({ root: svg, screenManager, mousePosition });
 
   const toolManager = new ToolManager(ctx);
+  toolManager.setTool(new PenTool(ctx));
 
-  const penTool = new PenTool(ctx);
-
-  // const arcTool = new ArcTool(ctx);
-
-  const pointFinderTool = new PointFinderTool(ctx);
+  // const pointFinderTool = new PointFinderTool(ctx);
 
   return {
     destroy: () => {

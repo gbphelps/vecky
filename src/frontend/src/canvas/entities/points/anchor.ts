@@ -26,6 +26,13 @@ class Anchor extends Point implements IAnchor {
     this._shape = args.shape;
   }
 
+  setPosition(pos: Vec2): void {
+    const offset = pos.minus(this.pos);
+
+    super.setPosition(pos);
+    this._handles.updateHandlesByOffset(offset);
+  }
+
   setHandle(type: 'next' | 'prev', pos: Vec2) {
     this._handles.setHandlePos(type, pos);
     this.update();

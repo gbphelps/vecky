@@ -6,9 +6,16 @@ import { TContext } from '../../types';
 class AnchorTool extends Tool {
   activeAnchor: Anchor | null;
 
-  constructor(args: TContext) {
-    super(args);
-    this.activeAnchor = null;
+  constructor(
+    ctx: TContext,
+    initAnchor?: Anchor,
+  ) {
+    super(ctx);
+    this.activeAnchor = initAnchor ?? null;
+  }
+
+  setActiveAnchor(anchor: Anchor) {
+    this.activeAnchor = anchor;
   }
 
   onMouseDown(e: CustomMouseDownEvent): void {
