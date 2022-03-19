@@ -1,6 +1,6 @@
 import Tool from '../tool';
 import Shape from '../../entities/shape';
-import { CustomDragEvent, CustomDragStartEvent, DehydratedEventState } from '../../events/EventsInterface';
+import { CustomDragEvent, CustomDragStartEvent } from '../../events/EventsInterface';
 import Vec2 from '../../utils/vec2';
 import { makeCircleShape } from '../../utils/arcBezier';
 import Registry from '../../entities/registry';
@@ -17,8 +17,8 @@ class ArcTool extends Tool {
   pointRegistry: Registry<Point>;
   intersectionsRegistry: IntersectionsRegistry;
 
-  constructor(args: TContext, dehydratedEventState: DehydratedEventState | null) {
-    super(args, dehydratedEventState);
+  constructor(args: TContext) {
+    super(args);
     this.shape = null;
     this.center = null;
     this.layerManager = args.layerManager;

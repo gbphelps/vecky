@@ -6,6 +6,7 @@ import EventManager from './EventManager';
 import Point from '../entities/points/point';
 import Shape from '../entities/shape';
 import Registry from '../entities/registry';
+import InputStateManager from './InputStateManager';
 
 interface CustomEscapeEvent {}
 
@@ -48,14 +49,6 @@ interface CustomMouseUpEvent {
   pos: Vec2
 }
 
-interface DehydratedEventState {
-  dragStartVector: Vec2 | null;
-  dragVector: Vec2 | null;
-  mouseDownVector: Vec2 | null;
-  selectedElement: SVGElement | null;
-  wasDragged: boolean;
-}
-
 type OnDragEndCallback = (args: CustomDragEndEvent) => void;
 type OnDragCallback = (args: CustomDragEvent) => void;
 type OnMouseMoveCallback = (args: CustomMouseMoveEvent) => void;
@@ -70,8 +63,7 @@ type Args = {
     screenManager: ScreenManager;
     mousePosition: MousePosition;
     pointRegistry: Registry<Point>;
-
-    initialState: DehydratedEventState | null;
+    inputStateManager: InputStateManager;
 
     onDragStartCallback?: OnDragStartCallback;
     onDragEndCallback?: OnDragEndCallback;
@@ -85,7 +77,6 @@ type Args = {
 
 class EventsInterface implements IListener {
   rootElement: SVGSVGElement;
-  selectedElement: SVGElement | null;
 
   onDragStartCallback?: OnDragStartCallback;
   onDragEndCallback?: OnDragEndCallback;
@@ -99,12 +90,7 @@ class EventsInterface implements IListener {
   screenManager: ScreenManager;
   mousePosition: MousePosition;
   pointRegistry: Registry<Point>;
-
-  dragStartVector: Vec2 | null;
-  dragVector: Vec2 | null;
-  mouseDownVector: Vec2 | null;
-
-  wasDragged: boolean;
+  inputStateManager: InputStateManager;
 
   rootEvents: EventManager;
   docEvents: EventManager;
@@ -124,16 +110,13 @@ class EventsInterface implements IListener {
       mousePosition,
       pointRegistry,
       root,
-      initialState,
+      inputStateManager,
     } = args;
 
     this.screenManager = screenManager;
     this.mousePosition = mousePosition;
     this.pointRegistry = pointRegistry;
-
-    this.dragVector = null;
-    this.dragStartVector = null;
-    this.mouseDownVector = null;
+    this.inputStateManager = inputStateManager;
 
     this.rootElement = root;
     this.onDragStartCallback = onDragStartCallback;
@@ -144,10 +127,6 @@ class EventsInterface implements IListener {
     this.onMouseDownCallback = onMouseDownCallback;
     this.onMouseUpCallback = onMouseUpCallback;
     this.onEscapeCallback = onEscapeCallback;
-
-    this.selectedElement = null;
-
-    this.wasDragged = false;
 
     this.rootEvents = new EventManager(root);
     this.docEvents = new EventManager(document);
@@ -166,12 +145,7 @@ class EventsInterface implements IListener {
     // note: this MUST come after the mousedown event.
     if (onMouseMoveCallback) this.rootEvents.add('mousemove', this.onMouseMove);
 
-    if (initialState) this.rehydrate(initialState);
-  }
-
-  rehydrate(state: DehydratedEventState) {
-    Object.assign(this, state);
-    if (state.mouseDownVector) this.setMouseDownEvents();
+    if (this.inputStateManager.mouseDownVector) this.setMouseDownEvents();
   }
 
   onEscape() {
@@ -180,7 +154,7 @@ class EventsInterface implements IListener {
   }
 
   mouseDown = (e: MouseEvent) => {
-    this.mouseDownVector = this.mousePosition.pos;
+    this.inputStateManager.mouseDownVector = this.mousePosition.pos;
 
     const elementId = (e.target as SVGElement | null)?.dataset?.id ?? '';
     if (this.onMouseDownCallback) {
@@ -190,7 +164,7 @@ class EventsInterface implements IListener {
       });
     }
 
-    this.selectedElement = e.target as SVGElement;
+    this.inputStateManager.selectedElement = e.target as SVGElement;
 
     this.setMouseDownEvents();
   };
@@ -212,36 +186,36 @@ class EventsInterface implements IListener {
   };
 
   onDragStart = () => {
-    if (!this.selectedElement) throw new Error();
+    if (!this.inputStateManager.selectedElement) throw new Error();
 
-    this.wasDragged = true;
+    this.inputStateManager.wasDragged = true;
 
-    if (!this.mouseDownVector) throw new Error();
-    this.dragStartVector = this.mouseDownVector;
+    if (!this.inputStateManager.mouseDownVector) throw new Error();
+    this.inputStateManager.dragStartVector = this.inputStateManager.mouseDownVector;
 
     if (!this.onDragStartCallback) return;
 
     this.onDragStartCallback({
-      dragStart: this.dragStartVector,
-      element: this.selectedElement,
+      dragStart: this.inputStateManager.dragStartVector,
+      element: this.inputStateManager.selectedElement,
     });
   };
 
   onMouseUp = () => {
-    this.mouseDownVector = null;
+    this.inputStateManager.mouseDownVector = null;
 
     if (
-      this.dragStartVector
-      && this.dragVector
-      && this.selectedElement
-      && this.wasDragged
+      this.inputStateManager.dragStartVector
+      && this.inputStateManager.dragVector
+      && this.inputStateManager.selectedElement
+      && this.inputStateManager.wasDragged
       && this.onDragEndCallback
     ) {
       this.onDragEndCallback({
-        dragStart: this.dragStartVector,
-        dragVector: this.dragVector,
+        dragStart: this.inputStateManager.dragStartVector,
+        dragVector: this.inputStateManager.dragVector,
         dragEnd: this.mousePosition.pos,
-        element: this.selectedElement,
+        element: this.inputStateManager.selectedElement,
       });
     }
 
@@ -251,15 +225,15 @@ class EventsInterface implements IListener {
       });
     }
 
-    this.selectedElement = null;
-    this.wasDragged = false;
-    this.dragStartVector = null;
-    this.dragVector = null;
+    this.inputStateManager.selectedElement = null;
+    this.inputStateManager.wasDragged = false;
+    this.inputStateManager.dragStartVector = null;
+    this.inputStateManager.dragVector = null;
     this.docEvents.destroy();
   };
 
   onMouseMove = () => {
-    if (this.wasDragged) return;
+    if (this.inputStateManager.wasDragged) return;
     if (!this.onMouseMoveCallback) return;
 
     this.onMouseMoveCallback({
@@ -270,33 +244,28 @@ class EventsInterface implements IListener {
   };
 
   onDrag = () => {
-    if (!this.dragStartVector) throw new Error('dragStartVector missing!');
-    if (!this.selectedElement) throw new Error();
+    if (!this.inputStateManager.dragStartVector) throw new Error('dragStartVector missing!');
+    if (!this.inputStateManager.selectedElement) throw new Error();
 
-    this.dragVector = this.mousePosition.pos.minus(this.dragStartVector);
+    this.inputStateManager.dragVector = this.mousePosition.pos.minus(
+      this.inputStateManager.dragStartVector,
+    );
 
     if (!this.onDragCallback) return;
 
     this.onDragCallback({
-      dragStart: this.dragStartVector,
-      dragVector: this.dragVector,
+      dragStart: this.inputStateManager.dragStartVector,
+      dragVector: this.inputStateManager.dragVector,
       dragDeltaVector: this.mousePosition.delta,
-      element: this.selectedElement,
+      element: this.inputStateManager.selectedElement,
       pos: this.mousePosition.pos,
     });
   };
 
-  destroy = (): DehydratedEventState => {
+  destroy = () => {
     this.rootEvents.destroy();
     this.docEvents.destroy();
     this.keyEvents.destroy();
-    return {
-      dragStartVector: this.dragStartVector,
-      dragVector: this.dragVector,
-      mouseDownVector: this.mouseDownVector,
-      selectedElement: this.selectedElement,
-      wasDragged: this.wasDragged,
-    };
   };
 }
 
@@ -311,5 +280,4 @@ export type {
   CustomMouseDownEvent,
   CustomMouseUpEvent,
   CustomEscapeEvent,
-  DehydratedEventState,
 };

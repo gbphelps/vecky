@@ -14,16 +14,16 @@ class ToolManager extends Tool {
   ctx: TContext;
 
   constructor(args: TContext) {
-    super(args, null);
+    super(args);
     this.activeTool = null;
     this.ctx = args;
   }
 
-  setTool<T extends ToolUnion>(ToolClass: T, toolArgs?: ConstructorParameters<T>[2]) {
-    const dehydratedToolState = this.activeTool?.destroy() ?? null;
+  setTool<T extends ToolUnion>(ToolClass: T, toolArgs?: ConstructorParameters<T>[1]) {
+    this.activeTool?.destroy();
+
     this.activeTool = new ToolClass(
       this.ctx,
-      dehydratedToolState,
       toolArgs,
     );
   }

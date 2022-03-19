@@ -7,7 +7,6 @@ import EventsInterface, {
   CustomMouseDownEvent,
   CustomMouseUpEvent,
   CustomEscapeEvent,
-  DehydratedEventState,
 } from '../events/EventsInterface';
 import { TContext } from '../types';
 
@@ -28,13 +27,13 @@ abstract class Tool {
 
   constructor(
     ctx: TContext,
-    dehydratedToolState: DehydratedEventState | null,
   ) {
     const {
       screenManager,
       mousePosition,
       root,
       pointRegistry,
+      inputStateManager,
     } = ctx;
 
     this.eventsInterface = new EventsInterface({
@@ -50,7 +49,7 @@ abstract class Tool {
       onMouseDownCallback: this.onMouseDown?.bind(this),
       onMouseUpCallback: this.onMouseUp?.bind(this),
       onEscapeCallback: this.onEscape?.bind(this),
-      initialState: dehydratedToolState,
+      inputStateManager,
     });
   }
 

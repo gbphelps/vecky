@@ -1,4 +1,4 @@
-import { CustomDragEvent, CustomMouseDownEvent, DehydratedEventState } from '../../events/EventsInterface';
+import { CustomDragEvent, CustomMouseDownEvent } from '../../events/EventsInterface';
 import Tool from '../tool';
 import Anchor from '../../entities/points/anchor';
 import { TContext } from '../../types';
@@ -8,10 +8,9 @@ class AnchorTool extends Tool {
 
   constructor(
     ctx: TContext,
-    initialEventState: DehydratedEventState | null,
     initAnchor?: Anchor,
   ) {
-    super(ctx, initialEventState);
+    super(ctx);
     this.activeAnchor = initAnchor ?? null;
   }
 

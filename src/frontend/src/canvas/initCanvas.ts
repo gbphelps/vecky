@@ -8,7 +8,7 @@ import LayerManager from './entities/layers/layerManager';
 import Registry from './entities/registry';
 import Point from './entities/points/point';
 import Shape from './entities/shape';
-import PointFinderTool from './tools/pointFinderTool';
+// import PointFinderTool from './tools/pointFinderTool';
 // import Vec2 from './utils/vec2';
 // import { commonNormals, commonTangents } from './utils/commonSlopes';
 // import intersections from './utils/intersections';
@@ -17,6 +17,7 @@ import PointFinderTool from './tools/pointFinderTool';
 import GridManager from './gridManager';
 import IntersectionsRegistry from './intersectionsRegistry';
 import ToolManager from './toolManager';
+import InputStateManager from './events/InputStateManager';
 
 // function commonSlopesDemo(root: SVGSVGElement) {
 //   const a = [
@@ -141,6 +142,8 @@ function initCanvas(rootDiv: HTMLDivElement) {
     root,
   });
 
+  const inputStateManager = new InputStateManager();
+
   const ctx = {
     root,
     screenManager,
@@ -150,9 +153,10 @@ function initCanvas(rootDiv: HTMLDivElement) {
     shapeRegistry,
     intersectionsRegistry,
     gridManager,
+    inputStateManager,
   };
 
-  const zoomTool = new ZoomTool(ctx, null);
+  const zoomTool = new ZoomTool(ctx);
   // const dragScreenTool = new DragScreenTool({ root: svg, screenManager, mousePosition });
 
   const toolManager = new ToolManager(ctx);

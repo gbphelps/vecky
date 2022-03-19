@@ -4,7 +4,6 @@ import {
   CustomMouseMoveEvent,
   CustomMouseUpEvent,
   CustomDragEvent,
-  DehydratedEventState,
 } from '../../events/EventsInterface';
 import Shape from '../../entities/shape';
 import LayerManager from '../../entities/layers/layerManager';
@@ -25,9 +24,8 @@ class PenTool extends Tool {
 
   constructor(
     ctx: TContext,
-    initialEventState: DehydratedEventState | null,
   ) {
-    super(ctx, initialEventState);
+    super(ctx);
 
     this.intersectionsRegistry = ctx.intersectionsRegistry;
     this.pointRegistry = ctx.pointRegistry;
