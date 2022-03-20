@@ -115,8 +115,6 @@ function initCanvas(rootDiv: HTMLDivElement) {
   const pointRegistry = new Registry<Point>();
   const shapeRegistry = new Registry<Shape>();
 
-  window.pointRegistry = pointRegistry;
-
   const root = create('svg', {
     style: {
       height: '100%',
