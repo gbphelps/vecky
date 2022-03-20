@@ -84,6 +84,11 @@ class Anchor extends Point implements IAnchor {
     this._handles.destroy();
     super.destroy();
   }
+
+  commit(): void {
+    super.commit();
+    this._handles.commit();
+  }
 }
 
 export default Anchor;

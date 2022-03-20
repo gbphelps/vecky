@@ -16,7 +16,7 @@ class Handles {
 
   private layer: Layer;
   private anchor: IAnchor;
-  private isMirrored: boolean;
+  isMirrored: boolean;
   private pointRegistry: Registry<Point>;
 
   constructor(args: {anchor: IAnchor, layer: Layer, pointRegistry: Registry<Point>}) {
@@ -41,17 +41,20 @@ class Handles {
   reverse() {
     const store = this._prev;
     this._prev = this._next;
+    if (this._prev) this._prev.side = 'prev';
+
     this._next = store;
+    if (this._next) this._next.side = 'next';
   }
 
   updateHandlesByOffset(offset: Vec2) {
     if (this._next) {
-      this._next.setPosition(
+      this._next.receivePosition(
         this._next.pos.plus(offset),
       );
     }
     if (this._prev) {
-      this._prev.setPosition(
+      this._prev.receivePosition(
         this._prev.pos.plus(offset),
       );
     }
@@ -64,9 +67,10 @@ class Handles {
       anchor: this.anchor,
       layer: this.layer,
       pointRegistry: this.pointRegistry,
+      side: handle,
     });
 
-    h.setPosition(pos);
+    h.receivePosition(pos);
     this[handleKey] = h;
 
     if (!this.isMirrored) return;
@@ -77,6 +81,7 @@ class Handles {
       anchor: this.anchor,
       layer: this.layer,
       pointRegistry: this.pointRegistry,
+      side: handle === 'prev' ? 'next' : 'prev',
     });
 
     const pos2 = pos
@@ -84,8 +89,13 @@ class Handles {
       .times(-1)
       .plus(this.anchor.pos);
 
-    h2.setPosition(pos2);
+    h2.receivePosition(pos2);
     this[otherKey] = h2;
+  }
+
+  commit() {
+    this._prev?.commit();
+    this._next?.commit();
   }
 
   destroy() {

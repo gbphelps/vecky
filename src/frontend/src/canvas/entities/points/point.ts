@@ -83,7 +83,7 @@ class Point extends RegistryObject<Point> {
     this.domPoint = new DomPoint({ id: this.id, layer: args.layer });
   }
 
-  protected update() {
+  update() {
     this.domPoint.setPosition(this._pos);
   }
 

@@ -1,13 +1,14 @@
 import { CustomMouseDownEvent } from './events/EventsInterface';
 import Tool from './tools/tool';
 import PenTool from './tools/penTool';
-import AnchorTool from './tools/anchorTool';
+import UpdatePointTool from './tools/updatePointTool';
 import { TContext } from './types';
 import Anchor from './entities/points/anchor';
+import Handle from './entities/points/handle';
 
 type ToolUnion = |
     typeof PenTool |
-    typeof AnchorTool
+    typeof UpdatePointTool
 
 class ToolManager extends Tool {
   activeTool: Tool | null;
@@ -30,13 +31,19 @@ class ToolManager extends Tool {
 
   handleAnchorClick(element: Anchor) {
     if (this.activeTool instanceof PenTool && !element.isEdge()) {
-      setTimeout(() => this.setTool(AnchorTool, element));
+      setTimeout(() => this.setTool(UpdatePointTool, element));
     }
+  }
+
+  handleHandleClick(element: Handle) {
+    setTimeout(() => this.setTool(UpdatePointTool, element));
   }
 
   onMouseDown(e: CustomMouseDownEvent): void {
     if (e.element instanceof Anchor) {
       this.handleAnchorClick(e.element);
+    } else if (e.element instanceof Handle) {
+      this.handleHandleClick(e.element);
     }
   }
 }

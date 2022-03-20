@@ -9,13 +9,17 @@ class Handle extends Point implements IHandle {
   private readonly connector: SVGLineElement;
   private readonly anchor: IAnchor;
   private layer: Layer;
+  side: 'prev' | 'next';
 
   constructor(args: {
     anchor: IAnchor,
     pointRegistry: Registry<Point>,
-    layer: Layer
+    layer: Layer,
+    side: 'prev' | 'next'
   }) {
-    const { anchor, layer, pointRegistry } = args;
+    const {
+      anchor, layer, pointRegistry, side,
+    } = args;
 
     super({ pointRegistry, layer });
 
@@ -24,6 +28,7 @@ class Handle extends Point implements IHandle {
 
     this.anchor = anchor;
     this.layer = layer;
+    this.side = side;
   }
 
   private createConnector() {
@@ -38,7 +43,7 @@ class Handle extends Point implements IHandle {
     });
   }
 
-  protected update() {
+  update() {
     super.update();
     setProps(this.connector, {
       x1: this.anchor.x,
@@ -46,11 +51,15 @@ class Handle extends Point implements IHandle {
       x2: this.x,
       y2: this.y,
     });
+    this.anchor.update();
+  }
+
+  receivePosition(pos: Vec2) {
+    super.setPosition(pos);
   }
 
   setPosition(pos: Vec2) {
-    super.setPosition(pos);
-    this.update();
+    this.anchor.setHandle(this.side, pos);
   }
 
   destroy() {
