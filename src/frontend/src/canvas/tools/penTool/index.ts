@@ -21,6 +21,7 @@ class PenTool extends Tool {
   private pointRegistry: Registry<Point>;
   private shapeRegistry: Registry<Shape>;
   private intersectionsRegistry: IntersectionsRegistry;
+  isDestroyed: boolean;
 
   constructor(
     ctx: TContext,
@@ -33,6 +34,7 @@ class PenTool extends Tool {
     this.layerManager = ctx.layerManager;
     this.activeNode = null;
     this.dir = 'next';
+    this.isDestroyed = false;
   }
 
   onEscape() {
@@ -46,6 +48,8 @@ class PenTool extends Tool {
   }
 
   onMouseDown(e: CustomMouseDownEvent) {
+    if (this.isDestroyed) return;
+
     const clickedPoint = e.element instanceof Anchor ? e.element : null;
 
     if (!this.activeNode) {
@@ -149,6 +153,13 @@ class PenTool extends Tool {
       shape.push(e.pos);
       this.activeNode = shape.lastPoint();
     }
+  }
+
+  destroy(): void {
+    this.isDestroyed = true;
+    setTimeout(() => {
+      super.destroy();
+    });
   }
 }
 

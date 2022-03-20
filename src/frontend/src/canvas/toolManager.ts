@@ -31,12 +31,12 @@ class ToolManager extends Tool {
 
   handleAnchorClick(element: Anchor) {
     if (this.activeTool instanceof PenTool && !element.isEdge()) {
-      setTimeout(() => this.setTool(UpdatePointTool, element));
+      this.setTool(UpdatePointTool, element);
     }
   }
 
   handleHandleClick(element: Handle) {
-    setTimeout(() => this.setTool(UpdatePointTool, element));
+    this.setTool(UpdatePointTool, element);
   }
 
   onMouseDown(e: CustomMouseDownEvent): void {
