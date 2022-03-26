@@ -1,31 +1,8 @@
-import { fireEvent } from '@testing-library/dom';
 import ResizeObserver from 'resize-observer-polyfill';
-import { getMouseEvent } from '../testUtils';
 import Vec2 from '../../utils/vec2';
 import initCanvas from '../../initCanvas';
 import { TContext } from '../../types';
-
-function drag(element: Element, from: Vec2, to: Vec2) {
-  fireEvent(element, getMouseEvent('mousemove', {
-    offsetX: from.x,
-    offsetY: from.y,
-  }));
-  fireEvent(element, getMouseEvent('mousedown', {}));
-  fireEvent(element, getMouseEvent('mousemove', {
-    offsetX: to.x,
-    offsetY: to.y,
-  }));
-  fireEvent(element, getMouseEvent('mouseup', {}));
-}
-
-function click(element: Element, at: Vec2) {
-  fireEvent(element, getMouseEvent('mousemove', {
-    offsetX: at.x,
-    offsetY: at.y,
-  }));
-  fireEvent(element, getMouseEvent('mousedown', {}));
-  fireEvent(element, getMouseEvent('mouseup', {}));
-}
+import { drag, click } from '../../testUtils/userInteractions';
 
 // Need to imperatively trigger this ro event so we can initialize the screenManager
 jest.mock('resize-observer-polyfill', () => class FakeResizeObserver {
