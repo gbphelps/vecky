@@ -122,11 +122,11 @@ describe('Pen tool', () => {
 
     beforeEach(() => {
       drag(ctx.root, A1, A2);
-      drag(ctx.root, A3, A4);
+      drag(ctx.root, A4, A3);
       escape();
 
       drag(ctx.root, B1, B2);
-      drag(ctx.root, B3, B4);
+      drag(ctx.root, B4, B3);
       escape();
     });
 
@@ -140,11 +140,15 @@ describe('Pen tool', () => {
           ['click', 'drag'].forEach((action2) => {
             test(`Join ${A.name} with ${B.name}, ${action1} then ${action2}`, () => {
               mouseDownPointAt(ctx, A.point);
-              if (action1 === 'drag') mouseMove(ctx, C1);
+              if (action1 === 'drag') {
+                mouseMove(ctx, C1);
+              }
               mouseUp();
 
               mouseDownPointAt(ctx, B.point);
-              if (action1 === 'drag') mouseMove(ctx, C2);
+              if (action1 === 'drag') {
+                mouseMove(ctx, C2);
+              }
               mouseUp();
 
               const paths = getPaths();
