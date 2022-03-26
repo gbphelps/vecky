@@ -188,8 +188,6 @@ class EventsInterface implements IListener {
   onDragStart = () => {
     if (!this.inputStateManager.selectedElement) throw new Error();
 
-    this.inputStateManager.wasDragged = true;
-
     if (!this.inputStateManager.mouseDownVector) throw new Error();
     this.inputStateManager.dragStartVector = this.inputStateManager.mouseDownVector;
 
@@ -226,14 +224,15 @@ class EventsInterface implements IListener {
     }
 
     this.inputStateManager.selectedElement = null;
-    this.inputStateManager.wasDragged = false;
     this.inputStateManager.dragStartVector = null;
     this.inputStateManager.dragVector = null;
     this.docEvents.destroy();
   };
 
   onMouseMove = () => {
-    if (this.inputStateManager.wasDragged) return;
+    // if mouse is down, this is a drag event
+    // fire drag event instead of mouse move event
+    if (this.inputStateManager.mouseDownVector) return;
     if (!this.onMouseMoveCallback) return;
 
     this.onMouseMoveCallback({

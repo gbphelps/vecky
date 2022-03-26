@@ -1,3 +1,4 @@
+import ResizeObserver from 'resize-observer-polyfill';
 import { setProps } from './utils/misc';
 import Vec2 from './utils/vec2';
 import Publisher from './publishers/publisher';

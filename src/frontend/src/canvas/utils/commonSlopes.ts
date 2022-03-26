@@ -37,7 +37,7 @@ function commonSlopes(
   // we can safely use quadratic eq on it
   const [C, B, A] = zero1.decompose(0);
 
-  const { rootFn, imaginaryBounds } = getAbstractQuadraticRoots(A, B, C);
+  const rootFn = getAbstractQuadraticRoots(A, B, C);
 
   const root1 = (t: number) => rootFn(t)[0] ?? NaN;
   const root2 = (t: number) => rootFn(t)[1] ?? NaN;

@@ -14,7 +14,8 @@ describe('getAbstractCubicRoots', () => {
       .map((key) => poly.coefficients[key])
       .map((c) => new Polynomial([c]));
 
-    const ans = getAbstractCubicRoots(A, B, C, D).rootFn(
+    const rootFn = getAbstractCubicRoots(A, B, C, D);
+    const ans = rootFn(
       // this can be anything since polynomials are 0 order
       0,
     )
@@ -38,7 +39,9 @@ describe('getAbstractQuadraticRoots', () => {
       .map((key) => poly.coefficients[key])
       .map((c) => new Polynomial([c]));
 
-    const ans = getAbstractQuadraticRoots(A, B, C).rootFn(
+    const rootFn = getAbstractQuadraticRoots(A, B, C);
+
+    const ans = rootFn(
       // this can be anything since polynomials are 0 order
       0,
     )

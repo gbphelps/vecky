@@ -165,6 +165,7 @@ function initCanvas(rootDiv: HTMLDivElement) {
   // const pointFinderTool = new PointFinderTool(ctx);
 
   return {
+    ctx,
     destroy: () => {
       screenManager.destroy();
       mousePosition.destroy();

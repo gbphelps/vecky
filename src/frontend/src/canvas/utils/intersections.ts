@@ -129,7 +129,7 @@ function intersections(aPoints: Vec2[], bPoints: Vec2[]): {
   // solve for dim0 in terms of dim1
   const [D, C, B, A] = zero1.decompose(0);
   const zero = new Polynomial([0]);
-  const { rootFn } = getAbstractCubicRoots(
+  const rootFn = getAbstractCubicRoots(
     A ?? zero,
     B ?? zero,
     C ?? zero,

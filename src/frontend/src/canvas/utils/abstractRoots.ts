@@ -1,6 +1,5 @@
 import X from 'complex.js';
 import Polynomial from './polynomial';
-import { findRoots } from './roots';
 
 function getAbstractCubicRoots(A:Polynomial, B:Polynomial, C:Polynomial, D:Polynomial) {
   if (A.isZero()) return getAbstractQuadraticRoots(B, C, D);
@@ -15,19 +14,6 @@ function getAbstractCubicRoots(A:Polynomial, B:Polynomial, C:Polynomial, D:Polyn
       B.pow(3).times(2),
     );
   const rBtm = A.pow(3).times(54);
-
-  const dsc = (t: number) => {
-    const R = rTop.evaluate(t) / rBtm.evaluate(t);
-    const Q = qTop.evaluate(t) / qBtm.evaluate(t);
-    return Q ** 3 + R ** 2;
-  };
-  const bounds = findRoots({
-    fn: dsc,
-    maxIterations: 20,
-    numSegments: 100,
-    precision: 1e-16,
-    range: [0, 1],
-  });
 
   const lookup: Record<number, number[]> = {};
 
@@ -57,10 +43,7 @@ function getAbstractCubicRoots(A:Polynomial, B:Polynomial, C:Polynomial, D:Polyn
     return res;
   }
 
-  return {
-    rootFn,
-    imaginaryBounds: bounds,
-  };
+  return rootFn;
 }
 
 function getAbstractQuadraticRoots(a: Polynomial, b: Polynomial, c: Polynomial) {
@@ -69,14 +52,6 @@ function getAbstractQuadraticRoots(a: Polynomial, b: Polynomial, c: Polynomial) 
   const sqrt = b.pow(2).minus(a.times(c).times(4));
   const twoA = a.times(2);
   const negB = b.times(-1);
-
-  const imaginaryBounds = findRoots({
-    fn: sqrt.evaluate,
-    range: [0, 1],
-    numSegments: 20,
-    precision: 1e-16,
-    maxIterations: Infinity,
-  });
 
   const lookup: Record<number, number[]> = {};
 
@@ -101,15 +76,11 @@ function getAbstractQuadraticRoots(a: Polynomial, b: Polynomial, c: Polynomial) 
     return roots;
   }
 
-  return {
-    rootFn,
-    imaginaryBounds,
-  };
+  return rootFn;
 }
 
 function getAbstractLinearRoot(A: Polynomial, B: Polynomial) {
-  const rootFn = (t: number) => [B.times(-1).evaluate(t) / A.evaluate(t)];
-  return { rootFn };
+  return (t: number) => [B.times(-1).evaluate(t) / A.evaluate(t)];
 }
 
 export { getAbstractCubicRoots, getAbstractQuadraticRoots };

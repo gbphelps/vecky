@@ -5,14 +5,12 @@ class InputStateManager {
   dragVector: Vec2 | null;
   mouseDownVector: Vec2 | null;
   selectedElement: SVGElement | null;
-  wasDragged: boolean;
 
   constructor() {
     this.dragStartVector = null;
     this.dragVector = null;
     this.mouseDownVector = null;
     this.selectedElement = null;
-    this.wasDragged = false;
   }
 }
 
