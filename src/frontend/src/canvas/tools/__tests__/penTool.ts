@@ -21,7 +21,41 @@ jest.mock('resize-observer-polyfill', () => class FakeResizeObserver {
 });
 
 describe('Pen tool', () => {
-  test('Sanity check', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  test('Makes one linear curve', () => {
+    const A = {
+      offsetX: 30,
+      offsetY: 40,
+    };
+    const B = {
+      offsetX: 80,
+      offsetY: 90,
+    };
+
+    const root = document.createElement('div');
+    document.body.appendChild(root);
+    const { ctx } = initCanvas(root);
+
+    expect(document.getElementsByTagName('path')).toHaveLength(0);
+
+    // add our first point
+    fireEvent(ctx.root, getMouseEvent('mousemove', A));
+
+    // click, don't drag
+    fireEvent(ctx.root, getMouseEvent('mousedown', {}));
+    fireEvent(ctx.root, getMouseEvent('mouseup', {}));
+
+    fireEvent(ctx.root, getMouseEvent('mousemove', B));
+
+    expect(document.getElementsByTagName('path')[0].getAttribute('d')).toEqual(
+      'M 30 40 L 80 90',
+    );
+  });
+
+  test('Makes one quadratic bezier curve', () => {
     const A = {
       offsetX: 30,
       offsetY: 40,
@@ -37,30 +71,61 @@ describe('Pen tool', () => {
 
     const root = document.createElement('div');
     document.body.appendChild(root);
-
     const { ctx } = initCanvas(root);
-
-    expect(document.getElementsByTagName('path')).toHaveLength(0);
 
     // add our first point
     fireEvent(ctx.root, getMouseEvent('mousemove', A));
     fireEvent(ctx.root, getMouseEvent('mousedown', {}));
 
-    // we should have initialized a shape now
-    const shapeIds = Object.keys(ctx.shapeRegistry.manifest);
-    expect(shapeIds).toHaveLength(1);
-
-    // there are no curves though, since there's only a single point
-    expect(ctx.shapeRegistry.manifest[shapeIds[0]].pointCurves).toEqual([]);
-
+    // drag to B
     fireEvent(ctx.root, getMouseEvent('mousemove', B));
-
     fireEvent.mouseUp(ctx.root);
 
     fireEvent(ctx.root, getMouseEvent('mousemove', C));
 
     expect(document.getElementsByTagName('path')[0].getAttribute('d')).toEqual(
       'M 30 40 Q 80 90 -30 20',
+    );
+  });
+
+  test('Makes one cubic bezier curve', () => {
+    const A = {
+      offsetX: 0,
+      offsetY: 0,
+    };
+    const B = {
+      offsetX: 0,
+      offsetY: 100,
+    };
+    const C = {
+      offsetX: 100,
+      offsetY: 0,
+    };
+    const D = {
+      offsetX: 100,
+      offsetY: 100,
+    };
+
+    const root = document.createElement('div');
+    document.body.appendChild(root);
+    const { ctx } = initCanvas(root);
+
+    // add our first point
+    fireEvent(ctx.root, getMouseEvent('mousemove', A));
+    fireEvent(ctx.root, getMouseEvent('mousedown', {}));
+
+    // drag to B
+    fireEvent(ctx.root, getMouseEvent('mousemove', B));
+    fireEvent.mouseUp(ctx.root);
+
+    fireEvent(ctx.root, getMouseEvent('mousemove', C));
+
+    // drag to D
+    fireEvent(ctx.root, getMouseEvent('mousedown', {}));
+    fireEvent(ctx.root, getMouseEvent('mousemove', D));
+
+    expect(document.getElementsByTagName('path')[0].getAttribute('d')).toEqual(
+      'M 0 0 C 0 100 100 -100 100 0',
     );
   });
 });
