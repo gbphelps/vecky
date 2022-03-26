@@ -100,10 +100,75 @@ describe('Pen tool', () => {
     });
   });
 
+  describe('closing a curve', () => {
+    test('forward orientation', () => {
+      drag(ctx.root, new Vec2(-50, 0), new Vec2(-50, 50));
+      drag(ctx.root, new Vec2(50, 0), new Vec2(50, -50));
+      mouseDownPointAt(ctx, new Vec2(-50, 0));
+
+      // shape is now closed
+      expect(getPaths()[0].getAttribute('d')).toEqual(
+        'M -50 0 C -50 50 50 50 50 0 C 50 -50 -50 -50 -50 0 Z',
+      );
+
+      // but we can still drag the last handle, which is still active
+      mouseMove(ctx, new Vec2(-50, 25));
+      mouseUp();
+
+      expect(getPaths()[0].getAttribute('d')).toEqual(
+        'M -50 0 C -50 25 50 50 50 0 C 50 -50 -50 -25 -50 0 Z',
+      );
+    });
+
+    test('backward orientation', () => {
+      drag(ctx.root, new Vec2(-50, 0), new Vec2(-50, 50));
+      drag(ctx.root, new Vec2(50, 0), new Vec2(50, -50));
+      escape();
+
+      mouseDownPointAt(ctx, new Vec2(-50, 0));
+      mouseUp();
+
+      mouseDownPointAt(ctx, new Vec2(50, 0));
+      expect(getPaths()[0].getAttribute('d')).toEqual(
+        'M -50 0 C -50 50 50 50 50 0 C 50 -50 -50 -50 -50 0 Z',
+      );
+
+      mouseMove(ctx, new Vec2(0, 25));
+      mouseUp();
+
+      expect(getPaths()[0].getAttribute('d')).toEqual(
+        'M -50 0 C -50 50 0 25 50 0 C 100 -25 -50 -50 -50 0 Z',
+      );
+    });
+  });
+
   describe('Chaining', () => {
-    test('click drag click', () => {});
-    test('drag click drag', () => {});
-    test('click click click', () => {});
+    test('click drag click', () => {
+      click(ctx.root, new Vec2(0, 0));
+      drag(ctx.root, new Vec2(100, 0), new Vec2(100, 100));
+      click(ctx.root, new Vec2(200, 0));
+      expect(getPaths()[0].getAttribute('d')).toEqual(
+        'M 0 0 Q 100 -100 100 0 Q 100 100 200 0',
+      );
+    });
+
+    test('drag click drag', () => {
+      drag(ctx.root, new Vec2(0, 0), new Vec2(100, 0));
+      click(ctx.root, new Vec2(0, 100));
+      drag(ctx.root, new Vec2(0, 200), new Vec2(-100, 200));
+      expect(getPaths()[0].getAttribute('d')).toEqual(
+        'M 0 0 Q 100 0 0 100 Q 100 200 0 200',
+      );
+    });
+
+    test('click click click', () => {
+      click(ctx.root, new Vec2(0, 0));
+      click(ctx.root, new Vec2(100, 100));
+      click(ctx.root, new Vec2(200, 0));
+      expect(getPaths()[0].getAttribute('d')).toEqual(
+        'M 0 0 L 100 100 L 200 0',
+      );
+    });
   });
 
   describe('Joining two curves', () => {
@@ -134,6 +199,67 @@ describe('Pen tool', () => {
       expect(getPaths()).toHaveLength(2);
     });
 
+    const expectedResults: Record<string, string> = {
+      'A1,B1,click,click':
+      'M 70 100 C 90 100 70 0 50 0 C 30 0 -30 0 -50 0 C -70 0 -90 100 -70 100',
+
+      'A1,B1,click,drag':
+      'M 70 100 C 90 100 70 0 50 0 C 30 0 -30 0 -50 0 C -70 0 -90 100 -70 100',
+
+      'A1,B1,drag,click':
+      'M 70 100 C 90 100 100 20 50 0 C 0 -20 0 -20 -50 0 C -100 20 -90 100 -70 100',
+
+      'A1,B1,drag,drag':
+      'M 70 100 C 90 100 100 20 50 0 C 0 -20 0 -20 -50 0 C -100 20 -90 100 -70 100',
+
+      'A1,B4,click,click':
+      'M 50 0 C 70 0 90 100 70 100 C 50 100 -30 0 -50 0 C -70 0 -90 100 -70 100',
+
+      'A1,B4,click,drag':
+      'M 50 0 C 70 0 90 100 70 100 C 50 100 -30 0 -50 0 C -70 0 -90 100 -70 100',
+
+      'A1,B4,drag,click':
+      'M 50 0 C 70 0 100 20 70 100 C 40 180 0 -20 -50 0 C -100 20 -90 100 -70 100',
+
+      'A1,B4,drag,drag':
+      'M 50 0 C 70 0 100 20 70 100 C 40 180 0 -20 -50 0 C -100 20 -90 100 -70 100',
+
+      'A4,B1,click,click':
+      'M -50 0 C -70 0 -90 100 -70 100 C -50 100 30 0 50 0 C 70 0 90 100 70 100',
+
+      'A4,B1,click,drag':
+      'M -50 0 C -70 0 -90 100 -70 100 C -50 100 30 0 50 0 C 70 0 90 100 70 100',
+
+      'A4,B1,drag,click':
+      'M -50 0 C -70 0 -140 220 -70 100 C 0 -20 0 -20 50 0 C 100 20 90 100 70 100',
+
+      'A4,B1,drag,drag':
+      'M -50 0 C -70 0 -140 220 -70 100 C 0 -20 0 -20 50 0 C 100 20 90 100 70 100',
+
+      'A4,B4,click,click':
+      'M -50 0 C -70 0 -90 100 -70 100 C -50 100 50 100 70 100 C 90 100 70 0 50 0',
+
+      'A4,B4,click,drag':
+      'M -50 0 C -70 0 -90 100 -70 100 C -50 100 50 100 70 100 C 90 100 70 0 50 0',
+
+      'A4,B4,drag,click':
+      'M -50 0 C -70 0 -140 220 -70 100 C 0 -20 40 180 70 100 C 100 20 70 0 50 0',
+
+      'A4,B4,drag,drag':
+      'M -50 0 C -70 0 -140 220 -70 100 C 0 -20 40 180 70 100 C 100 20 70 0 50 0',
+    };
+
+    /*
+      NOTE 3/26/22 these are snapshots of an app state for which
+      all permutations were manually tested in the UI and
+      verified to be correct. I spot-checked a couple of these
+      ('A1,B1,click,click' and 'A4,B1,drag,drag') to make sure the
+      test utils produce the same results as the UI, and both tests
+      were correct. Note however that this means there is a (small)
+      possibility that other tests MAY contain false positives if
+      the test utils do not perfectly simulate user actions.
+    */
+
     [{ point: A1, name: 'A1' }, { point: A4, name: 'A4' }].forEach((A) => {
       [{ point: B1, name: 'B1' }, { point: B4, name: 'B4' }].forEach((B) => {
         ['click', 'drag'].forEach((action1) => {
@@ -153,12 +279,13 @@ describe('Pen tool', () => {
 
               const paths = getPaths();
               expect(paths).toHaveLength(1);
+              expect(paths[0].getAttribute('d')).toEqual(
+                expectedResults[`${A.name},${B.name},${action1},${action2}`],
+              );
             });
           });
         });
       });
     });
   });
-
-  // describe('closing a curve', () => {});
 });

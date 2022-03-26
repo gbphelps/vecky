@@ -142,6 +142,8 @@ class Shape extends RegistryObject<Shape> {
       }
     });
 
+    if (this.isClosed) d.push('Z');
+
     setProps(this.element, { d: d.join(' ') });
   }
 
