@@ -206,7 +206,6 @@ class EventsInterface implements IListener {
       this.inputStateManager.dragStartVector
       && this.inputStateManager.dragVector
       && this.inputStateManager.selectedElement
-      && this.inputStateManager.wasDragged
       && this.onDragEndCallback
     ) {
       this.onDragEndCallback({

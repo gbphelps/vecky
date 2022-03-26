@@ -22,19 +22,28 @@ jest.mock('resize-observer-polyfill', () => class FakeResizeObserver {
 
 describe('Pen tool', () => {
   test('Sanity check', () => {
+    const A = {
+      offsetX: 30,
+      offsetY: 40,
+    };
+    const B = {
+      offsetX: 80,
+      offsetY: 90,
+    };
+    const C = {
+      offsetX: -30,
+      offsetY: 20,
+    };
+
     const root = document.createElement('div');
     document.body.appendChild(root);
 
     const { ctx } = initCanvas(root);
 
-    // there are currently no shapes
-    expect(Object.keys(ctx.shapeRegistry.manifest)).toHaveLength(0);
+    expect(document.getElementsByTagName('path')).toHaveLength(0);
 
     // add our first point
-    fireEvent(ctx.root, getMouseEvent('mousemove', {
-      offsetX: 30,
-      offsetY: 40,
-    }));
+    fireEvent(ctx.root, getMouseEvent('mousemove', A));
     fireEvent(ctx.root, getMouseEvent('mousedown', {}));
 
     // we should have initialized a shape now
@@ -44,21 +53,14 @@ describe('Pen tool', () => {
     // there are no curves though, since there's only a single point
     expect(ctx.shapeRegistry.manifest[shapeIds[0]].pointCurves).toEqual([]);
 
-    fireEvent(ctx.root, getMouseEvent('mousemove', {}));
-
-    fireEvent(ctx.root, getMouseEvent('mousemove', {
-      offsetX: 80,
-      offsetY: 90,
-    }));
+    fireEvent(ctx.root, getMouseEvent('mousemove', B));
 
     fireEvent.mouseUp(ctx.root);
 
-    fireEvent(ctx.root, getMouseEvent('mousemove', {}));
-    fireEvent(ctx.root, getMouseEvent('mousemove', {
-      offsetX: -30,
-      offsetY: 20,
-    }));
+    fireEvent(ctx.root, getMouseEvent('mousemove', C));
 
-    console.log(ctx.shapeRegistry.manifest[shapeIds[0]].pointCurves);
+    expect(document.getElementsByTagName('path')[0].getAttribute('d')).toEqual(
+      'M 30 40 Q 80 90 -30 20',
+    );
   });
 });
