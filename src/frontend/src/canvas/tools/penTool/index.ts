@@ -95,26 +95,18 @@ class PenTool extends Tool {
       return;
     }
 
-    this.activeNode = this.activeNode.getShape().lastPoint();
-
-    const shouldReverse = (this.dir === 'next' && clickedPoint.isLastPoint())
-      || (this.dir === 'prev' && clickedPoint.isFirstPoint());
-
-    const isFrontMerge = clickedPoint.isLastPoint();
-
     this.activeNode.getShape().merge(
       clickedPoint.getShape(),
-      isFrontMerge ? 'front' : 'back',
-      shouldReverse,
+      this.dir,
+      clickedPoint.isLastPoint() ? 'next' : 'prev',
     );
-
-    if (isFrontMerge) this.dir = 'prev';
 
     this.activeNode = clickedPoint;
   }
 
   onDrag(e: CustomDragEvent) {
     if (!this.activeNode) throw new Error('No active node!');
+
     this.activeNode.setHandle(this.dir, e.pos);
   }
 

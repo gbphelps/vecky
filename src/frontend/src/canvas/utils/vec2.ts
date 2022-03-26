@@ -11,6 +11,10 @@ class Vec2 {
     return Math.sqrt(this.x ** 2 + this.y ** 2);
   }
 
+  equals(other: Vec2) {
+    return this.x === other.x && this.y === other.y;
+  }
+
   clone(): Vec2 {
     return new Vec2(this.x, this.y);
   }

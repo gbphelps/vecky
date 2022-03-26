@@ -1,8 +1,11 @@
 import ResizeObserver from 'resize-observer-polyfill';
+
 import Vec2 from '../../utils/vec2';
 import initCanvas from '../../initCanvas';
 import { TContext } from '../../types';
-import { drag, click } from '../../testUtils/userInteractions';
+import {
+  drag, click, escape, mouseDownPointAt, mouseUp, mouseMove, getPaths,
+} from '../../testUtils/userInteractions';
 
 // Need to imperatively trigger this ro event so we can initialize the screenManager
 jest.mock('resize-observer-polyfill', () => class FakeResizeObserver {
@@ -35,12 +38,12 @@ describe('Pen tool', () => {
       const A = new Vec2(30, 40);
       const B = new Vec2(80, 90);
 
-      expect(document.getElementsByTagName('path')).toHaveLength(0);
+      expect(getPaths()).toHaveLength(0);
 
       click(ctx.root, A);
       click(ctx.root, B);
 
-      const paths = document.getElementsByTagName('path');
+      const paths = getPaths();
       expect(paths).toHaveLength(1);
       expect(paths[0].getAttribute('d')).toEqual(
         'M 30 40 L 80 90',
@@ -55,7 +58,7 @@ describe('Pen tool', () => {
       drag(ctx.root, A, B);
       click(ctx.root, C);
 
-      const paths = document.getElementsByTagName('path');
+      const paths = getPaths();
 
       expect(paths).toHaveLength(1);
       expect(paths[0].getAttribute('d')).toEqual(
@@ -71,7 +74,7 @@ describe('Pen tool', () => {
       click(ctx.root, A);
       drag(ctx.root, B, C);
 
-      const paths = document.getElementsByTagName('path');
+      const paths = getPaths();
 
       expect(paths).toHaveLength(1);
       expect(paths[0].getAttribute('d')).toEqual(
@@ -88,7 +91,7 @@ describe('Pen tool', () => {
       drag(ctx.root, A, B);
       drag(ctx.root, C, D);
 
-      const paths = document.getElementsByTagName('path');
+      const paths = getPaths();
 
       expect(paths).toHaveLength(1);
       expect(paths[0].getAttribute('d')).toEqual(
@@ -97,11 +100,61 @@ describe('Pen tool', () => {
     });
   });
 
-  // describe('Joining two curves', () => {
-  //   const root = document.createElement('div');
-  //   document.body.appendChild(root);
-  //   const { ctx } = initCanvas(root);
-  // });
+  describe('Chaining', () => {
+    test('click drag click', () => {});
+    test('drag click drag', () => {});
+    test('click click click', () => {});
+  });
+
+  describe('Joining two curves', () => {
+    const A1 = new Vec2(-50, 0);
+    const A2 = new Vec2(-70, 0);
+    const A3 = new Vec2(-50, 100);
+    const A4 = new Vec2(-70, 100);
+
+    const B1 = new Vec2(50, 0);
+    const B2 = new Vec2(70, 0);
+    const B3 = new Vec2(50, 100);
+    const B4 = new Vec2(70, 100);
+
+    const C1 = new Vec2(0, -20);
+    const C2 = new Vec2(100, 20);
+
+    beforeEach(() => {
+      drag(ctx.root, A1, A2);
+      drag(ctx.root, A3, A4);
+      escape();
+
+      drag(ctx.root, B1, B2);
+      drag(ctx.root, B3, B4);
+      escape();
+    });
+
+    test('There should initially be two curves', () => {
+      expect(getPaths()).toHaveLength(2);
+    });
+
+    [{ point: A1, name: 'A1' }, { point: A4, name: 'A4' }].forEach((A) => {
+      [{ point: B1, name: 'B1' }, { point: B4, name: 'B4' }].forEach((B) => {
+        ['click', 'drag'].forEach((action1) => {
+          ['click', 'drag'].forEach((action2) => {
+            test(`Join ${A.name} with ${B.name}, ${action1} then ${action2}`, () => {
+              mouseDownPointAt(ctx, A.point);
+              if (action1 === 'drag') mouseMove(ctx, C1);
+              mouseUp();
+
+              mouseDownPointAt(ctx, B.point);
+              if (action1 === 'drag') mouseMove(ctx, C2);
+              mouseUp();
+
+              const paths = getPaths();
+              expect(paths).toHaveLength(1);
+            });
+          });
+        });
+      });
+    });
+  });
 
   // describe('closing a curve', () => {});
 });

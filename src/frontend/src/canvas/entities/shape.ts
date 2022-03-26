@@ -162,26 +162,44 @@ class Shape extends RegistryObject<Shape> {
   }
   // insert(idx: number, pos: Vec2) {}
 
-  merge(other: Shape, side: 'back' | 'front', reverseThis: boolean) {
-    if (reverseThis) this.reverse();
-
+  merge(other: Shape, thisSide: 'next' | 'prev', otherSide: 'next' | 'prev') {
     if (other.size > this.size) {
-      other.merge(this, side === 'back' ? 'front' : 'back', false);
+      other.merge(this, otherSide, thisSide);
       return;
     }
 
+    if (thisSide === 'next' && otherSide === 'next') {
+      other.reverse();
+      other.points.forEach((point) => {
+        point.setShape(this);
+        this.points.push(point);
+      });
+    } else if (thisSide === 'next' && otherSide === 'prev') {
+      other.points.forEach((point) => {
+        point.setShape(this);
+        this.points.push(point);
+      });
+    } else if (thisSide === 'prev' && otherSide === 'next') {
+      const points = [...other.points].reverse();
+      points.forEach((point) => {
+        point.setShape(this);
+        this.points.unshift(point);
+      });
+    } else if (thisSide === 'prev' && otherSide === 'prev') {
+      other.reverse();
+      const points = [...other.points].reverse();
+      points.forEach((point) => {
+        point.setShape(this);
+        this.points.unshift(point);
+      });
+    }
     other.destroy();
-
-    other.points.forEach((p) => p.setShape(this));
-
-    this.points = side === 'front'
-      ? other.points.concat(this.points)
-      : this.points.concat(other.points);
     this.update();
   }
 
   destroy() {
     [...this.points].forEach((p) => {
+      if (p.getShape() !== this) return;
       p.destroy();
     });
     unmount(this.element);
