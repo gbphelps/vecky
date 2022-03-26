@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test-frontend": "run(){ cd src/frontend && jest; }; run",
     "tf": "run(){ cd src/frontend && jest --testMatch=**/__tests__/*$1*; }; run",
     "frontend-dev": "webpack --watch --config=src/frontend/webpack.config.js",
     "server-dev": "tsc -p src/server/tsconfig.json --watch & nodemon src/server/dist/src/index.js && fg",
