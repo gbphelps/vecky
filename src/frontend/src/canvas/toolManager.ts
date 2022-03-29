@@ -5,6 +5,7 @@ import UpdatePointTool from './tools/updatePointTool';
 import { TContext } from './types';
 import Anchor from './entities/points/anchor';
 import Handle from './entities/points/handle';
+import PubSub, { Subscription } from './publishers/pubSub';
 
 type ToolUnion = |
     typeof PenTool |
@@ -13,11 +14,13 @@ type ToolUnion = |
 class ToolManager extends Tool {
   activeTool: Tool | null;
   ctx: TContext;
+  observer: PubSub<string | null>;
 
   constructor(args: TContext) {
     super(args);
     this.activeTool = null;
     this.ctx = args;
+    this.observer = new PubSub(() => this.activeTool?.constructor.name ?? null);
   }
 
   setTool<T extends ToolUnion>(ToolClass: T, toolArgs?: ConstructorParameters<T>[1]) {
@@ -27,6 +30,7 @@ class ToolManager extends Tool {
       this.ctx,
       toolArgs,
     );
+    this.observer.publish();
   }
 
   handleAnchorClick(element: Anchor) {
@@ -45,6 +49,14 @@ class ToolManager extends Tool {
     } else if (e.element instanceof Handle) {
       this.handleHandleClick(e.element);
     }
+  }
+
+  subscribe(fn: Subscription<string | null>) {
+    this.observer.subscribe(fn);
+  }
+
+  unsubscribe(fn: Subscription<string | null>) {
+    this.observer.unsubscribe(fn);
   }
 }
 

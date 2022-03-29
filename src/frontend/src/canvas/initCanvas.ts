@@ -166,6 +166,7 @@ function initCanvas(rootDiv: HTMLDivElement) {
 
   return {
     ctx,
+    toolManager,
     destroy: () => {
       screenManager.destroy();
       mousePosition.destroy();

@@ -1,7 +1,7 @@
 import ResizeObserver from 'resize-observer-polyfill';
 import { setProps } from './utils/misc';
 import Vec2 from './utils/vec2';
-import Publisher from './publishers/publisher';
+import PubSub, { Subscription } from './publishers/pubSub';
 
 interface ScreenManagerEvent {
     scale: number,
@@ -11,7 +11,7 @@ interface ScreenManagerEvent {
     width: number,
 }
 
-class ScreenManager extends Publisher<ScreenManagerEvent> {
+class ScreenManager {
   scale: number;
   left: number;
   top: number;
@@ -20,10 +20,9 @@ class ScreenManager extends Publisher<ScreenManagerEvent> {
   viewportHeight: number;
   viewportWidth: number;
   ro: ResizeObserver;
+  observer: PubSub<ScreenManagerEvent>;
 
   constructor(svg: SVGSVGElement) {
-    super();
-
     if (!svg.parentElement) throw new Error('No parent');
 
     this.scale = 1;
@@ -37,7 +36,15 @@ class ScreenManager extends Publisher<ScreenManagerEvent> {
     this.viewportHeight = 0;
     this.viewportWidth = 0;
 
-    this.subscribe(({
+    this.observer = new PubSub(() => ({
+      scale: this.scale,
+      left: this.left,
+      top: this.top,
+      height: this.height,
+      width: this.width,
+    }));
+
+    this.observer.subscribe(({
       left,
       top,
       height,
@@ -55,7 +62,7 @@ class ScreenManager extends Publisher<ScreenManagerEvent> {
       this.height = this.scale * this.viewportHeight;
       this.width = this.scale * this.viewportWidth;
 
-      this.publish();
+      this.observer.publish();
     });
 
     this.ro.observe(svg.parentElement);
@@ -67,27 +74,25 @@ class ScreenManager extends Publisher<ScreenManagerEvent> {
     this.scale *= amount;
     this.height *= amount;
     this.width *= amount;
-    this.publish();
+    this.observer.publish();
   }
 
   move(delta: Vec2) {
     this.left += delta.x;
     this.top += delta.y;
-    this.publish();
-  }
-
-  publish() {
-    return {
-      scale: this.scale,
-      left: this.left,
-      top: this.top,
-      height: this.height,
-      width: this.width,
-    };
+    this.observer.publish();
   }
 
   destroy() {
     this.ro.disconnect();
+  }
+
+  subscribe(fn: Subscription<ScreenManagerEvent>) {
+    this.observer.subscribe(fn);
+  }
+
+  unsubscribe(fn: Subscription<ScreenManagerEvent>) {
+    this.observer.subscribe(fn);
   }
 }
 
