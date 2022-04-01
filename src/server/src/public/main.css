@@ -6,6 +6,14 @@
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/pages/auth/index.module.scss (1) ***!
   \********************************************************************************************************************************************/
 @import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap);
+/*!*************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/canvas/styles.module.scss ***!
+  \*************************************************************************************************************************************/
+@import url(https://fonts.googleapis.com/css2?family=Open+Sans:wght@700;800&display=swap);
+/*!*****************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/canvas/styles.module.scss (1) ***!
+  \*****************************************************************************************************************************************/
+@import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap);
 /*!******************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/styles/global.scss ***!
   \******************************************************************************************************************************/
@@ -40,6 +48,29 @@
   border-radius: 10px;
   width: 400px;
 }
+/*!*****************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/canvas/styles.module.scss (2) ***!
+  \*****************************************************************************************************************************************/
+.BbLgpuw4ebk4lBPo_ILD {
+  padding: 8px;
+  border-radius: 100%;
+  height: 40px;
+  width: 40px;
+  border: 1px solid #f0f0f0;
+  background: none;
+  font-family: "Roboto";
+  font-weight: 300;
+  overflow: hidden;
+  margin: 4px;
+  position: relative;
+}
+.BbLgpuw4ebk4lBPo_ILD:hover {
+  background: #f0f0f0;
+}
+.BbLgpuw4ebk4lBPo_ILD > * {
+  height: 100%;
+  width: 100%;
+}
 /*!**********************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/frontend/src/styles/global.scss (2) ***!
   \**********************************************************************************************************************************/
@@ -57,6 +88,10 @@ html, body, #root {
 
 button,
 input[type=submit] {
+  cursor: pointer;
+}
+button.primary,
+input[type=submit].primary {
   font-family: "Open Sans";
   font-weight: 800;
   font-size: 40px;
@@ -64,10 +99,8 @@ input[type=submit] {
   font-weight: 700;
   padding: 0.2em 0.8em;
   border-radius: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
   background: #171c1c;
   color: white;
-  cursor: pointer;
 }
 
 input[type=text],

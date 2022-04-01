@@ -6,10 +6,14 @@ import { TContext } from './types';
 import Anchor from './entities/points/anchor';
 import Handle from './entities/points/handle';
 import PubSub, { Subscription } from './publishers/pubSub';
+import DragTool from './tools/dragScreenTool';
+import ArcTool from './tools/arcTool';
 
 type ToolUnion = |
     typeof PenTool |
-    typeof UpdatePointTool
+    typeof UpdatePointTool |
+    typeof DragTool |
+    typeof ArcTool
 
 class ToolManager extends Tool {
   activeTool: Tool | null;

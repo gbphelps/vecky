@@ -14,15 +14,16 @@ html, body, #root {
 
 button,
 input[type="submit"] {
-    @include v.display-xsmall;
-    font-size: 20px;
-    font-weight: 700;
-    padding: .2em .8em;
-    border-radius: 3px;
-    border: 1px solid rgba(0,0,0,.1);
-    background: v.$content-primary;
-    color: white;
     cursor: pointer;
+    &.primary {
+        @include v.display-xsmall;
+        font-size: 20px;
+        font-weight: 700;
+        padding: .2em .8em;
+        border-radius: 3px;
+        background: v.$content-primary;
+        color: white;
+    }
 }
 
 input[type="text"], 

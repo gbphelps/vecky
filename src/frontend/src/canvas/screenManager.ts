@@ -21,6 +21,7 @@ class ScreenManager {
   viewportWidth: number;
   ro: ResizeObserver;
   observer: PubSub<ScreenManagerEvent>;
+  isInitialized: boolean;
 
   constructor(svg: SVGSVGElement) {
     if (!svg.parentElement) throw new Error('No parent');
@@ -35,6 +36,8 @@ class ScreenManager {
 
     this.viewportHeight = 0;
     this.viewportWidth = 0;
+
+    this.isInitialized = false;
 
     this.observer = new PubSub(() => ({
       scale: this.scale,
@@ -61,6 +64,12 @@ class ScreenManager {
 
       this.height = this.scale * this.viewportHeight;
       this.width = this.scale * this.viewportWidth;
+
+      if (!this.isInitialized) {
+        this.left = -this.width / 2;
+        this.top = -this.height / 2;
+        this.isInitialized = true;
+      }
 
       this.observer.publish();
     });

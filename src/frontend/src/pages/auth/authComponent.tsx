@@ -48,7 +48,7 @@ function AuthComponent({ title, onSubmit }: Props) {
           </label>
 
           <div className={styles['button-panel']}>
-            <input type="submit" value="Submit" />
+            <input type="submit" value="Submit" className="primary" />
           </div>
         </Form>
       </div>

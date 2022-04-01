@@ -1,0 +1,21 @@
+@use '../styles/variables.scss' as v;
+
+.icon-button {
+    padding: v.px(8);
+    border-radius: 100%;
+    height: v.px(40);
+    width: v.px(40);
+    border: 1px solid v.neutral(2);
+    background: none;
+    @include v.primary-font;
+    overflow: hidden;
+    margin: v.px(4);
+    position: relative;
+    &:hover {
+        background: v.neutral(2)
+    }
+    & > * {
+        height: 100%;
+        width: 100%;
+    }
+}

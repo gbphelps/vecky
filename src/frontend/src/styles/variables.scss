@@ -7,6 +7,11 @@
 
 $black: #171c1c;
 
+$neutral: (
+    1: #fafafa,
+    2: #f0f0f0
+);
+
 $content-primary: $black;
 
 $px: (
@@ -33,6 +38,12 @@ $px: (
     128: 128px,
     192: 192px
 );
+
+@function neutral($num) {
+    $color: map.get($neutral, $num);
+    @if $color == null { @error "Bad color key"; }
+    @return $color;
+}
 
 @function px($num) {
     $size: map.get($px, $num);

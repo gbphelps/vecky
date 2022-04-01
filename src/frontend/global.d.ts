@@ -3,6 +3,11 @@ declare module '*.scss' {
     export default styles;
 }
 
+declare module '*.svg' {
+    const component: import('react').FunctionComponent;
+    export default component;
+}
+
 declare module 'complex.js' {
     const type: any;
     export default type;
