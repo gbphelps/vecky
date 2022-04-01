@@ -26,7 +26,7 @@ class ScreenManager {
   constructor(svg: SVGSVGElement) {
     if (!svg.parentElement) throw new Error('No parent');
 
-    this.scale = 1;
+    this.scale = 0.25;
 
     this.left = 0;
     this.top = 0;
