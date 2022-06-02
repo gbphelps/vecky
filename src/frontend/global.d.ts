@@ -8,6 +8,11 @@ declare module '*.svg' {
     export default component;
 }
 
+declare module '*.glsl' {
+    const module: string;
+    export default module;
+}
+
 declare module 'complex.js' {
     const type: any;
     export default type;

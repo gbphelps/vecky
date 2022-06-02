@@ -18,6 +18,7 @@ import GridManager from './gridManager';
 import IntersectionsRegistry from './intersectionsRegistry';
 import ToolManager from './toolManager';
 import InputStateManager from './events/InputStateManager';
+import ColorPicker from '../glslColorPicker/hueSaturation';
 
 // function commonSlopesDemo(root: SVGSVGElement) {
 //   const a = [
@@ -161,6 +162,8 @@ function initCanvas(rootDiv: HTMLDivElement) {
 
   const toolManager = new ToolManager(ctx);
   toolManager.setTool(PenTool);
+
+  const colorPicker = new ColorPicker({ root: document.body });
 
   // const pointFinderTool = new PointFinderTool(ctx);
 

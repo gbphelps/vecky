@@ -30,6 +30,12 @@ module.exports = {
           'sass-loader',
         ],
       },
+      {
+        test: /\.(glsl)$/,
+        use: [
+          'raw-loader',
+        ],
+      },
     ],
   },
   plugins: [new MiniCssExtractPlugin()],
