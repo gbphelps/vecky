@@ -1,3 +1,5 @@
+import Color from 'color';
+
 interface HSVColor {
     hue: number,
     saturation: number,
@@ -45,7 +47,7 @@ class ColorPublisher {
     this.color = {
       hue: 100,
       saturation: 100,
-      value: 100,
+      value: 0,
     };
   }
 
@@ -69,3 +71,4 @@ class ColorPublisher {
 }
 
 export { ColorPublisher };
+export type { HSVColor };
