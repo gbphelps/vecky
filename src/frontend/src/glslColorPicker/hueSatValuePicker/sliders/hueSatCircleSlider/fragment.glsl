@@ -44,9 +44,10 @@ void main() {
   // gl_FragColor is a special variable a fragment shader
   // is responsible for setting
   float angle = (atan(-1.0 * v_pos.y, -1.0 * v_pos.x) + pi)/(2.0 * pi) * 6.0;
-  u_value;
 
   float r = length(v_pos.xy);
 
-  gl_FragColor = mix(vec4(1.0, 1.0, 1.0, 1.0), getColor(angle), easeIn(r));
+  vec4 preValue = mix(vec4(1.0, 1.0, 1.0, 1.0), getColor(angle), easeIn(r));
+
+  gl_FragColor = mix(vec4(0.0, 0.0, 0.0, 1.0), preValue, u_value);
 }
