@@ -1,6 +1,7 @@
 import { GlslSlider } from '../../../glslSlider';
 import { ColorPublisher } from '../../colorPublisher';
 import fragment from './fragment.glsl';
+import { ValuePip } from './valuePip';
 
 class ValueSlider extends GlslSlider<{
     'u_hue': 'uniform1f',
@@ -8,7 +9,7 @@ class ValueSlider extends GlslSlider<{
 }> {
   colorPublisher: ColorPublisher;
 
-  constructor({ root, colorPublisher }:{root: HTMLElement, colorPublisher: ColorPublisher}) {
+  constructor({ root, colorPublisher }:{root: HTMLDivElement, colorPublisher: ColorPublisher}) {
     super({
       root,
       uniforms: {
@@ -21,6 +22,7 @@ class ValueSlider extends GlslSlider<{
     this.colorPublisher = colorPublisher;
 
     this.init();
+    const pip = new ValuePip({ root: this.div, colorPublisher });
   }
 
   init(): void {
@@ -32,6 +34,7 @@ class ValueSlider extends GlslSlider<{
     Object.assign(this.canvas.style, {
       height: '100%',
       width: '100%',
+      borderRadius: '3px',
     });
 
     this.colorPublisher.subscribe((color) => {

@@ -24,15 +24,19 @@ class HueSatCircleSlider extends GlslSlider<{'u_value': 'uniform1f'}> {
     Object.assign(this.div.style, {
       height: '200px',
       width: '200px',
+      marginBottom: '12px',
     });
     Object.assign(this.canvas.style, {
       height: '100%',
       width: '100%',
       borderRadius: '100%',
     });
-    this.render(
-      { u_value: [1] },
-    );
+
+    this.colorPublisher.subscribe(({ value }) => {
+      this.render(
+        { u_value: [value / 100] },
+      );
+    });
   }
 }
 
