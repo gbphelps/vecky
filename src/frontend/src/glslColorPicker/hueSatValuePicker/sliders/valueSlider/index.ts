@@ -2,6 +2,7 @@ import { GlslSlider } from '../../../glslSlider';
 import { ColorPublisher } from '../../colorPublisher';
 import fragment from './fragment.glsl';
 import { ValuePip } from './valuePip';
+import { hsvToRgb } from '../../utils';
 
 class ValueSlider extends GlslSlider<{
     'u_hue': 'uniform1f',
@@ -27,8 +28,9 @@ class ValueSlider extends GlslSlider<{
 
   init(): void {
     Object.assign(this.div.style, {
-      height: '10px',
+      height: '12px',
       width: '200px',
+      marginBottom: '12px',
     });
 
     Object.assign(this.canvas.style, {

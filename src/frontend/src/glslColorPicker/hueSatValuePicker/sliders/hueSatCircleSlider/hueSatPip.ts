@@ -6,14 +6,9 @@ import {
   uneaseInQuad,
   easeInQuad,
   hsvToRgb,
+  RGBColor,
 } from '../../utils';
 import Vec2 from '../../../../canvas/utils/vec2';
-
-interface RGBColor {
-  red: number,
-  green: number,
-  blue: number
-}
 
 function uneaseAngle(angle: number) {
   const segments = Math.floor(angle / 60);
@@ -54,11 +49,11 @@ class HueSatPip extends Pip {
     });
 
     Object.assign(this.element.style, {
-      height: '15px',
-      width: '15px',
+      height: '20px',
+      width: '20px',
       background: 'black',
       borderRadius: '100%',
-      border: '1px solid rgba(0,0,0,.3)',
+      boxShadow: '0 2px 3px -1px rgba(0,0,0,1), inset 0 2px 3px -1px rgba(255,255,255,.4)',
     });
 
     this.colorPublisher.subscribe(({ hue, saturation, value }) => {
@@ -71,13 +66,10 @@ class HueSatPip extends Pip {
 
       const { red, green, blue } = hsvToRgb({ hue, saturation, value });
 
-      Object.assign(this.position.style, {
-
-      });
       Object.assign(this.element.style, {
         transform: `translateX(${vec.x}px) translateY(${-vec.y}px)`,
         background: `rgb(${red},${green},${blue})`,
-        border: getBorderColor({ red, green, blue }),
+        // border: getBorderColor({ red, green, blue }),
       });
     });
   }
@@ -100,13 +92,21 @@ class HueSatPip extends Pip {
     );
 
     const uneasedAngle = Math.atan2(dist.y, -dist.x) + Math.PI;
-    const phi = easeAngle(uneasedAngle * 180 / Math.PI);
+    let phi = easeAngle(uneasedAngle * 180 / Math.PI);
 
     const uneasedRadius = dist.magnitude / radius;
-    const r = easeInQuad(uneasedRadius);
+    let r = easeInQuad(uneasedRadius);
+
+    if (Number.isNaN(phi)) {
+      phi = 0;
+    }
+
+    if (Number.isNaN(r)) {
+      r = 0;
+    }
 
     this.colorPublisher.set({
-      hue: phi,
+      hue: phi % 360,
       saturation: r * 100,
     });
   }

@@ -13,9 +13,9 @@ class ColorPublisher {
   constructor() {
     this.subscriptions = new Set();
     this.color = {
-      hue: 100,
+      hue: 190,
       saturation: 100,
-      value: 0,
+      value: 80,
     };
   }
 

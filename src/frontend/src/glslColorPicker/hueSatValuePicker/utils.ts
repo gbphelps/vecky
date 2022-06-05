@@ -1,5 +1,11 @@
 import { HSVColor } from './colorPublisher';
 
+interface RGBColor {
+  red: number,
+  green: number,
+  blue: number
+}
+
 function easeInOutSine(x: number) {
   return (1 - Math.cos(x * Math.PI)) / 2;
 }
@@ -22,7 +28,7 @@ function hueToRgb(hue: number) {
 
   let color = { red: 0, green: 0, blue: 0 };
 
-  if (val <= 1 || val === 6) {
+  if (val <= 1) {
     color = { red: 1, green: p, blue: 0 };
   } else if (val <= 2) {
     color = { red: 1 - p, green: 1, blue: 0 };
@@ -65,3 +71,5 @@ function hsvToRgb({ hue, saturation, value }: HSVColor) {
 export {
   easeInOutSine, uneaseInOutSine, easeInQuad, uneaseInQuad, hsvToRgb,
 };
+
+export type { RGBColor };
