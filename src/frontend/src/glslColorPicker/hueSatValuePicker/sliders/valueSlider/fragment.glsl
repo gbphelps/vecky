@@ -8,23 +8,23 @@ uniform float u_saturation;
 vec4 getColor(float val) {
     float p = fract(val);
 
-    if (val <= 1.0){
+    if (val < 1.0){
         return vec4(1.0, p, 0.0, 1.0);
     }
 
-    if (val <= 2.0) {
+    if (val < 2.0) {
         return vec4(1.0 - p, 1.0, 0.0, 1.0);
     }
 
-    if (val <= 3.0) {
+    if (val < 3.0) {
         return vec4(0.0, 1.0, p, 1.0);
     }
 
-    if (val <= 4.0) {
+    if (val < 4.0) {
         return vec4(0.0, 1.0-p, 1.0, 1.0);
     }
 
-    if (val <= 5.0) {
+    if (val < 5.0) {
         return vec4(p, 0.0, 1.0, 1.0);
     }
 

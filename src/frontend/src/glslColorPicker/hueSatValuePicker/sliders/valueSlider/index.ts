@@ -31,6 +31,8 @@ class ValueSlider extends GlslSlider<{
       height: '12px',
       width: '200px',
       marginBottom: '12px',
+      boxShadow: '0 1px 2px rgba(0,0,0,.3)',
+      borderRadius: '3px',
     });
 
     Object.assign(this.canvas.style, {

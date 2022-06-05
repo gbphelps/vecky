@@ -54,6 +54,7 @@ class HueSatPip extends Pip {
       background: 'black',
       borderRadius: '100%',
       boxShadow: '0 2px 3px -1px rgba(0,0,0,1), inset 0 2px 3px -1px rgba(255,255,255,.4)',
+      cursor: 'pointer',
     });
 
     this.colorPublisher.subscribe(({ hue, saturation, value }) => {

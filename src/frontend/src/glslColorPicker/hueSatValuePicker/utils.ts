@@ -28,15 +28,15 @@ function hueToRgb(hue: number) {
 
   let color = { red: 0, green: 0, blue: 0 };
 
-  if (val <= 1) {
+  if (val < 1) {
     color = { red: 1, green: p, blue: 0 };
-  } else if (val <= 2) {
+  } else if (val < 2) {
     color = { red: 1 - p, green: 1, blue: 0 };
-  } else if (val <= 3) {
+  } else if (val < 3) {
     color = { red: 0, green: 1, blue: p };
-  } else if (val <= 4) {
+  } else if (val < 4) {
     color = { red: 0, green: 1 - p, blue: 1 };
-  } else if (val <= 5) {
+  } else if (val < 5) {
     color = { red: p, green: 0, blue: 1 };
   } else {
     color = { red: 1, green: 0, blue: (1 - p) };

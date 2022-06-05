@@ -1,3 +1,5 @@
+import { DropDown } from '../dropDown';
+import PubSub from '../statefulPubsub';
 import { ColorPublisher, HSVColor } from './colorPublisher';
 import { HueSatCircleSlider } from './sliders/hueSatCircleSlider';
 import { ValueSlider } from './sliders/valueSlider';
@@ -53,6 +55,7 @@ class Input {
     const inputElement = document.createElement('input');
     Object.assign(inputElement.style, {
       width: '100%',
+      margin: 0,
     });
     inputElement.type = 'text';
 
@@ -89,10 +92,19 @@ class HueSatValuePicker {
       left: '12px',
       padding: '20px',
       background: 'white',
-      border: '1px solid rgba(0,0,0,.1)',
+      boxShadow: '0 4px 16px rgba(0,0,0,.2)',
       borderRadius: '3px',
     });
     root.appendChild(div);
+
+    const dd = new DropDown({
+      root: div,
+      options: [
+        { value: 'one', label: 'one' },
+        { value: 'two', label: 'two' },
+      ],
+      publisher: new PubSub('one'),
+    });
 
     const hueSat = new HueSatCircleSlider({
       root: div,

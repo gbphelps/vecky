@@ -2,7 +2,7 @@
 
 
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
 
 $black: #171c1c;
@@ -84,4 +84,10 @@ $px: (
 @mixin label-xsmall {
     @include primary-font;
     font-size: px(14);
+}
+
+@mixin label-medium {
+    @include primary-font;
+    font-weight: 400;
+    font-size: px(16);
 }
