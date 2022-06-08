@@ -1,4 +1,4 @@
-import { ColorPublisher } from '../../colorPublisher';
+import { ColorPublisher, HSVColor } from '../../colorPublisher';
 import { Pip } from '../../pip';
 import { HueSatPip } from './hueSatPip';
 import { GlslSlider } from '../../../glslSlider';
@@ -32,11 +32,17 @@ class HueSatCircleSlider extends GlslSlider<{'u_value': 'uniform1f'}> {
       borderRadius: '100%',
     });
 
-    this.colorPublisher.subscribe(({ value }) => {
-      this.render(
-        { u_value: [value / 100] },
-      );
-    });
+    this.colorPublisher.subscribe(this.subscription);
+  }
+
+  subscription = ({ value }: HSVColor) => {
+    this.render(
+      { u_value: [value / 100] },
+    );
+  };
+
+  destroy(): void {
+    this.colorPublisher.unsubscribe(this.subscription);
   }
 }
 

@@ -1,14 +1,16 @@
 import { GlslSlider } from '../../../glslSlider';
-import { ColorPublisher } from '../../colorPublisher';
+import { ColorPublisher, HSVColor } from '../../colorPublisher';
 import fragment from './fragment.glsl';
 import { ValuePip } from './valuePip';
 import { hsvToRgb } from '../../utils';
+import { Pip } from '../../pip';
 
 class ValueSlider extends GlslSlider<{
     'u_hue': 'uniform1f',
     'u_saturation': 'uniform1f'
 }> {
   colorPublisher: ColorPublisher;
+  pip: Pip;
 
   constructor({ root, colorPublisher }:{root: HTMLDivElement, colorPublisher: ColorPublisher}) {
     super({
@@ -23,8 +25,15 @@ class ValueSlider extends GlslSlider<{
     this.colorPublisher = colorPublisher;
 
     this.init();
-    const pip = new ValuePip({ root: this.div, colorPublisher });
+    this.pip = new ValuePip({ root: this.div, colorPublisher });
   }
+
+  subscription = (color: HSVColor) => {
+    this.render({
+      u_hue: [color.hue],
+      u_saturation: [color.saturation / 100],
+    });
+  };
 
   init(): void {
     Object.assign(this.div.style, {
@@ -41,12 +50,11 @@ class ValueSlider extends GlslSlider<{
       borderRadius: '3px',
     });
 
-    this.colorPublisher.subscribe((color) => {
-      this.render({
-        u_hue: [color.hue],
-        u_saturation: [color.saturation / 100],
-      });
-    });
+    this.colorPublisher.subscribe(this.subscription);
+  }
+
+  destroy() {
+    this.colorPublisher.unsubscribe(this.subscription);
   }
 }
 

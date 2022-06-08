@@ -19,7 +19,7 @@ import IntersectionsRegistry from './intersectionsRegistry';
 import ToolManager from './toolManager';
 import InputStateManager from './events/InputStateManager';
 
-import { HueSatValuePicker } from '../glslColorPicker/hueSatValuePicker';
+import { ColorPicker } from '../glslColorPicker/hueSatValuePicker';
 
 // function commonSlopesDemo(root: SVGSVGElement) {
 //   const a = [
@@ -164,7 +164,7 @@ function initCanvas(rootDiv: HTMLDivElement) {
   const toolManager = new ToolManager(ctx);
   toolManager.setTool(PenTool);
 
-  const colorPicker = new HueSatValuePicker({ root: document.body });
+  const colorPicker = new ColorPicker({ root: document.body });
 
   // const pointFinderTool = new PointFinderTool(ctx);
 

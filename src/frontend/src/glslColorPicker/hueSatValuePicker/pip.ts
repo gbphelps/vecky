@@ -16,6 +16,7 @@ abstract class Pip {
 
     // colorPublisher: ColorPublisher;
     abstract dragCallback(arg: DragParams): void
+    abstract destroy(): void;
 
     onMouseMove = (e: MouseEvent) => {
       const {

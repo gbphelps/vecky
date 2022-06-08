@@ -1,5 +1,5 @@
 import { Pip, DragParams } from '../../pip';
-import { ColorPublisher } from '../../colorPublisher';
+import { ColorPublisher, HSVColor } from '../../colorPublisher';
 import {
   uneaseInOutSine,
   easeInOutSine,
@@ -20,15 +20,6 @@ function easeAngle(angle: number) {
   const segments = Math.floor(angle / 60);
   const remainder = angle % 60;
   return (segments + easeInOutSine(remainder / 60)) * 60;
-}
-
-function getBorderColor({ red, green, blue }: RGBColor) {
-  const v = ((0.299 * red + 0.587 * green + 0.114 * blue) / 255 - 0.5) * 2;
-
-  if (v < 0) {
-    return `1px solid rgba(255,255,255,${0.8})`;
-  }
-  return `1px solid rgba(0,0,0,${0.8})`;
 }
 
 class HueSatPip extends Pip {
@@ -57,23 +48,25 @@ class HueSatPip extends Pip {
       cursor: 'pointer',
     });
 
-    this.colorPublisher.subscribe(({ hue, saturation, value }) => {
-      const uneasedAngle = uneaseAngle(hue);
-
-      const magnitude = uneaseInQuad(saturation / 100) *
-        this.root.getBoundingClientRect().height / 2;
-
-      const vec = new Vec2(1, 0).rotate(uneasedAngle * Math.PI / 180).times(magnitude);
-
-      const { red, green, blue } = hsvToRgb({ hue, saturation, value });
-
-      Object.assign(this.element.style, {
-        transform: `translateX(${vec.x}px) translateY(${-vec.y}px)`,
-        background: `rgb(${red},${green},${blue})`,
-        // border: getBorderColor({ red, green, blue }),
-      });
-    });
+    this.colorPublisher.subscribe(this.subscription);
   }
+
+  subscription = ({ hue, saturation, value }: HSVColor) => {
+    const uneasedAngle = uneaseAngle(hue);
+
+    const magnitude = uneaseInQuad(saturation / 100) *
+      this.root.getBoundingClientRect().height / 2;
+
+    const vec = new Vec2(1, 0).rotate(uneasedAngle * Math.PI / 180).times(magnitude);
+
+    const { red, green, blue } = hsvToRgb({ hue, saturation, value });
+
+    Object.assign(this.element.style, {
+      transform: `translateX(${vec.x}px) translateY(${-vec.y}px)`,
+      background: `rgb(${red},${green},${blue})`,
+      // border: getBorderColor({ red, green, blue }),
+    });
+  };
 
   dragCallback(arg: DragParams) {
     const {
@@ -110,6 +103,10 @@ class HueSatPip extends Pip {
       hue: phi % 360,
       saturation: r * 100,
     });
+  }
+
+  destroy(): void {
+    this.colorPublisher.unsubscribe(this.subscription);
   }
 }
 

@@ -1,4 +1,4 @@
-import { ColorPublisher } from '../../colorPublisher';
+import { ColorPublisher, HSVColor } from '../../colorPublisher';
 import { DragParams, Pip } from '../../pip';
 import { hsvToRgb } from '../../utils';
 
@@ -19,6 +19,20 @@ class ValuePip extends Pip {
     });
   }
 
+  subscription = ({ hue, saturation, value }: HSVColor) => {
+    const p = value / 100;
+    const { width } = this.root.getBoundingClientRect();
+    const { red, green, blue } = hsvToRgb({ hue, saturation, value });
+
+    Object.assign(this.element.style, {
+      background: `rgb(${red},${green},${blue})`,
+    });
+
+    Object.assign(this.element.style, {
+      transform: `translateX(${width * p}px)`,
+    });
+  };
+
   init() {
     Object.assign(this.position.style, {
       position: 'absolute',
@@ -36,19 +50,11 @@ class ValuePip extends Pip {
       cursor: 'pointer',
     });
 
-    this.colorPublisher.subscribe(({ hue, saturation, value }) => {
-      const p = value / 100;
-      const { width } = this.root.getBoundingClientRect();
-      const { red, green, blue } = hsvToRgb({ hue, saturation, value });
+    this.colorPublisher.subscribe(this.subscription);
+  }
 
-      Object.assign(this.element.style, {
-        background: `rgb(${red},${green},${blue})`,
-      });
-
-      Object.assign(this.element.style, {
-        transform: `translateX(${width * p}px)`,
-      });
-    });
+  destroy() {
+    this.colorPublisher.unsubscribe(this.subscription);
   }
 }
 

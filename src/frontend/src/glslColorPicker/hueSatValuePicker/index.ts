@@ -1,3 +1,4 @@
+import { Subscription } from '../../canvas/publishers/pubSub';
 import { DropDown } from '../dropDown';
 import PubSub from '../statefulPubsub';
 import { ColorPublisher, HSVColor } from './colorPublisher';
@@ -22,13 +23,15 @@ class Input {
   key: keyof HSVColor;
   format: (a:number) => string;
   parse: (a: string) => number;
+  destroyCb: () => void;
+  container: HTMLLabelElement;
 
   constructor({
     label, root, init, colorPublisher, key, format, parse,
   }:{
     label: string,
     root: HTMLElement,
-    init: (this: Input) => void,
+    init: (this: Input) => () => void,
     colorPublisher: ColorPublisher,
     key: keyof HSVColor,
     format: (a:number) => string,
@@ -39,8 +42,8 @@ class Input {
     this.format = format.bind(this);
     this.parse = parse.bind(this);
 
-    const container = document.createElement('label');
-    Object.assign(container.style, {
+    this.container = document.createElement('label');
+    Object.assign(this.container.style, {
       width: 0,
       flexGrow: 1,
       paddingRight: '8px',
@@ -59,11 +62,11 @@ class Input {
     });
     inputElement.type = 'text';
 
-    root.appendChild(container);
-    container.appendChild(labelElement);
-    container.appendChild(inputElement);
+    root.appendChild(this.container);
+    this.container.appendChild(labelElement);
+    this.container.appendChild(inputElement);
     this.inputElement = inputElement;
-    init.call(this);
+    this.destroyCb = init.call(this);
 
     this.inputElement.addEventListener('blur', () => {
       this.inputElement.value = this.format(
@@ -80,9 +83,16 @@ class Input {
       }
     });
   }
+
+  destroy() {
+    this.destroyCb();
+    this.container.parentElement?.removeChild(this.container);
+  }
 }
 
-class HueSatValuePicker {
+class ColorPicker {
+  picker: HueSatValuePicker | null;
+
   constructor({ root }: {root: HTMLElement}) {
     const colorPublisher = new ColorPublisher();
     const div = document.createElement('div');
@@ -97,22 +107,50 @@ class HueSatValuePicker {
     });
     root.appendChild(div);
 
+    this.picker = null;
+
+    const colorSpace = new PubSub('HSV');
+
     const dd = new DropDown({
       root: div,
       options: [
-        { value: 'one', label: 'one' },
-        { value: 'two', label: 'two' },
+        { value: 'HSV', label: 'HSV' },
+        { value: 'RGB', label: 'RGB' },
       ],
-      publisher: new PubSub('one'),
+      publisher: colorSpace,
     });
 
-    const hueSat = new HueSatCircleSlider({
-      root: div,
+    const c = document.createElement('div');
+    div.appendChild(c);
+
+    colorSpace.subscribe((space) => {
+      this.picker?.destroy();
+
+      if (space === 'HSV') {
+        this.picker = new HueSatValuePicker({
+          root: c,
+          colorPublisher,
+        });
+      } else {
+        //
+      }
+    });
+  }
+}
+
+class HueSatValuePicker {
+  inputs: Input[];
+  hueSatCircleSlider: HueSatCircleSlider;
+  valueSlider: ValueSlider;
+
+  constructor({ root, colorPublisher }: {root: HTMLDivElement, colorPublisher: ColorPublisher}) {
+    this.hueSatCircleSlider = new HueSatCircleSlider({
+      root,
       colorPublisher,
     });
 
-    const valueSlider = new ValueSlider({
-      root: div,
+    this.valueSlider = new ValueSlider({
+      root,
       colorPublisher,
     });
 
@@ -122,10 +160,10 @@ class HueSatValuePicker {
       marginRight: '-8px',
     });
 
-    ['hue', 'saturation', 'value'].forEach((k) => {
+    this.inputs = ['hue', 'saturation', 'value'].map((k) => {
       const key = k as keyof HSVColor;
 
-      const input = new Input({
+      return new Input({
         root: inputs,
         label: key.slice(0, 3),
         colorPublisher,
@@ -136,16 +174,27 @@ class HueSatValuePicker {
         },
         parse: key === 'hue' ? hueParser : defaultParser,
         init() {
-          colorPublisher.subscribe((color) => {
+          const sub: Subscription<HSVColor> = (color) => {
             if (document.activeElement === this.inputElement) return;
             this.inputElement.value = this.format(color[key]);
-          });
+          };
+
+          colorPublisher.subscribe(sub);
+          return () => {
+            colorPublisher.unsubscribe(sub);
+          };
         },
       });
     });
 
-    div.appendChild(inputs);
+    root.appendChild(inputs);
+  }
+
+  destroy() {
+    this.inputs.forEach((input) => input.destroy());
+    this.valueSlider.destroy();
+    this.hueSatCircleSlider.destroy();
   }
 }
 
-export { HueSatValuePicker };
+export { ColorPicker };

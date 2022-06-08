@@ -1,5 +1,6 @@
 import vScript from './vertex.glsl';
 import { createProgram, createShader } from './utils';
+import { Pip } from './hueSatValuePicker/pip';
 
 type UniformType = 'uniform1f' | 'uniform2f'
 
@@ -14,6 +15,8 @@ abstract class GlslSlider<T extends {[name: string]: UniformType}> {
   aPosition: number;
   div: HTMLDivElement;
   program: WebGLProgram;
+  abstract pip: Pip;
+  abstract destroy(): void;
 
   uniforms: T;
   locs: {[U in keyof T]: WebGLUniformLocation};
@@ -25,6 +28,13 @@ abstract class GlslSlider<T extends {[name: string]: UniformType}> {
     }) {
     this.uniforms = uniforms;
     this.div = document.createElement('div');
+
+    const { destroy } = this;
+
+    this.destroy = () => {
+      destroy.call(this);
+      this.destroyParent();
+    };
 
     this.canvas = document.createElement('canvas');
     const gl = this.canvas.getContext('webgl');
@@ -92,6 +102,11 @@ abstract class GlslSlider<T extends {[name: string]: UniformType}> {
     gl.enableVertexAttribArray(aPosition);
     gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
+  }
+
+  destroyParent() {
+    this.pip.destroy();
+    this.div.parentElement?.removeChild(this.div);
   }
 }
 
