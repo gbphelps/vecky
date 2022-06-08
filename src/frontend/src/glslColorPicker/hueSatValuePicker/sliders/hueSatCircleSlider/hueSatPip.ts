@@ -1,12 +1,11 @@
 import { Pip, DragParams } from '../../pip';
-import { ColorPublisher, HSVColor } from '../../colorPublisher';
+import { ColorPublisher, Color } from '../../colorPublisher';
 import {
   uneaseInOutSine,
   easeInOutSine,
   uneaseInQuad,
   easeInQuad,
   hsvToRgb,
-  RGBColor,
 } from '../../utils';
 import Vec2 from '../../../../canvas/utils/vec2';
 
@@ -51,7 +50,7 @@ class HueSatPip extends Pip {
     this.colorPublisher.subscribe(this.subscription);
   }
 
-  subscription = ({ hue, saturation, value }: HSVColor) => {
+  subscription = ({ hsv: { hue, saturation, value } }: Color) => {
     const uneasedAngle = uneaseAngle(hue);
 
     const magnitude = uneaseInQuad(saturation / 100) *
@@ -99,7 +98,7 @@ class HueSatPip extends Pip {
       r = 0;
     }
 
-    this.colorPublisher.set({
+    this.colorPublisher.set('hsv', {
       hue: phi % 360,
       saturation: r * 100,
     });

@@ -1,4 +1,4 @@
-import { ColorPublisher, HSVColor } from '../../colorPublisher';
+import { ColorPublisher, Color } from '../../colorPublisher';
 import { DragParams, Pip } from '../../pip';
 import { hsvToRgb } from '../../utils';
 
@@ -14,12 +14,12 @@ class ValuePip extends Pip {
     const { rootBox: { width }, mouse: { x } } = args;
 
     const p = Math.max(0, Math.min(width, x)) / width;
-    this.colorPublisher.set({
+    this.colorPublisher.set('hsv', {
       value: p * 100,
     });
   }
 
-  subscription = ({ hue, saturation, value }: HSVColor) => {
+  subscription = ({ hsv: { hue, saturation, value } }: Color) => {
     const p = value / 100;
     const { width } = this.root.getBoundingClientRect();
     const { red, green, blue } = hsvToRgb({ hue, saturation, value });

@@ -1,7 +1,7 @@
 import { Subscription } from '../../canvas/publishers/pubSub';
 import { DropDown } from '../dropDown';
 import PubSub from '../statefulPubsub';
-import { ColorPublisher, HSVColor } from './colorPublisher';
+import { Color, ColorPublisher, HSVColor } from './colorPublisher';
 import { HueSatCircleSlider } from './sliders/hueSatCircleSlider';
 import { ValueSlider } from './sliders/valueSlider';
 
@@ -70,14 +70,14 @@ class Input {
 
     this.inputElement.addEventListener('blur', () => {
       this.inputElement.value = this.format(
-        this.colorPublisher.color[this.key],
+        this.colorPublisher.color.hsv[this.key],
       );
     });
 
     this.inputElement.addEventListener('input', () => {
       try {
         const val = this.parse(this.inputElement.value);
-        this.colorPublisher.set({ [this.key]: val });
+        this.colorPublisher.set('hsv', { [this.key]: val });
       } catch {
         //
       }
@@ -174,9 +174,9 @@ class HueSatValuePicker {
         },
         parse: key === 'hue' ? hueParser : defaultParser,
         init() {
-          const sub: Subscription<HSVColor> = (color) => {
+          const sub: Subscription<Color> = (color) => {
             if (document.activeElement === this.inputElement) return;
-            this.inputElement.value = this.format(color[key]);
+            this.inputElement.value = this.format(color.hsv[key]);
           };
 
           colorPublisher.subscribe(sub);

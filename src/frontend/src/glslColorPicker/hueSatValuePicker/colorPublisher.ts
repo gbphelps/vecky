@@ -6,30 +6,34 @@ interface HSVColor {
 
 type Subscription<T> = (arg: T) => void;
 
+interface Color {hsv: HSVColor}
+
 class ColorPublisher {
-  color: HSVColor;
-  subscriptions: Set<Subscription<HSVColor>>;
+  color: Color;
+  subscriptions: Set<Subscription<Color>>;
 
   constructor() {
     this.subscriptions = new Set();
     this.color = {
-      hue: 190,
-      saturation: 100,
-      value: 80,
+      hsv: {
+        hue: 190,
+        saturation: 100,
+        value: 80,
+      },
     };
   }
 
-  set(incoming: Partial<HSVColor>) {
-    Object.assign(this.color, incoming);
+  set<T extends keyof Color>(colorSpace: T, incoming: Partial<Color[T]>) {
+    Object.assign(this.color[colorSpace], incoming);
     this.publish();
   }
 
-  subscribe(fn: Subscription<HSVColor>) {
+  subscribe(fn: Subscription<Color>) {
     fn(this.color);
     this.subscriptions.add(fn);
   }
 
-  unsubscribe(fn: Subscription<HSVColor>) {
+  unsubscribe(fn: Subscription<Color>) {
     this.subscriptions.delete(fn);
   }
 
@@ -39,4 +43,4 @@ class ColorPublisher {
 }
 
 export { ColorPublisher };
-export type { HSVColor };
+export type { HSVColor, Color };

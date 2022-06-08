@@ -1,8 +1,7 @@
 import { GlslSlider } from '../../../glslSlider';
-import { ColorPublisher, HSVColor } from '../../colorPublisher';
+import { Color, ColorPublisher } from '../../colorPublisher';
 import fragment from './fragment.glsl';
 import { ValuePip } from './valuePip';
-import { hsvToRgb } from '../../utils';
 import { Pip } from '../../pip';
 
 class ValueSlider extends GlslSlider<{
@@ -28,10 +27,10 @@ class ValueSlider extends GlslSlider<{
     this.pip = new ValuePip({ root: this.div, colorPublisher });
   }
 
-  subscription = (color: HSVColor) => {
+  subscription = (color: Color) => {
     this.render({
-      u_hue: [color.hue],
-      u_saturation: [color.saturation / 100],
+      u_hue: [color.hsv.hue],
+      u_saturation: [color.hsv.saturation / 100],
     });
   };
 
